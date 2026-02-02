@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Error Capture</title>
+    <style>
+        body { background: #1e293b; color: #e2e8f0; font-family: monospace; padding: 20px; }
+        #status { font-size: 20px; margin-bottom: 20px; }
+        .error { background: #450a0a; border-left: 4px solid #dc2626; padding: 10px; margin: 10px 0; }
+        .warn { background: #451a03; border-left: 4px solid #f59e0b; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div id="status">🎯 Opening workflow page and capturing errors...</div>
+    <div id="errors"></div>
+
+    <script>
+        const errorsDiv = document.getElementById('errors');
+        const statusDiv = document.getElementById('status');
+        const collectedErrors = [];
+
+        // Capture errors
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'error') {
+                collectedErrors.push(event.data);
+                const div = document.createElement('div');
+                div.className = 'error';
+                div.textContent = JSON.stringify(event.data, null, 2);
+                errorsDiv.appendChild(div);
+            }
+        });
+
+        // Open workflow page in iframe to capture its errors
+        setTimeout(() => {
+            const iframe = document.createElement('iframe');
+            iframe.src = '/workflows/feature-development-workflow';
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+
+            // Inject error capture into iframe
+            iframe.onload = () => {
+                try {
+                    const iframeWindow = iframe.contentWindow;
+                    const originalError = iframeWindow.console.error;
+
+                    iframeWindow.console.error = function(...args) {
+                        window.parent.postMessage({
+                            type: 'error',
+                            message: args.join(' '),
+                            timestamp: new Date().toISOString()
+                        }, '*');
+                        originalError.apply(iframeWindow.console, args);
+                    };
+
+                    iframeWindow.onerror = function(msg, url, line, col, error) {
+                        window.parent.postMessage({
+                            type: 'error',
+                            message: msg,
+                            url, line, col,
+                            stack: error?.stack,
+                            timestamp: new Date().toISOString()
+                        }, '*');
+                    };
+
+                    statusDiv.textContent = '✅ Capturing errors... (wait 10 seconds)';
+                } catch (e) {
+                    statusDiv.textContent = '❌ Cannot access iframe (CORS). Open DevTools on workflow page directly.';
+                }
+            };
+
+            // Save to server after 10 seconds
+            setTimeout(async () => {
+                if (collectedErrors.length > 0) {
+                    await fetch('/error-logger', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ errors: collectedErrors })
+                    });
+                    statusDiv.textContent = `✅ Captured ${collectedErrors.length} errors! Saved to /tmp/browser-errors.log`;
+                } else {
+                    statusDiv.textContent = '✅ No errors captured (page might be working!)';
+                }
+            }, 10000);
+        }, 1000);
+    </script>
+</body>
+</html>

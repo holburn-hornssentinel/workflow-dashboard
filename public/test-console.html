@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Console Error Capture</title>
+</head>
+<body>
+    <h1>Browser Console Error Capture</h1>
+    <pre id="errors" style="background: #000; color: #0f0; padding: 20px; font-family: monospace;"></pre>
+    <button onclick="location.reload()">Reload</button>
+
+    <script>
+        const errorsDiv = document.getElementById('errors');
+        const errors = [];
+
+        // Capture console errors
+        const originalError = console.error;
+        console.error = function(...args) {
+            errors.push('ERROR: ' + args.join(' '));
+            errorsDiv.textContent = errors.join('\n\n');
+            originalError.apply(console, args);
+        };
+
+        const originalWarn = console.warn;
+        console.warn = function(...args) {
+            errors.push('WARN: ' + args.join(' '));
+            errorsDiv.textContent = errors.join('\n\n');
+            originalWarn.apply(console, args);
+        };
+
+        // Capture runtime errors
+        window.onerror = function(msg, url, line, col, error) {
+            errors.push('RUNTIME ERROR: ' + msg + ' at ' + url + ':' + line);
+            errorsDiv.textContent = errors.join('\n\n');
+        };
+
+        errorsDiv.textContent = 'Waiting for errors... Open workflow page in another tab.';
+    </script>
+</body>
+</html>

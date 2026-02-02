@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  workflow-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: workflow-dashboard
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount workflows directory
+      - ${HOME}/.claude/workflows:/root/.claude/workflows:ro
+      # Mount working directories (if needed for execution)
+      - ${HOME}:/root:ro
+    environment:
+      - NODE_ENV=production
+      - HOME=/root
+    restart: unless-stopped
+    networks:
+      - workflow-net
+
+networks:
+  workflow-net:
+    driver: bridge
