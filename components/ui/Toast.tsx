@@ -73,7 +73,7 @@ export default function Toast({ message, type, duration = 3000, onClose }: Toast
 export function useToast() {
   const [toasts, setToasts] = useState<Array<{ id: number; message: string; type: ToastType }>>([]);
 
-  const show Toast = (message: string, type: ToastType = 'info') => {
+  const showToast = (message: string, type: ToastType = 'info') => {
     const id = Date.now();
     setToasts((prev) => [...prev, { id, message, type }]);
   };
