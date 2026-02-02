@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { loadWorkflows, getWorkflowStats, workflowToSlug } from '@/lib/workflow-parser';
 import HomeContent from '@/components/home/HomeContent';
+import SmartWidget from '@/components/dashboard/SmartWidget';
 
 export default function Home() {
   const workflows = loadWorkflows();
@@ -61,6 +62,9 @@ export default function Home() {
         </div>
 
         <HomeContent />
+
+        {/* Smart Recommendations Widget */}
+        <SmartWidget />
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
