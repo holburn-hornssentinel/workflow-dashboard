@@ -19,6 +19,7 @@ export default function BuilderPage() {
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [draggedNodeType, setDraggedNodeType] = useState<NodeType | null>(null);
   const [showVibeInput, setShowVibeInput] = useState(false);
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
 
   // Load vibe-generated workflow from session storage
   useEffect(() => {
@@ -109,6 +110,11 @@ export default function BuilderPage() {
   const handleDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
+    setIsDraggingOver(true);
+  }, []);
+
+  const handleDragLeave = useCallback(() => {
+    setIsDraggingOver(false);
   }, []);
 
   // Handle connection
@@ -276,7 +282,17 @@ export default function BuilderPage() {
         <NodePalette onDragStart={handleDragStart} />
 
         {/* Center: Canvas */}
-        <div className="flex-1 relative" ref={reactFlowWrapper}>
+        <div
+          className={`flex-1 relative transition-all ${isDraggingOver ? 'ring-4 ring-blue-500/50 ring-inset' : ''}`}
+          ref={reactFlowWrapper}
+        >
+          {isDraggingOver && (
+            <div className="absolute inset-4 border-4 border-dashed border-blue-500 rounded-lg pointer-events-none z-10 bg-blue-500/5">
+              <div className="flex items-center justify-center h-full">
+                <div className="text-blue-400 text-xl font-semibold">Drop node here</div>
+              </div>
+            </div>
+          )}
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -285,9 +301,15 @@ export default function BuilderPage() {
             onConnect={handleConnect}
             onNodeClick={handleNodeClick}
             onPaneClick={handlePaneClick}
-            onDrop={handleDrop}
+            onDrop={(e) => {
+              handleDrop(e);
+              setIsDraggingOver(false);
+            }}
             onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
             onInit={setReactFlowInstance}
+            snapToGrid={true}
+            snapGrid={[15, 15]}
             nodeTypes={nodeTypes}
             connectionMode={ConnectionMode.Loose}
             fitView

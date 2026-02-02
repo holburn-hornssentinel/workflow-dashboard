@@ -79,12 +79,24 @@ export default function NodePalette({ onDragStart }: NodePaletteProps) {
           <div
             key={template.type}
             draggable
-            onDragStart={() => onDragStart(template.type)}
-            className="group cursor-grab active:cursor-grabbing bg-slate-800/50 hover:bg-slate-800 border border-slate-700 hover:border-slate-600 rounded-lg p-3 transition-all duration-200"
+            onDragStart={(e) => {
+              onDragStart(template.type);
+              // Create ghost image for better drag feedback
+              const ghost = e.currentTarget.cloneNode(true) as HTMLElement;
+              ghost.style.opacity = '0.5';
+              ghost.style.position = 'absolute';
+              ghost.style.top = '-1000px';
+              document.body.appendChild(ghost);
+              e.dataTransfer.setDragImage(ghost, 50, 25);
+              setTimeout(() => document.body.removeChild(ghost), 0);
+            }}
+            className="group cursor-grab active:cursor-grabbing bg-slate-800/50 hover:bg-slate-800 border border-slate-700 hover:border-slate-600 hover:shadow-lg hover:shadow-blue-500/20 rounded-lg p-3 transition-all duration-200 touch-manipulation"
+            style={{ minHeight: '44px' }} // Touch-friendly minimum size
           >
             <div className="flex items-start gap-3">
               <div
-                className={`w-10 h-10 ${template.color} rounded-lg flex items-center justify-center text-xl flex-shrink-0`}
+                className={`w-11 h-11 ${template.color} rounded-lg flex items-center justify-center text-xl flex-shrink-0`}
+                style={{ minWidth: '44px', minHeight: '44px' }} // Touch-friendly tap target
               >
                 {template.icon}
               </div>
