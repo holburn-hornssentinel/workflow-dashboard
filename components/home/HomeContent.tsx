@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import WalkthroughModal from '@/components/walkthrough/WalkthroughModal';
+import ProgressChecklist from '@/components/walkthrough/ProgressChecklist';
 
 export default function HomeContent() {
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [showTutorialButton, setShowTutorialButton] = useState(false);
+  const [showChecklist, setShowChecklist] = useState(false);
 
   useEffect(() => {
     // Check if first visit
@@ -13,6 +15,7 @@ export default function HomeContent() {
       const completed = localStorage.getItem('walkthrough-completed');
       if (!completed) {
         setTimeout(() => setShowWalkthrough(true), 1000);
+        setShowChecklist(true);
       }
       setShowTutorialButton(true);
     }
@@ -53,6 +56,9 @@ export default function HomeContent() {
           onSkip={handleWalkthroughSkip}
         />
       )}
+
+      {/* Progress Checklist */}
+      {showChecklist && <ProgressChecklist />}
     </>
   );
 }
