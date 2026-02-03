@@ -6,7 +6,7 @@
     "dev": "next dev -H 0.0.0.0 -p 3004",
     "dev:restart": "./dev.sh",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3004",
     "lint": "next lint",
     "test": "jest --watch",
     "test:ci": "jest --ci --coverage",
@@ -42,6 +42,7 @@
     "reactflow": "^11.11.4",
     "socket.io-client": "^4.8.3",
     "three": "^0.176.0",
+    "zod": "^3.25.76",
     "zustand": "^5.0.10"
   },
   "devDependencies": {
