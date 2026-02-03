@@ -15,7 +15,7 @@ A bleeding-edge visual platform for creating, managing, and monitoring AI agent 
 
 ```bash
 npm run dev
-# Open http://localhost:3000
+# Open http://localhost:3004
 # Click "🎨 Visual Builder" → "✨ Vibe Code"
 # Type: "Check my GitHub notifications and summarize"
 # Watch Claude create a complete workflow in seconds

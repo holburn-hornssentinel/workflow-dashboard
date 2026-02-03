@@ -159,7 +159,7 @@ npx playwright test --grep "should display homepage"
 
 Quick visual checks to do in browser:
 
-1. **Homepage** (http://localhost:3000)
+1. **Homepage** (http://localhost:3004)
    - [ ] 5 workflow cards display
    - [ ] Stats show correct numbers
    - [ ] No console errors (F12)

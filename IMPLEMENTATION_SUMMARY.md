@@ -266,7 +266,7 @@ PINECONE_INDEX=workflow-memory
 ### 1. Start the Development Server
 ```bash
 npm run dev
-# Server starts at http://localhost:3000
+# Server starts at http://localhost:3004
 ```
 
 ### 2. Navigate the Platform

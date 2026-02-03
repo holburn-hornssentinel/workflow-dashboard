@@ -8,11 +8,11 @@ Welcome to your transformed AI Agent Orchestration Platform! 🎉
 ```bash
 cd /home/horns/workflow-dashboard
 npm run dev
-# Server will start at http://localhost:3000 (or next available port)
+# Server will start at http://localhost:3004 (or next available port)
 ```
 
 ### Step 2: Open in Browser
-Navigate to **http://localhost:3000** and you'll see the homepage with 4 main sections:
+Navigate to **http://localhost:3004** and you'll see the homepage with 4 main sections:
 
 1. **🧠 Memory** - Persistent memory browser
 2. **🤖 Agents** - Multi-agent orchestration dashboard

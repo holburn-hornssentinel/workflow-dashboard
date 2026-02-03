@@ -4,7 +4,7 @@ import { NextRequest } from 'next/server';
 describe('GET /api/workflows/[name]', () => {
   it('should return workflow data for valid workflow name', async () => {
     const mockParams = Promise.resolve({ name: 'bug-fix-workflow' });
-    const request = new NextRequest('http://localhost:3000/api/workflows/bug-fix-workflow');
+    const request = new NextRequest('http://localhost:3004/api/workflows/bug-fix-workflow');
 
     const response = await GET(request, { params: mockParams });
     const data = await response.json();
@@ -20,7 +20,7 @@ describe('GET /api/workflows/[name]', () => {
 
   it('should return 404 for non-existent workflow', async () => {
     const mockParams = Promise.resolve({ name: 'non-existent-workflow-xyz' });
-    const request = new NextRequest('http://localhost:3000/api/workflows/non-existent-workflow-xyz');
+    const request = new NextRequest('http://localhost:3004/api/workflows/non-existent-workflow-xyz');
 
     const response = await GET(request, { params: mockParams });
     const data = await response.json();
@@ -33,7 +33,7 @@ describe('GET /api/workflows/[name]', () => {
   it('should handle URL-encoded workflow names', async () => {
     const encodedName = encodeURIComponent('bug-fix-workflow');
     const mockParams = Promise.resolve({ name: encodedName });
-    const request = new NextRequest(`http://localhost:3000/api/workflows/${encodedName}`);
+    const request = new NextRequest(`http://localhost:3004/api/workflows/${encodedName}`);
 
     const response = await GET(request, { params: mockParams });
 
@@ -42,7 +42,7 @@ describe('GET /api/workflows/[name]', () => {
 
   it('should return nodes with proper structure', async () => {
     const mockParams = Promise.resolve({ name: 'bug-fix-workflow' });
-    const request = new NextRequest('http://localhost:3000/api/workflows/bug-fix-workflow');
+    const request = new NextRequest('http://localhost:3004/api/workflows/bug-fix-workflow');
 
     const response = await GET(request, { params: mockParams });
     const data = await response.json();
@@ -63,7 +63,7 @@ describe('GET /api/workflows/[name]', () => {
 
   it('should return edges connecting steps sequentially', async () => {
     const mockParams = Promise.resolve({ name: 'bug-fix-workflow' });
-    const request = new NextRequest('http://localhost:3000/api/workflows/bug-fix-workflow');
+    const request = new NextRequest('http://localhost:3004/api/workflows/bug-fix-workflow');
 
     const response = await GET(request, { params: mockParams });
     const data = await response.json();
