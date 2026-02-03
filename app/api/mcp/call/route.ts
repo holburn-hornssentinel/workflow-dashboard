@@ -1,16 +1,67 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMCPClient } from '@/lib/mcp/client';
+import {
+  MCPCallRequestSchema,
+  validateRequest,
+  formatValidationError,
+} from '@/lib/security/validators';
+import { validateToolId } from '@/lib/security/sanitizer';
 
 export async function POST(request: NextRequest) {
   try {
-    const { toolId, args } = await request.json();
+    const body = await request.json();
 
-    if (!toolId) {
-      return NextResponse.json({ error: 'Tool ID required' }, { status: 400 });
+    // Validate request body with Zod schema
+    const validation = validateRequest(MCPCallRequestSchema, body);
+    if (!validation.success) {
+      return NextResponse.json(formatValidationError(validation.error), {
+        status: 400,
+      });
+    }
+
+    const { toolId, args } = validation.data;
+
+    // Additional validation for tool ID format
+    if (!validateToolId(toolId)) {
+      return NextResponse.json(
+        { error: 'Invalid tool ID format. Expected format: server:tool' },
+        { status: 400 }
+      );
     }
 
     const client = getMCPClient();
-    const result = await client.callTool(toolId, args || {});
+
+    // Validate args against tool's input schema if available
+    const tools = await client.listTools();
+    const tool = tools.find((t) => `${t.serverId}:${t.name}` === toolId);
+
+    if (!tool) {
+      return NextResponse.json({ error: 'Tool not found' }, { status: 404 });
+    }
+
+    // If tool has input schema, validate args against it
+    if (tool.inputSchema && args) {
+      try {
+        // Basic validation - could be enhanced with ajv or similar
+        const requiredFields = tool.inputSchema.required || [];
+        for (const field of requiredFields) {
+          if (!(field in args)) {
+            return NextResponse.json(
+              { error: `Missing required field: ${field}` },
+              { status: 400 }
+            );
+          }
+        }
+      } catch (schemaError) {
+        console.error('[MCP] Schema validation error:', schemaError);
+        return NextResponse.json(
+          { error: 'Invalid arguments for tool' },
+          { status: 400 }
+        );
+      }
+    }
+
+    const result = await client.callTool(toolId, args);
 
     return NextResponse.json({ result });
   } catch (error) {

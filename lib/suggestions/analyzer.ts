@@ -2,6 +2,7 @@ import type { AnalysisResult, AnalysisConfig, WorkflowGraph } from '@/types/sugg
 import { checkParallelization } from './rules/parallelization';
 import { checkWarnings } from './rules/warnings';
 import { checkQuality } from './rules/quality';
+import { checkSecurity, calculateSecurityScore } from './rules/security';
 
 /**
  * Calculate workflow quality score (0-100)
@@ -60,11 +61,17 @@ export async function analyzeWorkflow(
     suggestions.push(...checkQuality(graph));
   }
 
-  // Calculate score
+  // Run security analysis (always enabled)
+  const securitySuggestions = checkSecurity(graph);
+  suggestions.push(...securitySuggestions);
+
+  // Calculate scores
   const workflowScore = calculateScore(graph, suggestions.length);
+  const securityScoreResult = calculateSecurityScore(securitySuggestions);
 
   return {
     suggestions,
     workflowScore,
+    securityScore: securityScoreResult.overall,
   };
 }

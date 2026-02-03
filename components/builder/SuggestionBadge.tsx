@@ -1,6 +1,6 @@
 'use client';
 
-import { AlertCircle, Zap, Info } from 'lucide-react';
+import { AlertCircle, Zap, Info, Shield } from 'lucide-react';
 import type { SuggestionType } from '@/types/suggestions';
 
 interface SuggestionBadgeProps {
@@ -11,7 +11,15 @@ interface SuggestionBadgeProps {
 export function SuggestionBadge({ count, type = 'warning' }: SuggestionBadgeProps) {
   if (count === 0) return null;
 
-  const config = {
+  const config: Record<
+    SuggestionType,
+    { icon: typeof Shield; bg: string; text: string }
+  > = {
+    security: {
+      icon: Shield,
+      bg: 'bg-red-500',
+      text: 'text-red-900',
+    },
     warning: {
       icon: AlertCircle,
       bg: 'bg-yellow-500',

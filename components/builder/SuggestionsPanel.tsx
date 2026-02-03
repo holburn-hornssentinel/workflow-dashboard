@@ -1,18 +1,24 @@
 'use client';
 
-import { ChevronRight, ChevronLeft, RefreshCw, Award } from 'lucide-react';
+import { ChevronRight, ChevronLeft, RefreshCw, Award, Shield } from 'lucide-react';
 import { useSuggestionsStore } from '@/stores/suggestionsStore';
 import { SuggestionCard } from './SuggestionCard';
+import type { SecuritySuggestion } from '@/types/security';
 
 export function SuggestionsPanel() {
-  const { suggestions, workflowScore, isAnalyzing, isOpen, toggleOpen } =
+  const { suggestions, workflowScore, securityScore, isAnalyzing, isOpen, toggleOpen } =
     useSuggestionsStore();
 
   const suggestionsByType = {
+    security: suggestions.filter((s) => s.type === 'security') as SecuritySuggestion[],
     optimization: suggestions.filter((s) => s.type === 'optimization'),
     warning: suggestions.filter((s) => s.type === 'warning'),
     quality: suggestions.filter((s) => s.type === 'quality'),
   };
+
+  const criticalSecurityIssues = suggestionsByType.security.filter(
+    (s) => s.severity === 'critical'
+  ).length;
 
   return (
     <div
@@ -46,6 +52,48 @@ export function SuggestionsPanel() {
                 <RefreshCw className="w-4 h-4 text-blue-400 animate-spin" />
               )}
             </div>
+
+            {/* Security Score */}
+            {securityScore !== undefined && (
+              <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-400 flex items-center gap-1">
+                    <Shield className="w-4 h-4" />
+                    Security Score
+                  </span>
+                  <span
+                    className={`text-lg font-bold ${
+                      securityScore >= 80
+                        ? 'text-green-400'
+                        : securityScore >= 60
+                          ? 'text-yellow-400'
+                          : 'text-red-400'
+                    }`}
+                  >
+                    {securityScore}/100
+                  </span>
+                </div>
+                <div className="w-full bg-slate-700 rounded-full h-2">
+                  <div
+                    className={`h-2 rounded-full transition-all ${
+                      securityScore >= 80
+                        ? 'bg-green-500'
+                        : securityScore >= 60
+                          ? 'bg-yellow-500'
+                          : 'bg-red-500'
+                    }`}
+                    style={{ width: `${securityScore}%` }}
+                  />
+                </div>
+                {criticalSecurityIssues > 0 && (
+                  <div className="mt-2 text-xs text-red-400 flex items-center gap-1">
+                    <Shield className="w-3 h-3" />
+                    {criticalSecurityIssues} critical issue
+                    {criticalSecurityIssues > 1 ? 's' : ''} found
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Workflow Score */}
             <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-3">
@@ -87,6 +135,19 @@ export function SuggestionsPanel() {
             </div>
           ) : (
             <div className="space-y-4">
+              {/* Security Issues */}
+              {suggestionsByType.security.length > 0 && (
+                <div className="space-y-2">
+                  <h3 className="text-xs font-semibold text-red-400 uppercase tracking-wide flex items-center gap-1">
+                    <Shield className="w-3 h-3" />
+                    Security ({suggestionsByType.security.length})
+                  </h3>
+                  {suggestionsByType.security.map((suggestion) => (
+                    <SuggestionCard key={suggestion.id} suggestion={suggestion} />
+                  ))}
+                </div>
+              )}
+
               {/* Optimizations */}
               {suggestionsByType.optimization.length > 0 && (
                 <div className="space-y-2">

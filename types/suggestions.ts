@@ -1,6 +1,7 @@
 import type { Node, Edge } from '@xyflow/react';
 
-export type SuggestionType = 'optimization' | 'warning' | 'quality';
+export type SuggestionType = 'optimization' | 'warning' | 'quality' | 'security';
+export type { SecuritySeverity } from './security';
 export type SuggestionImpact = 'high' | 'medium' | 'low';
 
 export interface Suggestion {
@@ -17,6 +18,7 @@ export interface Suggestion {
 export interface AnalysisResult {
   suggestions: Suggestion[];
   workflowScore: number; // 0-100
+  securityScore?: number; // 0-100, added by security scanner
 }
 
 export interface AnalysisConfig {

@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { BudgetDashboard } from '@/components/router/BudgetDashboard';
+import { ModelRoutingPanel } from '@/components/router/ModelRoutingPanel';
 
 interface EnvConfig {
   anthropicKey: string;
@@ -291,6 +293,20 @@ export default function SettingsPage() {
               </p>
             </div>
           )}
+        </div>
+
+        {/* AI Router Budget Section */}
+        <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6 mb-6">
+          <h2 className="text-2xl font-semibold text-white mb-4">💰 AI Budget & Routing</h2>
+          <p className="text-slate-400 mb-6">Track costs and configure intelligent model routing.</p>
+          <BudgetDashboard />
+        </div>
+
+        {/* Model Routing Rules Section */}
+        <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6 mb-6">
+          <h2 className="text-2xl font-semibold text-white mb-4">🎯 Model Routing Rules</h2>
+          <p className="text-slate-400 mb-6">Configure which models to use for different task types.</p>
+          <ModelRoutingPanel />
         </div>
 
         {/* Save Button */}

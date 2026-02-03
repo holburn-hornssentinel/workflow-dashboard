@@ -13,7 +13,16 @@ export function SuggestionCard({ suggestion }: SuggestionCardProps) {
   const { setSelectedNodeId } = useBuilderStore();
   const { dismissSuggestion } = useSuggestionsStore();
 
-  const config = {
+  const config: Record<
+    import('@/types/suggestions').SuggestionType,
+    { icon: any; iconColor: string; borderColor: string; bgColor: string }
+  > = {
+    security: {
+      icon: AlertCircle,
+      iconColor: 'text-red-500',
+      borderColor: 'border-red-500/30',
+      bgColor: 'bg-red-500/10',
+    },
     warning: {
       icon: AlertCircle,
       iconColor: 'text-yellow-500',

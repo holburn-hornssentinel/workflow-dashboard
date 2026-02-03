@@ -6,6 +6,7 @@ export interface MCPTool {
   description: string;
   inputSchema: any;
   category?: string;
+  serverId?: string;
 }
 
 export interface MCPServer {
@@ -51,6 +52,7 @@ export class MCPClient {
             description: tool.description || '',
             inputSchema: tool.inputSchema || {},
             category: server.name,
+            serverId: server.name,
           });
         });
       }
@@ -79,12 +81,61 @@ export class MCPClient {
     }
   }
 
-  async callTool(toolId: string, args: any): Promise<any> {
+  async callTool(
+    toolId: string,
+    args: any,
+    permissionsStore?: {
+      checkPermission: (type: string, details: Record<string, unknown>) => string;
+      requestPermission: (request: any) => Promise<any>;
+    }
+  ): Promise<any> {
     const [serverName, toolName] = toolId.split(':');
     const client = this.clients.get(serverName);
 
     if (!client) {
       throw new Error(`Server ${serverName} not connected`);
+    }
+
+    // Check permissions if store provided
+    if (permissionsStore) {
+      const permissionLevel = permissionsStore.checkPermission('tool', {
+        toolId,
+        args,
+      });
+
+      // Handle different permission levels
+      if (permissionLevel === 'block') {
+        throw new Error(
+          `Permission denied: ${toolId} is blocked by security policy`
+        );
+      }
+
+      if (permissionLevel === 'confirm') {
+        // Request user approval
+        const request = await permissionsStore.requestPermission({
+          type: 'tool',
+          toolId,
+          details: { toolId, args },
+        });
+
+        // Wait for approval (polling)
+        const approved = await this.waitForApproval(request.id, permissionsStore);
+
+        if (!approved) {
+          throw new Error(
+            `Permission denied: User did not approve ${toolId}`
+          );
+        }
+
+        console.log(`[MCP] Permission granted for ${toolId}`);
+      }
+
+      if (permissionLevel === 'notify') {
+        console.log(`[MCP] Notification: Executing ${toolId}`);
+        // Continue with execution
+      }
+
+      // 'auto' level - continue without prompting
     }
 
     try {
@@ -100,9 +151,63 @@ export class MCPClient {
     }
   }
 
+  /**
+   * Wait for permission approval with timeout
+   */
+  private async waitForApproval(
+    requestId: string,
+    permissionsStore: any,
+    timeoutMs: number = 30000
+  ): Promise<boolean> {
+    const startTime = Date.now();
+
+    while (Date.now() - startTime < timeoutMs) {
+      // Check if request is still pending
+      const pendingRequests = permissionsStore.pendingRequests || [];
+      const request = pendingRequests.find((r: any) => r.id === requestId);
+
+      if (!request) {
+        // Request no longer pending - check history
+        const history = permissionsStore.requestHistory || [];
+        const completedRequest = history.find((r: any) => r.id === requestId);
+
+        if (completedRequest) {
+          return completedRequest.status === 'approved';
+        }
+
+        // Request disappeared without approval
+        return false;
+      }
+
+      // Wait before checking again
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+
+    // Timeout
+    return false;
+  }
+
   getTools(): MCPTool[] {
     const tools: MCPTool[] = [];
     this.tools.forEach((tool) => tools.push(tool));
+    return tools;
+  }
+
+  /**
+   * List tools in format compatible with validation
+   */
+  async listTools(): Promise<Array<{ serverId: string; name: string; inputSchema?: any }>> {
+    const tools: Array<{ serverId: string; name: string; inputSchema?: any }> = [];
+
+    this.tools.forEach((tool, toolId) => {
+      const [serverId, name] = toolId.split(':');
+      tools.push({
+        serverId,
+        name,
+        inputSchema: tool.inputSchema,
+      });
+    });
+
     return tools;
   }
 

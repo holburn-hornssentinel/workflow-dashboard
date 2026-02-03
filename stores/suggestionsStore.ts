@@ -4,6 +4,7 @@ import type { Suggestion, AnalysisResult } from '@/types/suggestions';
 interface SuggestionsState {
   suggestions: Suggestion[];
   workflowScore: number;
+  securityScore?: number;
   isAnalyzing: boolean;
   isOpen: boolean;
 
@@ -19,6 +20,7 @@ interface SuggestionsState {
 export const useSuggestionsStore = create<SuggestionsState>((set) => ({
   suggestions: [],
   workflowScore: 0,
+  securityScore: undefined,
   isAnalyzing: false,
   isOpen: true,
 
@@ -26,6 +28,7 @@ export const useSuggestionsStore = create<SuggestionsState>((set) => ({
     set({
       suggestions: result.suggestions,
       workflowScore: result.workflowScore,
+      securityScore: result.securityScore,
     });
   },
 
@@ -48,6 +51,6 @@ export const useSuggestionsStore = create<SuggestionsState>((set) => ({
   },
 
   clearSuggestions: () => {
-    set({ suggestions: [], workflowScore: 0 });
+    set({ suggestions: [], workflowScore: 0, securityScore: undefined });
   },
 }));
