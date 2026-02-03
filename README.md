@@ -49,37 +49,52 @@ A bleeding-edge AI agent orchestration platform that transforms natural language
 - Fact and preference learning
 - Context-aware responses
 
-## 🚀 Quick Start
+### 🔒 Security & AI Agent Platform (NEW in v1.1)
+- **Security Scanner** - Real-time vulnerability detection with CWE references
+- **AI Router** - Multi-model routing with cost tracking and budget enforcement
+- **Permission System** - Human-in-the-loop approvals for high-risk operations
+- **Input Validation** - Comprehensive request validation with Zod schemas
+- **Command Injection Prevention** - Safe command execution with argument arrays
+- **API Authentication** - Optional API key auth for production deployments
+
+## 🚀 Quick Start (No Configuration Required!)
 
 ### Prerequisites
 
 - **Node.js** 18+ and npm
-- **API Key** (at least one):
-  - [Anthropic Claude API Key](https://console.anthropic.com/)
-  - [Google Gemini API Key](https://aistudio.google.com/app/apikey)
+- **Optional:** API Key for AI features
+  - [Anthropic Claude API Key](https://console.anthropic.com/) - Free tier available
+  - [Google Gemini API Key](https://aistudio.google.com/app/apikey) - Free tier available
 
 ### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/workflow-dashboard.git
-   cd workflow-dashboard
-   ```
+```bash
+# 1. Clone the repository
+git clone https://github.com/yourusername/workflow-dashboard.git
+cd workflow-dashboard
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+# 2. Install dependencies
+npm install
 
-3. **Start the development server**
-   ```bash
-   npm run dev:restart
-   ```
+# 3. Start the development server
+npm run dev
 
-4. **Open the application**
-   - Navigate to [http://localhost:3004](http://localhost:3004)
-   - Go to **Settings** and add your API key(s)
-   - Click **Restart Server** to apply changes
+# 4. Open your browser
+open http://localhost:3004
+```
+
+**That's it!** The app runs without any configuration.
+
+### Unlock AI Features (Optional)
+
+The visual builder, UI, and core features work immediately. To enable AI-powered features:
+
+1. Navigate to **Settings** (top right)
+2. Add your API key(s) for Claude and/or Gemini
+3. Click **Restart Server** to apply changes
+4. Return to the **Visual Builder** and click **✨ Vibe Code**
+
+No .env file editing required - configure everything through the UI!
 
 ### First Workflow
 
