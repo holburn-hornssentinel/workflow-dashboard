@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { Node, Edge, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange } from '@xyflow/react';
 import { nanoid } from 'nanoid';
+import type { ViewMode } from '@/types/visualization';
 
 export type NodeType = 'agent' | 'tool' | 'condition' | 'loop' | 'parallel' | 'start' | 'end';
 
@@ -34,6 +35,7 @@ interface BuilderState {
   // UI state
   isPanelOpen: boolean;
   selectedNodeId: string | null;
+  viewMode: ViewMode;
 
   // Actions - Node Management
   onNodesChange: (changes: NodeChange[]) => void;
@@ -62,6 +64,8 @@ interface BuilderState {
   // Actions - UI
   togglePanel: () => void;
   setIsPanelOpen: (open: boolean) => void;
+  setViewMode: (mode: ViewMode) => void;
+  setSelectedNodeId: (id: string | null) => void;
 
   // Actions - Import/Export
   importWorkflow: (nodes: Node<AgentNodeData>[], edges: Edge[]) => void;
@@ -78,6 +82,7 @@ const initialState = {
   historyIndex: -1,
   isPanelOpen: true,
   selectedNodeId: null,
+  viewMode: '2d' as ViewMode,
 };
 
 export const useBuilderStore = create<BuilderState>((set, get) => ({
@@ -247,6 +252,16 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   // Set panel open state
   setIsPanelOpen: (open: boolean) => {
     set({ isPanelOpen: open });
+  },
+
+  // Set view mode (2D/3D)
+  setViewMode: (mode: ViewMode) => {
+    set({ viewMode: mode });
+  },
+
+  // Set selected node ID
+  setSelectedNodeId: (id: string | null) => {
+    set({ selectedNodeId: id });
   },
 
   // Import workflow from YAML

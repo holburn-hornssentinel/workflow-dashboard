@@ -1,8 +1,10 @@
 'use client';
 
-import { memo, useState } from 'react';
+import { memo, useState, useMemo } from 'react';
 import { Handle, Position, NodeProps } from '@xyflow/react';
 import { AgentNodeData, NodeType } from '@/stores/builderStore';
+import { useSuggestionsStore } from '@/stores/suggestionsStore';
+import { SuggestionBadge } from './SuggestionBadge';
 
 const nodeIcons: Record<NodeType, string> = {
   agent: '🤖',
@@ -24,10 +26,22 @@ const nodeColors: Record<NodeType, string> = {
   end: 'border-red-500 bg-red-500/10',
 };
 
-function AgentNode({ data, selected }: NodeProps) {
+function AgentNode({ data, selected, id }: NodeProps) {
   const nodeData = data as AgentNodeData;
   const [isEditing, setIsEditing] = useState(false);
   const [label, setLabel] = useState(nodeData.label);
+  const { suggestions } = useSuggestionsStore();
+
+  // Count suggestions for this node
+  const nodeSuggestions = useMemo(() => {
+    return suggestions.filter((s) => s.nodeIds?.includes(id));
+  }, [suggestions, id]);
+
+  const suggestionCount = nodeSuggestions.length;
+  const primarySuggestionType =
+    nodeSuggestions.find((s) => s.type === 'warning')?.type ||
+    nodeSuggestions.find((s) => s.type === 'optimization')?.type ||
+    nodeSuggestions[0]?.type;
 
   const handleDoubleClick = () => {
     setIsEditing(true);
@@ -57,9 +71,13 @@ function AgentNode({ data, selected }: NodeProps) {
       className={`
         min-w-[200px] rounded-lg border-2 ${colorClass}
         ${selected ? 'ring-2 ring-blue-400 ring-offset-2 ring-offset-slate-900' : ''}
-        transition-all duration-200
+        transition-all duration-200 relative
       `}
     >
+      {/* Suggestion Badge */}
+      {suggestionCount > 0 && (
+        <SuggestionBadge count={suggestionCount} type={primarySuggestionType} />
+      )}
       {/* Input Handle */}
       {nodeData.type !== 'start' && (
         <Handle

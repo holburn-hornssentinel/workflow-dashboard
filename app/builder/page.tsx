@@ -8,6 +8,10 @@ import NodePalette from '@/components/builder/NodePalette';
 import PropertyPanel from '@/components/builder/PropertyPanel';
 import AgentNode from '@/components/builder/AgentNode';
 import VibeInput from '@/components/vibe/VibeInput';
+import { ViewToggle } from '@/components/builder/ViewToggle';
+import { Builder3DCanvas } from '@/components/builder/Builder3DCanvas';
+import { SuggestionsPanel } from '@/components/builder/SuggestionsPanel';
+import { useSuggestionsStore } from '@/stores/suggestionsStore';
 import Link from 'next/link';
 
 const nodeTypes = {
@@ -20,6 +24,26 @@ export default function BuilderPage() {
   const [draggedNodeType, setDraggedNodeType] = useState<NodeType | null>(null);
   const [showVibeInput, setShowVibeInput] = useState(false);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
+
+  const { setSuggestions, setIsAnalyzing } = useSuggestionsStore();
+
+  const {
+    nodes,
+    edges,
+    onNodesChange,
+    onEdgesChange,
+    addNode,
+    addEdge,
+    selectNode,
+    selectedNodeId,
+    isPanelOpen,
+    togglePanel,
+    canUndo,
+    canRedo,
+    undo,
+    redo,
+    viewMode,
+  } = useBuilderStore();
 
   // Load vibe-generated workflow from session storage
   useEffect(() => {
@@ -37,22 +61,35 @@ export default function BuilderPage() {
     }
   }, []);
 
-  const {
-    nodes,
-    edges,
-    onNodesChange,
-    onEdgesChange,
-    addNode,
-    addEdge,
-    selectNode,
-    selectedNodeId,
-    isPanelOpen,
-    togglePanel,
-    canUndo,
-    canRedo,
-    undo,
-    redo,
-  } = useBuilderStore();
+  // Debounced workflow analysis
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      if (nodes.length === 0) {
+        setSuggestions({ suggestions: [], workflowScore: 0 });
+        return;
+      }
+
+      setIsAnalyzing(true);
+      try {
+        const response = await fetch('/api/suggestions/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nodes, edges }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setSuggestions(result);
+        }
+      } catch (error) {
+        console.error('Analysis failed:', error);
+      } finally {
+        setIsAnalyzing(false);
+      }
+    }, 1000); // 1 second debounce
+
+    return () => clearTimeout(timer);
+  }, [nodes, edges, setSuggestions, setIsAnalyzing]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -172,6 +209,9 @@ export default function BuilderPage() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* View Toggle */}
+            <ViewToggle />
+
             {/* Vibe Coding */}
             <button
               onClick={() => setShowVibeInput(true)}
@@ -286,14 +326,15 @@ export default function BuilderPage() {
           className={`flex-1 relative transition-all ${isDraggingOver ? 'ring-4 ring-blue-500/50 ring-inset' : ''}`}
           ref={reactFlowWrapper}
         >
-          {isDraggingOver && (
+          {isDraggingOver && viewMode === '2d' && (
             <div className="absolute inset-4 border-4 border-dashed border-blue-500 rounded-lg pointer-events-none z-10 bg-blue-500/5">
               <div className="flex items-center justify-center h-full">
                 <div className="text-blue-400 text-xl font-semibold">Drop node here</div>
               </div>
             </div>
           )}
-          <ReactFlow
+          {viewMode === '2d' ? (
+            <ReactFlow
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
@@ -332,6 +373,9 @@ export default function BuilderPage() {
               }}
             />
           </ReactFlow>
+          ) : (
+            <Builder3DCanvas nodes={nodes} edges={edges} />
+          )}
 
           {/* Node Count Badge */}
           <div className="absolute top-4 left-4 bg-slate-900/90 backdrop-blur border border-slate-700 rounded-lg px-4 py-2 text-white text-sm">
@@ -342,6 +386,9 @@ export default function BuilderPage() {
 
         {/* Right: Property Panel */}
         {isPanelOpen && <PropertyPanel />}
+
+        {/* Right: Suggestions Panel */}
+        <SuggestionsPanel />
       </div>
 
       {/* Vibe Input Modal */}
