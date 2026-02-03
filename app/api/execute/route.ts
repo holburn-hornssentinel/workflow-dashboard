@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { exec } from 'child_process';
-import { promisify } from 'util';
+import { spawn } from 'child_process';
 import path from 'path';
 import fs from 'fs';
-
-const execAsync = promisify(exec);
+import {
+  buildSafeCommand,
+  isAllowedModel,
+  type AllowedModel,
+} from '@/lib/security/sanitizer';
+import {
+  ExecuteRequestSchema,
+  validateRequest,
+  formatValidationError,
+} from '@/lib/security/validators';
 
 /**
  * Validate that a working directory path is safe
@@ -34,15 +41,29 @@ function isWorkingDirectorySafe(targetPath: string): boolean {
 
 export async function POST(request: NextRequest) {
   try {
-    const { workflow, step, prompt, model, workingDirectory } = await request.json();
+    const body = await request.json();
+
+    // Validate request body with Zod schema
+    const validation = validateRequest(ExecuteRequestSchema, body);
+    if (!validation.success) {
+      return NextResponse.json(formatValidationError(validation.error), {
+        status: 400,
+      });
+    }
+
+    const { prompt, model, workingDirectory } = validation.data;
+
+    // Additional model validation
+    if (!isAllowedModel(model)) {
+      return NextResponse.json(
+        { error: 'Model not in allowlist' },
+        { status: 400 }
+      );
+    }
 
     // Generate a session ID
-    const sessionId = `${workflow}-${step}-${Date.now()}`;
+    const sessionId = `workflow-${Date.now()}`;
 
-    // Safely handle potentially undefined prompt and working directory
-    const safePrompt = prompt || 'Help me with this workflow step';
-    const escapedPrompt = safePrompt.replace(/"/g, '\\"');
-    const safeModel = model || 'gemini-flash';
     const defaultWorkingDir = process.env.HOME || process.env.USERPROFILE || '';
 
     // Validate and use working directory
@@ -58,17 +79,30 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Execute Claude Code in non-interactive mode
-    const command = `claude -p "${escapedPrompt}" --model ${safeModel}`;
+    // Build safe command using argument array (prevents command injection)
+    const safeCommand = buildSafeCommand(prompt, model, executionDir);
 
-    // Run in background and return immediately
-    exec(command, { cwd: executionDir }, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Execution error: ${error}`);
-        return;
-      }
-      console.log(`Output: ${stdout}`);
-      if (stderr) console.error(`stderr: ${stderr}`);
+    // Execute using spawn with argument array for security
+    const child = spawn(safeCommand.command, safeCommand.args, {
+      cwd: executionDir,
+      env: process.env,
+    });
+
+    // Log output
+    child.stdout.on('data', (data) => {
+      console.log(`Output: ${data.toString()}`);
+    });
+
+    child.stderr.on('data', (data) => {
+      console.error(`stderr: ${data.toString()}`);
+    });
+
+    child.on('error', (error) => {
+      console.error(`Execution error: ${error}`);
+    });
+
+    child.on('close', (code) => {
+      console.log(`Process exited with code ${code}`);
     });
 
     return NextResponse.json({
