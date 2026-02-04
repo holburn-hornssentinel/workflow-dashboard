@@ -2,9 +2,10 @@
 
 A bleeding-edge AI agent orchestration platform that transforms natural language descriptions into executable workflows. Built for "vibe coders" - describe what you want in plain English and get working AI agents.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-1.1.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Tests](https://img.shields.io/badge/tests-passing-brightgreen)
+![Security](https://img.shields.io/badge/security-hardened-orange)
+![Deployment](https://img.shields.io/badge/deployment-ready-brightgreen)
 
 ## ✨ Features
 
@@ -70,7 +71,7 @@ A bleeding-edge AI agent orchestration platform that transforms natural language
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/workflow-dashboard.git
+git clone https://github.com/holburn-hornssentinel/workflow-dashboard.git
 cd workflow-dashboard
 
 # 2. Install dependencies
