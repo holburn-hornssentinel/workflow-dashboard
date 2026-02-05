@@ -127,7 +127,7 @@ export function BudgetDashboard() {
           <div>
             <p className="text-sm text-gray-400">Current Period</p>
             <p className="text-2xl font-bold text-white capitalize">
-              {config.budgetPeriod}ly Budget
+              {config.budgetPeriod === 'day' ? 'Daily' : config.budgetPeriod === 'week' ? 'Weekly' : 'Monthly'} Budget
             </p>
           </div>
           <div className="text-right">

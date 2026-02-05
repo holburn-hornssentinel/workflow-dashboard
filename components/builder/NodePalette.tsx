@@ -15,18 +15,48 @@ interface NodeTemplate {
 }
 
 const nodeTemplates: NodeTemplate[] = [
+  // Specific Agent Presets
   {
     type: 'agent',
-    label: 'Agent',
-    icon: '🤖',
-    description: 'AI agent that performs tasks',
+    label: 'Planner',
+    icon: '📋',
+    description: 'Breaks down complex tasks into actionable steps',
     color: 'bg-blue-500',
   },
+  {
+    type: 'agent',
+    label: 'Executor',
+    icon: '⚙️',
+    description: 'Implements code and executes technical tasks',
+    color: 'bg-cyan-500',
+  },
+  {
+    type: 'agent',
+    label: 'Reviewer',
+    icon: '🔍',
+    description: 'Conducts security scans and quality checks',
+    color: 'bg-purple-500',
+  },
+  {
+    type: 'agent',
+    label: 'Researcher',
+    icon: '📚',
+    description: 'Gathers information and analyzes patterns',
+    color: 'bg-indigo-500',
+  },
+  {
+    type: 'agent',
+    label: 'Coordinator',
+    icon: '🎯',
+    description: 'Orchestrates team workflows and manages tasks',
+    color: 'bg-violet-500',
+  },
+  // Generic Types
   {
     type: 'tool',
     label: 'Tool',
     icon: '🔧',
-    description: 'External tool or function',
+    description: 'External tool or function call',
     color: 'bg-green-500',
   },
   {
@@ -68,13 +98,13 @@ const nodeTemplates: NodeTemplate[] = [
 
 export default function NodePalette({ onDragStart }: NodePaletteProps) {
   return (
-    <div className="w-64 bg-slate-900/95 backdrop-blur border-r border-slate-700 p-4 overflow-y-auto">
+    <div className="w-64 bg-slate-900/95 backdrop-blur border-r border-slate-700 p-4 overflow-y-auto h-screen">
       <div className="mb-4">
         <h3 className="text-lg font-bold text-white mb-2">Node Palette</h3>
         <p className="text-sm text-slate-400">Drag nodes onto the canvas</p>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2 pb-6">
         {nodeTemplates.map((template) => (
           <div
             key={template.type}

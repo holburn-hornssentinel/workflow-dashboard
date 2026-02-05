@@ -42,6 +42,10 @@ body {
     animation: fadeIn 0.3s ease-in-out;
   }
 
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -90,5 +94,49 @@ body {
       transform: translateX(0);
       opacity: 1;
     }
+  }
+
+  /* Pulsing border animation for critical security issues */
+  .animate-pulse-border {
+    animation: pulseBorder 2s ease-in-out infinite;
+  }
+
+  @keyframes pulseBorder {
+    0%, 100% {
+      border-color: rgb(239 68 68 / 0.5);
+      box-shadow: 0 0 0 0 rgb(239 68 68 / 0.7);
+    }
+    50% {
+      border-color: rgb(239 68 68 / 0.8);
+      box-shadow: 0 0 15px 2px rgb(239 68 68 / 0.4);
+    }
+  }
+
+  /* Animated edge dash */
+  @keyframes edgeDashFlow {
+    to {
+      stroke-dashoffset: -24;
+    }
+  }
+
+  /* Glowing edge styles for ReactFlow */
+  .react-flow__edge-path {
+    stroke-width: 2;
+    stroke: rgb(96 165 250);
+    filter: drop-shadow(0 0 4px rgb(96 165 250 / 0.6));
+    stroke-dasharray: 8 4;
+    animation: edgeDashFlow 1s linear infinite;
+  }
+
+  .react-flow__edge-path:hover {
+    stroke: rgb(147 197 253);
+    filter: drop-shadow(0 0 8px rgb(147 197 253 / 0.8));
+    stroke-width: 3;
+  }
+
+  .react-flow__edge.selected .react-flow__edge-path {
+    stroke: rgb(59 130 246);
+    filter: drop-shadow(0 0 10px rgb(59 130 246));
+    stroke-width: 3;
   }
 }

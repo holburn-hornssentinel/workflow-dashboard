@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { BudgetDashboard } from '@/components/router/BudgetDashboard';
 import { ModelRoutingPanel } from '@/components/router/ModelRoutingPanel';
+import { SpendingChart } from '@/components/router/SpendingChart';
+import { BudgetConfig } from '@/components/router/BudgetConfig';
+import { Tabs, Tab } from '@/components/ui/Tabs';
 
 interface EnvConfig {
   anthropicKey: string;
@@ -168,146 +171,189 @@ export default function SettingsPage() {
           </div>
         )}
 
-        {/* AI Providers Section */}
-        <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6 mb-6">
-          <h2 className="text-2xl font-semibold text-white mb-4">🤖 AI Providers</h2>
-          <p className="text-slate-400 mb-6">Configure at least one AI provider to use workflow generation features.</p>
+        {/* Tabbed Interface */}
+        <Tabs
+          tabs={[
+            {
+              id: 'budget',
+              label: 'Budget & Usage',
+              icon: '💰',
+              content: (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="space-y-6">
+                    <SpendingChart />
+                    <BudgetConfig />
+                  </div>
+                  <div>
+                    <BudgetDashboard />
+                  </div>
+                </div>
+              ),
+            },
+            {
+              id: 'models',
+              label: 'AI Models',
+              icon: '🤖',
+              content: (
+                <div className="space-y-6">
+                  {/* AI Providers Section */}
+                  <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
+                    <h2 className="text-2xl font-semibold text-white mb-4">AI Providers</h2>
+                    <p className="text-slate-400 mb-6">Configure at least one AI provider to use workflow generation features.</p>
 
-          {/* Claude API Key */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-2">
-              <label className="text-white font-medium flex items-center gap-2">
-                Anthropic Claude API Key
-                {config?.hasAnthropicKey && (
-                  <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded">
-                    ✓ Configured
-                  </span>
-                )}
-              </label>
-              {config?.hasAnthropicKey && (
-                <button
-                  onClick={() => testConnection('claude')}
-                  disabled={testing.provider === 'claude'}
-                  className="px-3 py-1 bg-purple-600 hover:bg-purple-700 disabled:bg-slate-600 text-white text-sm rounded transition-colors"
-                >
-                  {testing.provider === 'claude' ? 'Testing...' : 'Test Connection'}
-                </button>
-              )}
-            </div>
-            <input
-              type="password"
-              value={anthropicKey}
-              onChange={(e) => setAnthropicKey(e.target.value)}
-              placeholder="sk-ant-..."
-              className="w-full px-4 py-2 bg-slate-900 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-purple-500"
-            />
-            <p className="text-slate-500 text-sm mt-1">
-              Get your key from:{' '}
-              <a
-                href="https://console.anthropic.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-purple-400 hover:underline"
-              >
-                console.anthropic.com
-              </a>
-            </p>
-          </div>
+                    {/* Claude API Key */}
+                    <div className="mb-6">
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="text-white font-medium flex items-center gap-2">
+                          Anthropic Claude API Key
+                          {config?.hasAnthropicKey && (
+                            <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded">
+                              ✓ Configured
+                            </span>
+                          )}
+                        </label>
+                        {config?.hasAnthropicKey && (
+                          <button
+                            onClick={() => testConnection('claude')}
+                            disabled={testing.provider === 'claude'}
+                            className="px-3 py-1 bg-purple-600 hover:bg-purple-700 disabled:bg-slate-600 text-white text-sm rounded transition-colors"
+                          >
+                            {testing.provider === 'claude' ? 'Testing...' : 'Test Connection'}
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        type="password"
+                        value={anthropicKey}
+                        onChange={(e) => setAnthropicKey(e.target.value)}
+                        placeholder="sk-ant-..."
+                        className="w-full px-4 py-2 bg-slate-900 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-purple-500"
+                      />
+                      <p className="text-slate-500 text-sm mt-1">
+                        Get your key from:{' '}
+                        <a
+                          href="https://console.anthropic.com/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-purple-400 hover:underline"
+                        >
+                          console.anthropic.com
+                        </a>
+                      </p>
+                    </div>
 
-          {/* Gemini API Key */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-2">
-              <label className="text-white font-medium flex items-center gap-2">
-                Google Gemini API Key
-                {config?.hasGeminiKey && (
-                  <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded">
-                    ✓ Configured
-                  </span>
-                )}
-              </label>
-              {config?.hasGeminiKey && (
-                <button
-                  onClick={() => testConnection('gemini')}
-                  disabled={testing.provider === 'gemini'}
-                  className="px-3 py-1 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 text-white text-sm rounded transition-colors"
-                >
-                  {testing.provider === 'gemini' ? 'Testing...' : 'Test Connection'}
-                </button>
-              )}
-            </div>
-            <input
-              type="password"
-              value={geminiKey}
-              onChange={(e) => setGeminiKey(e.target.value)}
-              placeholder="AIza..."
-              className="w-full px-4 py-2 bg-slate-900 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-            />
-            <p className="text-slate-500 text-sm mt-1">
-              Get your key from:{' '}
-              <a
-                href="https://aistudio.google.com/app/apikey"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-400 hover:underline"
-              >
-                aistudio.google.com
-              </a>
-            </p>
-          </div>
-        </div>
+                    {/* Gemini API Key */}
+                    <div className="mb-6">
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="text-white font-medium flex items-center gap-2">
+                          Google Gemini API Key
+                          {config?.hasGeminiKey && (
+                            <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded">
+                              ✓ Configured
+                            </span>
+                          )}
+                        </label>
+                        {config?.hasGeminiKey && (
+                          <button
+                            onClick={() => testConnection('gemini')}
+                            disabled={testing.provider === 'gemini'}
+                            className="px-3 py-1 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 text-white text-sm rounded transition-colors"
+                          >
+                            {testing.provider === 'gemini' ? 'Testing...' : 'Test Connection'}
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        type="password"
+                        value={geminiKey}
+                        onChange={(e) => setGeminiKey(e.target.value)}
+                        placeholder="AIza..."
+                        className="w-full px-4 py-2 bg-slate-900 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                      />
+                      <p className="text-slate-500 text-sm mt-1">
+                        Get your key from:{' '}
+                        <a
+                          href="https://aistudio.google.com/app/apikey"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-400 hover:underline"
+                        >
+                          aistudio.google.com
+                        </a>
+                      </p>
+                    </div>
+                  </div>
 
-        {/* Memory Settings Section */}
-        <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6 mb-6">
-          <h2 className="text-2xl font-semibold text-white mb-4">🧠 Memory Settings</h2>
-          <p className="text-slate-400 mb-6">Configure persistent memory storage for AI agents.</p>
+                  {/* Model Routing Rules Section */}
+                  <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
+                    <h2 className="text-2xl font-semibold text-white mb-4">Model Routing Rules</h2>
+                    <p className="text-slate-400 mb-6">Configure which models to use for different task types.</p>
+                    <ModelRoutingPanel />
+                  </div>
+                </div>
+              ),
+            },
+            {
+              id: 'security',
+              label: 'Security',
+              icon: '🛡️',
+              content: (
+                <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
+                  <h2 className="text-2xl font-semibold text-white mb-4">Security Settings</h2>
+                  <p className="text-slate-400 mb-6">Configure security and privacy options.</p>
+                  <div className="text-slate-400 text-sm">
+                    Security settings coming soon. For now, all API keys are stored securely in environment variables.
+                  </div>
+                </div>
+              ),
+            },
+            {
+              id: 'performance',
+              label: 'Performance',
+              icon: '⚡',
+              content: (
+                <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
+                  <h2 className="text-2xl font-semibold text-white mb-4">Memory Settings</h2>
+                  <p className="text-slate-400 mb-6">Configure persistent memory storage for AI agents.</p>
 
-          {/* Memory Backend */}
-          <div className="mb-6">
-            <label className="text-white font-medium block mb-2">Memory Backend</label>
-            <select
-              value={memoryBackend}
-              onChange={(e) => setMemoryBackend(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900 border border-slate-600 rounded text-white focus:outline-none focus:border-pink-500"
-            >
-              <option value="local">Local (LanceDB)</option>
-              <option value="cloud">Cloud (Pinecone)</option>
-            </select>
-            <p className="text-slate-500 text-sm mt-1">
-              Local storage works offline, cloud storage requires Pinecone API key.
-            </p>
-          </div>
+                  {/* Memory Backend */}
+                  <div className="mb-6">
+                    <label className="text-white font-medium block mb-2">Memory Backend</label>
+                    <select
+                      value={memoryBackend}
+                      onChange={(e) => setMemoryBackend(e.target.value)}
+                      className="w-full px-4 py-2 bg-slate-900 border border-slate-600 rounded text-white focus:outline-none focus:border-pink-500"
+                    >
+                      <option value="local">Local (LanceDB)</option>
+                      <option value="cloud">Cloud (Pinecone)</option>
+                    </select>
+                    <p className="text-slate-500 text-sm mt-1">
+                      Local storage works offline, cloud storage requires Pinecone API key.
+                    </p>
+                  </div>
 
-          {/* LanceDB Path (only for local) */}
-          {memoryBackend === 'local' && (
-            <div className="mb-6">
-              <label className="text-white font-medium block mb-2">LanceDB Path</label>
-              <input
-                type="text"
-                value={lancedbPath}
-                onChange={(e) => setLancedbPath(e.target.value)}
-                placeholder="./data/lancedb"
-                className="w-full px-4 py-2 bg-slate-900 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-pink-500"
-              />
-              <p className="text-slate-500 text-sm mt-1">
-                Directory where vector embeddings will be stored.
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* AI Router Budget Section */}
-        <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6 mb-6">
-          <h2 className="text-2xl font-semibold text-white mb-4">💰 AI Budget & Routing</h2>
-          <p className="text-slate-400 mb-6">Track costs and configure intelligent model routing.</p>
-          <BudgetDashboard />
-        </div>
-
-        {/* Model Routing Rules Section */}
-        <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6 mb-6">
-          <h2 className="text-2xl font-semibold text-white mb-4">🎯 Model Routing Rules</h2>
-          <p className="text-slate-400 mb-6">Configure which models to use for different task types.</p>
-          <ModelRoutingPanel />
-        </div>
+                  {/* LanceDB Path (only for local) */}
+                  {memoryBackend === 'local' && (
+                    <div className="mb-6">
+                      <label className="text-white font-medium block mb-2">LanceDB Path</label>
+                      <input
+                        type="text"
+                        value={lancedbPath}
+                        onChange={(e) => setLancedbPath(e.target.value)}
+                        placeholder="./data/lancedb"
+                        className="w-full px-4 py-2 bg-slate-900 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-pink-500"
+                      />
+                      <p className="text-slate-500 text-sm mt-1">
+                        Directory where vector embeddings will be stored.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ),
+            },
+          ]}
+          defaultTab="budget"
+        />
 
         {/* Save Button */}
         <div className="flex justify-between items-center gap-4">
