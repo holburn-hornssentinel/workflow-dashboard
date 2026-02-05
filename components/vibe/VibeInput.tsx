@@ -39,11 +39,12 @@ export default function VibeInput({
           body: JSON.stringify({ description, provider }),
         });
 
-        if (!response.ok) {
-          throw new Error('Failed to generate workflow');
-        }
-
         const data = await response.json();
+
+        if (!response.ok) {
+          // Show actual API error message instead of generic one
+          throw new Error(data.error || 'Failed to generate workflow');
+        }
 
         // Store workflow data and redirect to builder
         if (typeof window !== 'undefined') {

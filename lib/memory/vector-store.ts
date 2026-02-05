@@ -127,19 +127,20 @@ export class VectorStore {
       const tableName = 'memories';
       const table = await this.db.openTable(tableName);
 
-      // Simple text search for now (would use vector search in production)
+      // Use simple LIKE query instead of full-text search (which requires INVERTED index)
       const results = await table
-        .search(query)
+        .query()
+        .where(`content LIKE '%${query}%'`)
         .limit(limit)
-        .execute();
+        .toArray();
 
-      return results.map((result: any) => ({
+      return results.map((result: any, index: number) => ({
         entry: {
           id: result.id,
           content: result.content,
           metadata: JSON.parse(result.metadata),
         },
-        score: result._distance || 0,
+        score: 1.0 - (index * 0.1), // Simple relevance scoring
       }));
     } catch (error) {
       console.error('[Memory] Search failed:', error);
@@ -162,7 +163,12 @@ export class VectorStore {
       const tableName = 'memories';
       const table = await this.db.openTable(tableName);
 
-      const results = await table.filter(`metadata LIKE '%"type":"${type}"%'`).limit(limit).execute();
+      // LanceDB 0.23 API: use query().where() instead of filter()
+      const results = await table
+        .query()
+        .where(`metadata LIKE '%"type":"${type}"%'`)
+        .limit(limit)
+        .toArray();
 
       return results.map((result: any) => ({
         id: result.id,

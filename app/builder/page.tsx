@@ -107,6 +107,11 @@ export default function BuilderPage() {
         e.preventDefault();
         if (canRedo()) redo();
       }
+      // Ctrl/Cmd + Enter to open Vibe Code modal
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        setShowVibeInput(true);
+      }
       // Delete key to delete selected node
       if (e.key === 'Delete' && selectedNodeId) {
         useBuilderStore.getState().deleteNode(selectedNodeId);
@@ -184,11 +189,13 @@ export default function BuilderPage() {
       body: JSON.stringify({ description }),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error('Failed to generate workflow');
+      // Show actual API error message instead of generic one
+      throw new Error(data.error || 'Failed to generate workflow');
     }
 
-    const data = await response.json();
     useBuilderStore.getState().importWorkflow(data.nodes, data.edges);
     setShowVibeInput(false);
   };

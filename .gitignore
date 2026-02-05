@@ -41,3 +41,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# QA test outputs (kept locally, not in repo)
+qa_screenshots/
+qa_screenshots_interactive/
+qa_report*.json
+
+# Internal tooling (development only)
+qa/
+__tests__/
+dev.sh
+jest.config.js

@@ -1,9 +1,44 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 import AgentStatusPanel from '@/components/agents/AgentStatusPanel';
 
 export default function AgentsPage() {
+  const [taskDescription, setTaskDescription] = useState('');
+  const [selectedAgent, setSelectedAgent] = useState('planner');
+  const [isAssigning, setIsAssigning] = useState(false);
+
+  const handleAssignTask = async () => {
+    if (!taskDescription.trim()) {
+      alert('Please enter a task description');
+      return;
+    }
+
+    setIsAssigning(true);
+    try {
+      const response = await fetch('/api/agents/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          agent: selectedAgent,
+          task: taskDescription,
+        }),
+      });
+
+      if (response.ok) {
+        alert(`Task assigned to ${selectedAgent}`);
+        setTaskDescription('');
+      } else {
+        alert('Failed to assign task');
+      }
+    } catch (error) {
+      console.error('Task assignment failed:', error);
+      alert('Error assigning task');
+    } finally {
+      setIsAssigning(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-8">
       <div className="max-w-7xl mx-auto">
@@ -25,6 +60,60 @@ export default function AgentsPage() {
 
         {/* Agent Status Panel */}
         <AgentStatusPanel />
+
+        {/* Task Assignment Interface */}
+        <div className="mt-8 bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+          <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+            📝 Assign Task to Agent
+          </h2>
+
+          <div className="space-y-4">
+            {/* Agent Selection */}
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                Select Agent
+              </label>
+              <select
+                value={selectedAgent}
+                onChange={(e) => setSelectedAgent(e.target.value)}
+                className="w-full bg-slate-700 text-white px-4 py-3 rounded-lg border border-slate-600 focus:outline-none focus:border-blue-500"
+              >
+                <option value="planner">📋 Planner - Strategy & Planning</option>
+                <option value="executor">⚡ Executor - Task Execution</option>
+                <option value="reviewer">✅ Reviewer - Quality Assurance</option>
+                <option value="researcher">🔍 Researcher - Information Gathering</option>
+                <option value="coordinator">🎯 Coordinator - Orchestration</option>
+              </select>
+            </div>
+
+            {/* Task Description */}
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                Task Description
+              </label>
+              <textarea
+                value={taskDescription}
+                onChange={(e) => setTaskDescription(e.target.value)}
+                placeholder="Describe the task you want to assign... (e.g., 'Analyze the security vulnerabilities in the authentication system')"
+                rows={4}
+                className="w-full bg-slate-700 text-white px-4 py-3 rounded-lg border border-slate-600 focus:outline-none focus:border-blue-500 resize-none"
+              />
+            </div>
+
+            {/* Assign Button */}
+            <button
+              onClick={handleAssignTask}
+              disabled={isAssigning || !taskDescription.trim()}
+              className={`w-full px-6 py-3 rounded-lg font-medium transition-colors ${
+                isAssigning || !taskDescription.trim()
+                  ? 'bg-slate-600 text-slate-400 cursor-not-allowed'
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+              }`}
+            >
+              {isAssigning ? 'Assigning...' : 'Assign Task'}
+            </button>
+          </div>
+        </div>
 
         {/* Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">

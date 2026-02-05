@@ -22,12 +22,6 @@ export default function Home() {
             </div>
             <div className="flex gap-3">
               <Link
-                href="/qa"
-                className="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-lg transition-colors"
-              >
-                🧪 QA Tests
-              </Link>
-              <Link
                 href="/settings"
                 className="px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-semibold rounded-lg transition-colors"
               >

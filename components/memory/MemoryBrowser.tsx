@@ -26,6 +26,8 @@ export default function MemoryBrowser() {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newMemory, setNewMemory] = useState({ content: '', type: 'fact', tags: '' });
 
   useEffect(() => {
     fetchStats();
@@ -95,6 +97,43 @@ export default function MemoryBrowser() {
     }
   };
 
+  const handleAddMemory = async () => {
+    if (!newMemory.content.trim()) {
+      alert('Please enter memory content');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/memory', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: newMemory.content,
+          type: newMemory.type,
+          metadata: {
+            tags: newMemory.tags.split(',').map(t => t.trim()).filter(Boolean),
+            source: 'manual-entry'
+          },
+        }),
+      });
+
+      if (response.ok) {
+        setNewMemory({ content: '', type: 'fact', tags: '' });
+        setShowAddForm(false);
+        fetchStats();
+        if (selectedType === newMemory.type || selectedType === 'all') {
+          fetchMemories(selectedType);
+        }
+        alert('Memory added successfully');
+      } else {
+        alert('Failed to add memory');
+      }
+    } catch (error) {
+      console.error('Failed to add memory:', error);
+      alert('Error adding memory');
+    }
+  };
+
   const formatTimestamp = (timestamp: number) => {
     return new Date(timestamp).toLocaleString();
   };
@@ -148,6 +187,63 @@ export default function MemoryBrowser() {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Add Memory Section */}
+        <div className="mb-6">
+          <button
+            onClick={() => setShowAddForm(!showAddForm)}
+            className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded transition-colors mb-3"
+          >
+            {showAddForm ? '− Cancel' : '+ Add Memory'}
+          </button>
+
+          {showAddForm && (
+            <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4 space-y-3">
+              <div>
+                <label className="text-xs text-slate-400 mb-1 block">Type</label>
+                <select
+                  value={newMemory.type}
+                  onChange={(e) => setNewMemory({ ...newMemory, type: e.target.value })}
+                  className="w-full bg-slate-700 text-white px-3 py-2 rounded border border-slate-600 focus:outline-none focus:border-blue-500 text-sm"
+                >
+                  <option value="conversation">Conversation</option>
+                  <option value="fact">Fact</option>
+                  <option value="preference">Preference</option>
+                  <option value="context">Context</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-xs text-slate-400 mb-1 block">Content</label>
+                <textarea
+                  value={newMemory.content}
+                  onChange={(e) => setNewMemory({ ...newMemory, content: e.target.value })}
+                  placeholder="Enter memory content..."
+                  rows={3}
+                  className="w-full bg-slate-700 text-white px-3 py-2 rounded border border-slate-600 focus:outline-none focus:border-blue-500 text-sm resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs text-slate-400 mb-1 block">Tags (comma-separated)</label>
+                <input
+                  type="text"
+                  value={newMemory.tags}
+                  onChange={(e) => setNewMemory({ ...newMemory, tags: e.target.value })}
+                  placeholder="tag1, tag2, tag3"
+                  className="w-full bg-slate-700 text-white px-3 py-2 rounded border border-slate-600 focus:outline-none focus:border-blue-500 text-sm"
+                />
+              </div>
+
+              <button
+                onClick={handleAddMemory}
+                className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors text-sm"
+              >
+                Save Memory
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Clear Button */}
