@@ -104,47 +104,11 @@ npm start          # Run production build
 npm run lint       # Run linter
 ```
 
-## Testing
+## Documentation
 
-### AI-Powered QA Agents
-
-Two testing modes available:
-
-#### 1. Screenshot Analysis (Fast - 30 seconds)
-```bash
-./run_qa.sh
-```
-
-- Visual UI checks
-- Layout validation
-- Quick smoke testing
-- CI/CD friendly
-
-#### 2. Interactive Testing (Comprehensive - 2-3 minutes)
-```bash
-./run_qa_interactive.sh
-```
-
-**Actually tests functionality:**
-- ✅ Clicks buttons and fills forms
-- ✅ Drags nodes in workflow builder
-- ✅ Tests keyboard shortcuts (Ctrl+Z, Ctrl+Y)
-- ✅ Validates AI workflow generation
-- ✅ Tests 3D view toggle
-- ✅ YAML import/export round-trip
-
-**Example output:**
-```
-✅ Vibe Code Generation - Generated 5 nodes, 4 edges
-✅ Drag & Drop - Created 3 connected nodes
-✅ Memory CRUD - Created, searched, found memory
-✅ Keyboard Shortcuts - Undo/redo working
-✅ 3D View Toggle - Rendered successfully
-```
-
-**Documentation:**
-- [Screenshot Agent](docs/AI_QA_AGENT.md) - Fast visual checks
-- [Interactive Agent](docs/AI_QA_INTERACTIVE.md) - Full E2E testing
+- **[Getting Started Guide](docs/GETTING_STARTED.md)** - Build your first workflow in 5 minutes
+- **[Workflow Builder](docs/WORKFLOW_BUILDER.md)** - Complete guide to nodes, connections, and patterns
+- **[Configuration](docs/CONFIGURATION.md)** - API setup, MCP tools, and troubleshooting
 
 ## Contributing
 
