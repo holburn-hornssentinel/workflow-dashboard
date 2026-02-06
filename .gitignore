@@ -8,7 +8,7 @@
 
 # testing
 /coverage
-/e2e
+# /e2e - Now tracked for QA tests
 /playwright-report
 /test-results
 *.tsbuildinfo
