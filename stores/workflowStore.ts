@@ -91,7 +91,6 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
 
   // Set workflow data and initialize step order
   setWorkflow: (data: WorkflowData) => {
-    console.log('[WorkflowStore] setWorkflow called');
     const { workflow, nodes, edges } = data;
 
     // Extract step order from sorted step keys
@@ -112,7 +111,6 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
       initialStatus[sortedSteps[0]] = 'active';
     }
 
-    console.log('[WorkflowStore] Setting state with nodes:', nodes.length, 'edges:', edges.length);
     set({
       workflow,
       nodes,
@@ -121,7 +119,6 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
       currentStepIndex: 0,
       stepStatus: initialStatus,
     });
-    console.log('[WorkflowStore] setWorkflow completed');
   },
 
   // Navigate to step by index

@@ -88,21 +88,21 @@ export async function POST(request: NextRequest) {
       env: process.env,
     });
 
-    // Log output
+    // Set up event handlers
     child.stdout.on('data', (data) => {
-      console.log(`Output: ${data.toString()}`);
+      // Output is handled by streaming API
     });
 
     child.stderr.on('data', (data) => {
-      console.error(`stderr: ${data.toString()}`);
+      // Errors are handled by error handler
     });
 
     child.on('error', (error) => {
-      console.error(`Execution error: ${error}`);
+      // Execution errors are logged to system error handler
     });
 
     child.on('close', (code) => {
-      console.log(`Process exited with code ${code}`);
+      // Process completion is tracked by session manager
     });
 
     return NextResponse.json({

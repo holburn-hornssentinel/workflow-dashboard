@@ -14,11 +14,6 @@ export default function WorkflowDetailPage() {
   const name = params.name;
   const workflowName = typeof name === 'string' ? decodeURIComponent(name) : '';
   const [loading, setLoading] = useState(true);
-  const renderCountRef = useRef(0);
-
-  // Track renders (safe way with useRef)
-  renderCountRef.current += 1;
-  console.log('[WorkflowDetailPage] Render #', renderCountRef.current);
 
   // Zustand store - use single selector to prevent multiple subscriptions
   const { workflow, nodes, edges } = useWorkflowStore((state) => ({
@@ -61,13 +56,11 @@ export default function WorkflowDetailPage() {
   };
 
   useEffect(() => {
-    console.log('[WorkflowDetailPage] useEffect triggered, workflowName:', workflowName);
     if (!workflowName) {
       setLoading(false);
       return;
     }
 
-    console.log('[WorkflowDetailPage] Fetching workflow data...');
     fetch(`/api/workflows/${encodeURIComponent(workflowName)}`)
       .then(res => {
         if (!res.ok) {
@@ -79,9 +72,7 @@ export default function WorkflowDetailPage() {
         if ('error' in data) {
           throw new Error((data as any).error);
         }
-        console.log('[WorkflowDetailPage] Calling setWorkflow with data');
         setWorkflow(data); // Use Zustand store
-        console.log('[WorkflowDetailPage] setWorkflow call completed');
       })
       .catch(err => {
         console.error('Error loading workflow:', err);
