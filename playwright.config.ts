@@ -9,7 +9,7 @@ export default defineConfig({
   reporter: 'html',
 
   use: {
-    baseURL: process.env.BASE_URL || 'https://workflow.mikedeez.top',
+    baseURL: process.env.BASE_URL || 'http://localhost:3004',
     trace: 'on-first-retry',
     screenshot: 'on',
     video: 'retain-on-failure',
@@ -25,7 +25,9 @@ export default defineConfig({
   ],
 
   webServer: process.env.CI ? undefined : {
-    command: 'echo "Using external server at ${BASE_URL:-https://workflow.mikedeez.top}"',
-    reuseExistingServer: true,
+    command: 'npm run dev',
+    url: 'http://localhost:3004',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120000,
   },
 });

@@ -10,7 +10,8 @@ This directory contains screenshots for the README.
 
 ## How to Capture
 
-1. Open https://workflow.mikedeez.top/ in your browser
-2. Navigate to each page listed above
-3. Take screenshots and save them here with the exact filenames
-4. The README already references these images
+1. Run the app locally: `npm run dev`
+2. Open http://localhost:3004 in your browser
+3. Navigate to each page listed above
+4. Take screenshots and save them here with the exact filenames
+5. The README already references these images

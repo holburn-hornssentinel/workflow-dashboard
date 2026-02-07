@@ -11,7 +11,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-BASE_URL="${1:-https://workflow.mikedeez.top}"
+BASE_URL="${1:-http://localhost:3004}"
 PASS_COUNT=0
 FAIL_COUNT=0
 
