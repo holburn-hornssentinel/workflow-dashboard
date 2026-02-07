@@ -46,6 +46,9 @@ next-env.d.ts
 qa_screenshots/
 qa_screenshots_interactive/
 qa_report*.json
+QA_TEST_RESULTS.md
+qa_console_errors*.log
+qa_console_errors*.json
 
 # Internal tooling (development only)
 qa/
