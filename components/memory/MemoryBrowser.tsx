@@ -142,25 +142,25 @@ export default function MemoryBrowser() {
     <div className="flex h-full bg-slate-900">
       {/* Left Sidebar: Stats & Filters */}
       <div className="w-80 border-r border-slate-700 p-6 overflow-y-auto">
-        <h3 className="text-lg font-bold text-white mb-6">Memory System</h3>
+        <h3 className="text-base font-medium text-white mb-6">Memory System</h3>
 
         {/* Stats */}
         {stats && (
           <div className="space-y-3 mb-6">
             <div className="bg-slate-800/50 rounded-lg p-4">
-              <div className="text-2xl font-bold text-blue-400">{stats.totalConversations}</div>
+              <div className="text-lg font-medium text-blue-400">{stats.totalConversations}</div>
               <div className="text-sm text-slate-400">Conversations</div>
             </div>
             <div className="bg-slate-800/50 rounded-lg p-4">
-              <div className="text-2xl font-bold text-green-400">{stats.totalFacts}</div>
+              <div className="text-lg font-medium text-green-400">{stats.totalFacts}</div>
               <div className="text-sm text-slate-400">Facts</div>
             </div>
             <div className="bg-slate-800/50 rounded-lg p-4">
-              <div className="text-2xl font-bold text-purple-400">{stats.totalPreferences}</div>
+              <div className="text-lg font-medium text-purple-400">{stats.totalPreferences}</div>
               <div className="text-sm text-slate-400">Preferences</div>
             </div>
             <div className="bg-slate-800/50 rounded-lg p-4">
-              <div className="text-2xl font-bold text-orange-400">{stats.totalContexts}</div>
+              <div className="text-lg font-medium text-orange-400">{stats.totalContexts}</div>
               <div className="text-sm text-slate-400">Contexts</div>
             </div>
           </div>

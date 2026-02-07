@@ -36,7 +36,7 @@ export function BudgetConfig() {
       <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
         <div className="flex items-center gap-2 mb-4">
           <DollarSign className="w-5 h-5 text-blue-400" />
-          <h3 className="text-lg font-semibold text-white">Budget Limits</h3>
+          <h3 className="text-base font-medium text-white">Budget Limits</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -89,7 +89,7 @@ export function BudgetConfig() {
 
       {/* Budget Exceeded Actions */}
       <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">
+        <h3 className="text-base font-medium text-white mb-4">
           Budget Exceeded Actions
         </h3>
 
@@ -166,7 +166,7 @@ export function BudgetConfig() {
       <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
         <div className="flex items-center gap-2 mb-4">
           <Sliders className="w-5 h-5 text-purple-400" />
-          <h3 className="text-lg font-semibold text-white">Model Parameters</h3>
+          <h3 className="text-base font-medium text-white">Model Parameters</h3>
         </div>
 
         <div className="space-y-6">

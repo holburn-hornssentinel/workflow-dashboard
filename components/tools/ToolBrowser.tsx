@@ -77,7 +77,7 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
     <div className="flex h-full bg-slate-900">
       {/* Left Sidebar: Categories */}
       <div className="w-64 border-r border-slate-700 p-4 overflow-y-auto">
-        <h3 className="text-lg font-bold text-white mb-4">Tool Categories</h3>
+        <h3 className="text-base font-medium text-white mb-4">Tool Categories</h3>
         <div className="space-y-2">
           {TOOL_CATEGORIES.map((category) => {
             const isConnected = connectedServers.includes(category.id);
@@ -124,7 +124,7 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
           <div className="flex items-center justify-center h-full text-center">
             <div>
               <div className="text-6xl mb-4">🔧</div>
-              <h3 className="text-xl font-semibold text-white mb-2">
+              <h3 className="text-base font-medium text-white mb-2">
                 Select a Tool Category
               </h3>
               <p className="text-slate-400">
@@ -139,7 +139,7 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
         ) : (
           <div>
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-white mb-2">
+              <h2 className="text-lg font-medium text-white mb-2">
                 {getToolCategory(selectedCategory)?.name} Tools
               </h2>
               <p className="text-slate-400">

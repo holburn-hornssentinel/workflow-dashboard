@@ -27,7 +27,7 @@ export default function PropertyPanel() {
   return (
     <div className="w-80 bg-slate-900/95 backdrop-blur border-l border-slate-700 p-4 overflow-y-auto">
       <div className="mb-4">
-        <h3 className="text-lg font-bold text-white mb-1">Properties</h3>
+        <h3 className="text-base font-medium text-white mb-1">Properties</h3>
         <p className="text-xs text-slate-400">Node ID: {selectedNode.id}</p>
       </div>
 

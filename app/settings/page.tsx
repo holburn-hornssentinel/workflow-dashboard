@@ -154,7 +154,7 @@ export default function SettingsPage() {
           >
             ← Back to Dashboard
           </Link>
-          <h1 className="text-4xl font-bold text-white mb-2">⚙️ Settings</h1>
+          <h1 className="text-lg font-medium tracking-tight text-white mb-2">⚙️ Settings</h1>
           <p className="text-slate-300">Configure AI providers and system settings</p>
         </div>
 
@@ -198,7 +198,7 @@ export default function SettingsPage() {
                 <div className="space-y-6">
                   {/* AI Providers Section */}
                   <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
-                    <h2 className="text-2xl font-semibold text-white mb-4">AI Providers</h2>
+                    <h2 className="text-lg font-medium text-white mb-4">AI Providers</h2>
                     <p className="text-slate-400 mb-6">Configure at least one AI provider to use workflow generation features.</p>
 
                     {/* Claude API Key */}
@@ -286,7 +286,7 @@ export default function SettingsPage() {
 
                   {/* Model Routing Rules Section */}
                   <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
-                    <h2 className="text-2xl font-semibold text-white mb-4">Model Routing Rules</h2>
+                    <h2 className="text-lg font-medium text-white mb-4">Model Routing Rules</h2>
                     <p className="text-slate-400 mb-6">Configure which models to use for different task types.</p>
                     <ModelRoutingPanel />
                   </div>
@@ -299,7 +299,7 @@ export default function SettingsPage() {
               icon: '🛡️',
               content: (
                 <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
-                  <h2 className="text-2xl font-semibold text-white mb-4">Security Settings</h2>
+                  <h2 className="text-lg font-medium text-white mb-4">Security Settings</h2>
                   <p className="text-slate-400 mb-6">Configure security and privacy options.</p>
                   <div className="text-slate-400 text-sm">
                     Security settings coming soon. For now, all API keys are stored securely in environment variables.
@@ -313,7 +313,7 @@ export default function SettingsPage() {
               icon: '⚡',
               content: (
                 <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
-                  <h2 className="text-2xl font-semibold text-white mb-4">Memory Settings</h2>
+                  <h2 className="text-lg font-medium text-white mb-4">Memory Settings</h2>
                   <p className="text-slate-400 mb-6">Configure persistent memory storage for AI agents.</p>
 
                   {/* Memory Backend */}

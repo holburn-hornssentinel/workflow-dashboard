@@ -56,7 +56,7 @@ export function ModelRoutingPanel() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+        <h2 className="text-lg font-medium text-white flex items-center gap-2">
           <Settings className="w-6 h-6" />
           Model Routing Configuration
         </h2>
@@ -64,7 +64,7 @@ export function ModelRoutingPanel() {
 
       {/* Budget Settings */}
       <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">
+        <h3 className="text-base font-medium text-white mb-4">
           Budget Settings
         </h3>
 
@@ -113,7 +113,7 @@ export function ModelRoutingPanel() {
       {/* Routing Rules */}
       <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-white">Routing Rules</h3>
+          <h3 className="text-base font-medium text-white">Routing Rules</h3>
           <button
             onClick={() => setIsAddingRule(true)}
             className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2"
@@ -264,7 +264,7 @@ export function ModelRoutingPanel() {
 
       {/* Model Capabilities Reference */}
       <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">
+        <h3 className="text-base font-medium text-white mb-4">
           Model Capabilities Reference
         </h3>
 

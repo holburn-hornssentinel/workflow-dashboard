@@ -55,7 +55,7 @@ export function SuggestionsPanel() {
           {/* Header */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <h2 className="text-base font-medium text-white flex items-center gap-2">
                 <Award className="w-5 h-5" />
                 AI Suggestions
               </h2>
@@ -70,19 +70,19 @@ export function SuggestionsPanel() {
                 {/* Critical Issues */}
                 <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3">
                   <div className="text-red-400 text-xs font-semibold mb-1">Critical</div>
-                  <div className="text-2xl font-bold text-red-400">{criticalSecurityIssues}</div>
+                  <div className="text-lg font-medium text-red-400">{criticalSecurityIssues}</div>
                 </div>
 
                 {/* High Risk */}
                 <div className="bg-orange-500/10 border border-orange-500/50 rounded-lg p-3">
                   <div className="text-orange-400 text-xs font-semibold mb-1">High Risk</div>
-                  <div className="text-2xl font-bold text-orange-400">{highRiskIssues}</div>
+                  <div className="text-lg font-medium text-orange-400">{highRiskIssues}</div>
                 </div>
 
                 {/* Tests Passed */}
                 <div className="bg-green-500/10 border border-green-500/50 rounded-lg p-3">
                   <div className="text-green-400 text-xs font-semibold mb-1">Passed</div>
-                  <div className="text-2xl font-bold text-green-400">{testsPassed}</div>
+                  <div className="text-lg font-medium text-green-400">{testsPassed}</div>
                 </div>
               </div>
             )}
@@ -96,7 +96,7 @@ export function SuggestionsPanel() {
                     Security Score
                   </span>
                   <span
-                    className={`text-lg font-bold ${
+                    className={`text-base font-medium ${
                       securityScore >= 80
                         ? 'text-green-400'
                         : securityScore >= 60
@@ -134,7 +134,7 @@ export function SuggestionsPanel() {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-gray-400">Workflow Score</span>
                 <span
-                  className={`text-lg font-bold ${
+                  className={`text-base font-medium ${
                     workflowScore >= 80
                       ? 'text-green-400'
                       : workflowScore >= 60

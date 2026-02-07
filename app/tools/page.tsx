@@ -21,7 +21,7 @@ export default function ToolsPage() {
             >
               ← Back
             </Link>
-            <h1 className="text-2xl font-bold text-white">MCP Tool Browser</h1>
+            <h1 className="text-lg font-medium text-white">MCP Tool Browser</h1>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-slate-400">

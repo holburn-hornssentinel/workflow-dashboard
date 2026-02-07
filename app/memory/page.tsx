@@ -16,7 +16,7 @@ export default function MemoryPage() {
             >
               ← Back
             </Link>
-            <h1 className="text-2xl font-bold text-white">Persistent Memory</h1>
+            <h1 className="text-lg font-medium text-white">Persistent Memory</h1>
           </div>
           <div className="flex items-center gap-2">
             <div className="px-3 py-1 bg-green-500/20 text-green-400 text-sm rounded">

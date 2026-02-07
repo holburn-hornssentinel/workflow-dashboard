@@ -62,7 +62,7 @@ function EnhancedWorkflowNode({ data, selected }: EnhancedWorkflowNodeProps) {
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-2xl">{getStatusIndicator()}</span>
-              <h3 className="text-lg font-bold text-slate-50 leading-tight">{name}</h3>
+              <h3 className="text-base font-medium text-slate-50 leading-tight">{name}</h3>
             </div>
           </div>
         </div>

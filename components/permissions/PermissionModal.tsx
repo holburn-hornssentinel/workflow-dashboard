@@ -42,7 +42,7 @@ export function PermissionModal({ request, onClose }: PermissionModalProps) {
         <div className="flex items-center justify-between p-6 border-b border-slate-700">
           <div className="flex items-center gap-3">
             <Shield className="w-6 h-6 text-blue-400" />
-            <h2 className="text-xl font-bold text-white">Permission Required</h2>
+            <h2 className="text-base font-medium text-white">Permission Required</h2>
           </div>
           <button
             onClick={onClose}

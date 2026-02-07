@@ -50,7 +50,7 @@ export function ApprovalQueue() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+        <h2 className="text-lg font-medium text-white flex items-center gap-2">
           <Shield className="w-6 h-6" />
           Approval Queue
         </h2>
@@ -66,7 +66,7 @@ export function ApprovalQueue() {
 
       {/* Pending Requests */}
       <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">
+        <h3 className="text-base font-medium text-white mb-4">
           Pending Approvals ({pendingRequests.length})
         </h3>
 
@@ -159,7 +159,7 @@ export function ApprovalQueue() {
       {/* Request History */}
       <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-white">
+          <h3 className="text-base font-medium text-white">
             Recent History ({requestHistory.slice(-10).length})
           </h3>
           {requestHistory.length > 0 && (

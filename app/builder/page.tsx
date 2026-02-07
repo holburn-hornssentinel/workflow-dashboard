@@ -212,7 +212,7 @@ export default function BuilderPage() {
             >
               ← Back
             </Link>
-            <h1 className="text-2xl font-bold text-white">Visual Workflow Builder</h1>
+            <h1 className="text-lg font-medium text-white">Visual Workflow Builder</h1>
           </div>
 
           <div className="flex items-center gap-2">
@@ -336,7 +336,7 @@ export default function BuilderPage() {
           {isDraggingOver && viewMode === '2d' && (
             <div className="absolute inset-4 border-4 border-dashed border-blue-500 rounded-lg pointer-events-none z-10 bg-blue-500/5">
               <div className="flex items-center justify-center h-full">
-                <div className="text-blue-400 text-xl font-semibold">Drop node here</div>
+                <div className="text-blue-400 text-base font-medium">Drop node here</div>
               </div>
             </div>
           )}

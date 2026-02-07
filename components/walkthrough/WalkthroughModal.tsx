@@ -70,7 +70,7 @@ export default function WalkthroughModal({ onComplete, onSkip }: WalkthroughModa
           <div className="p-8">
             <div className="flex items-start justify-between mb-6">
               <div>
-                <h2 className="text-2xl font-bold text-white mb-2">{step.title}</h2>
+                <h2 className="text-lg font-medium text-white mb-2">{step.title}</h2>
                 <p className="text-slate-300">{step.description}</p>
               </div>
               <div className="text-sm text-slate-400 ml-4">

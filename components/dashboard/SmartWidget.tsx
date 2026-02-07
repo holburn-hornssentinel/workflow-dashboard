@@ -35,19 +35,19 @@ export default function SmartWidget() {
           {/* Quick Stats */}
           <div className="grid grid-cols-4 gap-4 mt-4 pt-4 border-t border-purple-500/20">
             <div>
-              <div className="text-2xl font-bold text-purple-400">{stats.builder}</div>
+              <div className="text-lg font-medium text-purple-400">{stats.builder}</div>
               <div className="text-xs text-slate-400">Builder uses</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-blue-400">{stats.vibe}</div>
+              <div className="text-lg font-medium text-blue-400">{stats.vibe}</div>
               <div className="text-xs text-slate-400">Vibe codes</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-green-400">{stats.workflows}</div>
+              <div className="text-lg font-medium text-green-400">{stats.workflows}</div>
               <div className="text-xs text-slate-400">Workflows</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-orange-400">{stats.qa}</div>
+              <div className="text-lg font-medium text-orange-400">{stats.qa}</div>
               <div className="text-xs text-slate-400">QA runs</div>
             </div>
           </div>

@@ -24,7 +24,7 @@ export default function WizardPanel({ onExecuteStep, terminalRef }: WizardPanelP
       <div className="h-full bg-slate-900/95 backdrop-blur flex items-center justify-center">
         <div className="text-center p-8">
           <div className="text-6xl mb-4">🧙‍♂️</div>
-          <h3 className="text-lg font-semibold text-white mb-2">No Workflow Loaded</h3>
+          <h3 className="text-base font-medium text-white mb-2">No Workflow Loaded</h3>
           <p className="text-slate-400 text-sm">
             Select a workflow to begin the guided wizard
           </p>
@@ -40,7 +40,7 @@ export default function WizardPanel({ onExecuteStep, terminalRef }: WizardPanelP
     <div className="h-full bg-slate-900/95 backdrop-blur flex flex-col">
       {/* Wizard Header */}
       <div className="border-b border-slate-700 bg-slate-800/50 p-4">
-        <h2 className="text-lg font-bold text-white mb-4">Workflow Wizard</h2>
+        <h2 className="text-base font-medium text-white mb-4">Workflow Wizard</h2>
         <WizardProgressBar
           currentStep={index}
           totalSteps={total}

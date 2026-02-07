@@ -13,7 +13,7 @@ export default function Home() {
         <div className="mb-12">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-5xl font-bold text-white mb-4">
+              <h1 className="text-2xl font-semibold tracking-tight text-white mb-4">
                 🎯 Horns Workflow Control Center
               </h1>
               <p className="text-slate-300 text-lg">
@@ -63,21 +63,21 @@ export default function Home() {
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg p-6">
-            <div className="text-3xl font-bold text-blue-400">{workflows.length}</div>
+            <div className="text-2xl font-semibold tracking-tight text-blue-400">{workflows.length}</div>
             <div className="text-slate-400 text-sm mt-1">Workflows Available</div>
           </div>
           <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg p-6">
-            <div className="text-3xl font-bold text-green-400">
+            <div className="text-2xl font-semibold tracking-tight text-green-400">
               {workflows.reduce((acc, w) => acc + Object.keys(w.steps).length, 0)}
             </div>
             <div className="text-slate-400 text-sm mt-1">Total Steps</div>
           </div>
           <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg p-6">
-            <div className="text-3xl font-bold text-purple-400">✅</div>
+            <div className="text-2xl font-semibold tracking-tight text-purple-400">✅</div>
             <div className="text-slate-400 text-sm mt-1">Claude Max Active</div>
           </div>
           <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg p-6">
-            <div className="text-3xl font-bold text-orange-400">
+            <div className="text-2xl font-semibold tracking-tight text-orange-400">
               {workflows.filter(w => w.difficulty === 'high').length}
             </div>
             <div className="text-slate-400 text-sm mt-1">Complex Workflows</div>
@@ -99,7 +99,7 @@ export default function Home() {
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="text-xl font-semibold text-white group-hover:text-blue-400 transition-colors">
+                      <h3 className="text-base font-medium text-white group-hover:text-blue-400 transition-colors">
                         {workflow.name}
                       </h3>
                       <p className="text-slate-400 text-sm mt-1">
@@ -121,15 +121,15 @@ export default function Home() {
                   <div className="grid grid-cols-3 gap-4 mb-4 pb-4 border-b border-slate-700">
                     <div>
                       <div className="text-sm text-slate-500">Steps</div>
-                      <div className="text-lg font-semibold text-white">{stats.stepCount}</div>
+                      <div className="text-base font-medium text-white">{stats.stepCount}</div>
                     </div>
                     <div>
                       <div className="text-sm text-slate-500">Tasks</div>
-                      <div className="text-lg font-semibold text-white">{stats.totalTasks}</div>
+                      <div className="text-base font-medium text-white">{stats.totalTasks}</div>
                     </div>
                     <div>
                       <div className="text-sm text-slate-500">Duration</div>
-                      <div className="text-lg font-semibold text-white text-xs">
+                      <div className="text-base font-medium text-white text-xs">
                         {stats.estimatedDuration}
                       </div>
                     </div>
@@ -165,7 +165,7 @@ export default function Home() {
         {workflows.length === 0 && (
           <div className="text-center py-16">
             <div className="text-6xl mb-4">📭</div>
-            <h3 className="text-2xl font-semibold text-white mb-2">No Workflows Found</h3>
+            <h3 className="text-lg font-medium text-white mb-2">No Workflows Found</h3>
             <p className="text-slate-400">
               Workflows should be located at <code className="bg-slate-700 px-2 py-1 rounded">~/.claude/workflows/</code>
             </p>

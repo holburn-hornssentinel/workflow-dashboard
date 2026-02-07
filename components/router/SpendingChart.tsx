@@ -57,12 +57,12 @@ export function SpendingChart() {
     <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-lg font-semibold text-white">7-Day Spending Trend</h3>
+          <h3 className="text-base font-medium text-white">7-Day Spending Trend</h3>
           <p className="text-sm text-slate-400">Daily API usage costs</p>
         </div>
         <div className="text-right">
           <div className="text-xs text-slate-400">Avg per day</div>
-          <div className="text-lg font-bold text-blue-400">
+          <div className="text-base font-medium text-blue-400">
             ${avgSpending.toFixed(2)}
           </div>
         </div>

@@ -81,7 +81,7 @@ export default function AgentStatusPanel({ refreshInterval = 1000 }: AgentStatus
   return (
     <div className="bg-slate-900/95 backdrop-blur border border-slate-700 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-bold text-white">Agent Status</h3>
+        <h3 className="text-base font-medium text-white">Agent Status</h3>
         <div className="text-sm text-slate-400">
           {agents.filter((a) => a.status === 'running').length} active
         </div>

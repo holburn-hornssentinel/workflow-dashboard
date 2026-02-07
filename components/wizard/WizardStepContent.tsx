@@ -33,7 +33,7 @@ export default function WizardStepContent({
     <div className="space-y-6">
       {/* Step Header */}
       <div>
-        <h2 className="text-2xl font-bold text-white mb-2">{step.name}</h2>
+        <h2 className="text-lg font-medium text-white mb-2">{step.name}</h2>
         {step.duration && (
           <p className="text-slate-400 text-sm">⏱️ Duration: {step.duration}</p>
         )}

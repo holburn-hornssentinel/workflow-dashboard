@@ -82,7 +82,7 @@ export default function VibeInput({
             ✨
           </div>
           <div className="flex-1">
-            <h3 className="text-xl font-bold text-white mb-2">
+            <h3 className="text-base font-medium text-white mb-2">
               Describe Your Workflow
             </h3>
             <p className="text-slate-400 text-sm">

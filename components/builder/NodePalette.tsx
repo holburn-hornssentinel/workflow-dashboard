@@ -100,7 +100,7 @@ export default function NodePalette({ onDragStart }: NodePaletteProps) {
   return (
     <div className="w-64 bg-slate-900/95 backdrop-blur border-r border-slate-700 p-4 overflow-y-auto h-screen">
       <div className="mb-4">
-        <h3 className="text-lg font-bold text-white mb-2">Node Palette</h3>
+        <h3 className="text-base font-medium text-white mb-2">Node Palette</h3>
         <p className="text-sm text-slate-400">Drag nodes onto the canvas</p>
       </div>
 

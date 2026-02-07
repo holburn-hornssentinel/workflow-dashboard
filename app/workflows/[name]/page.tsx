@@ -88,7 +88,7 @@ export default function WorkflowDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
-        <div className="text-white text-xl">Loading workflow...</div>
+        <div className="text-white text-base">Loading workflow...</div>
       </div>
     );
   }
@@ -97,7 +97,7 @@ export default function WorkflowDetailPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-white text-xl mb-4">Workflow not found</div>
+          <div className="text-white text-base mb-4">Workflow not found</div>
           <Link href="/" className="text-blue-400 hover:text-blue-300">← Back to workflows</Link>
         </div>
       </div>

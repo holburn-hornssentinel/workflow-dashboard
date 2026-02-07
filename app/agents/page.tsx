@@ -50,7 +50,7 @@ export default function AgentsPage() {
           >
             ← Back
           </Link>
-          <h1 className="text-4xl font-bold text-white mb-4">
+          <h1 className="text-2xl font-semibold tracking-tight text-white mb-4">
             Multi-Agent Orchestration
           </h1>
           <p className="text-slate-300 text-lg">
@@ -63,7 +63,7 @@ export default function AgentsPage() {
 
         {/* Task Assignment Interface */}
         <div className="mt-8 bg-slate-800/50 border border-slate-700 rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+          <h2 className="text-lg font-medium text-white mb-4 flex items-center gap-2">
             📝 Assign Task to Agent
           </h2>
 

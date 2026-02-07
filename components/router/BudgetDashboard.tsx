@@ -88,7 +88,7 @@ export function BudgetDashboard() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+        <h2 className="text-lg font-medium text-white flex items-center gap-2">
           <DollarSign className="w-6 h-6" />
           Budget Dashboard
         </h2>
@@ -126,13 +126,13 @@ export function BudgetDashboard() {
         <div className="flex items-center justify-between mb-4">
           <div>
             <p className="text-sm text-gray-400">Current Period</p>
-            <p className="text-2xl font-bold text-white capitalize">
+            <p className="text-lg font-medium text-white capitalize">
               {config.budgetPeriod === 'day' ? 'Daily' : config.budgetPeriod === 'week' ? 'Weekly' : 'Monthly'} Budget
             </p>
           </div>
           <div className="text-right">
             <p className="text-sm text-gray-400">Spent / Limit</p>
-            <p className={`text-2xl font-bold ${getStatusColor()}`}>
+            <p className={`text-lg font-medium ${getStatusColor()}`}>
               ${budgetStatus.used.toFixed(2)} / ${budgetStatus.limit.toFixed(2)}
             </p>
           </div>
@@ -196,7 +196,7 @@ export function BudgetDashboard() {
 
       {/* Model Breakdown */}
       <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">
+        <h3 className="text-base font-medium text-white mb-4">
           Cost by Model
         </h3>
 
@@ -236,7 +236,7 @@ export function BudgetDashboard() {
 
       {/* Recent Usage */}
       <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">
+        <h3 className="text-base font-medium text-white mb-4">
           Recent Usage
         </h3>
 
