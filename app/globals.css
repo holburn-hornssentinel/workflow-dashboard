@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  /* Card styles */
+  .card {
+    @apply bg-slate-800 border border-white/[0.06] rounded-lg;
+  }
+
+  .card-hover {
+    @apply hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200;
+  }
+
+  /* Button styles */
+  .btn-md {
+    @apply px-4 py-2 text-sm font-medium rounded-lg transition-all active:scale-[0.98];
+  }
+
+  /* Typography styles */
+  .heading-page {
+    @apply text-2xl font-semibold tracking-tight;
+  }
+
+  .heading-section {
+    @apply text-lg font-medium;
+  }
+
+  .stat-number {
+    @apply text-2xl font-semibold tracking-tight;
+  }
+
+  .stat-label {
+    @apply text-sm text-slate-400;
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -25,7 +58,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
   /* Improve text rendering for better readability */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
