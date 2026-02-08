@@ -87,7 +87,7 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
               <div
                 key={category.id}
                 className={`
-                  cursor-pointer rounded-lg p-3 transition-all
+                  cursor-pointer rounded-lg p-3 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10
                   ${
                     isSelected
                       ? 'bg-blue-600 text-white'
@@ -158,7 +158,7 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
                   <div
                     key={idx}
                     onClick={() => onSelectTool?.(tool)}
-                    className="bg-slate-800/50 hover:bg-slate-800 border border-white/[0.06] hover:border-slate-600 rounded-lg p-4 cursor-pointer transition-all"
+                    className="bg-slate-800/50 hover:bg-slate-800 border border-white/[0.06] hover:border-slate-600 rounded-lg p-4 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10"
                   >
                     <h4 className="text-white font-medium mb-2">{tool.name}</h4>
                     <p className="text-slate-400 text-sm line-clamp-3">

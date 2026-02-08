@@ -120,7 +120,7 @@ export default function NodePalette({ onDragStart }: NodePaletteProps) {
               e.dataTransfer.setDragImage(ghost, 50, 25);
               setTimeout(() => document.body.removeChild(ghost), 0);
             }}
-            className="group cursor-grab active:cursor-grabbing bg-slate-800/50 hover:bg-slate-800 border border-white/[0.06] hover:border-slate-600 hover:shadow-lg hover:shadow-blue-500/20 rounded-lg p-3 transition-all duration-200 touch-manipulation"
+            className="group cursor-grab active:cursor-grabbing bg-slate-800/50 hover:bg-slate-800 border border-white/[0.06] hover:border-slate-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 rounded-lg p-3 transition-all duration-200 touch-manipulation"
             style={{ minHeight: '44px' }} // Touch-friendly minimum size
           >
             <div className="flex items-start gap-3">

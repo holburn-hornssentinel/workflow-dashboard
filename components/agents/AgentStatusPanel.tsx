@@ -13,7 +13,7 @@ const AGENT_ICONS = {
 
 const STATUS_COLORS = {
   idle: 'bg-slate-500',
-  running: 'bg-blue-500 animate-pulse',
+  running: 'bg-blue-500',
   waiting: 'bg-yellow-500',
   completed: 'bg-green-500',
   failed: 'bg-red-500',
@@ -64,7 +64,12 @@ export default function AgentStatusPanel({ refreshInterval = 1000 }: AgentStatus
   const getStatusBadge = (status: AgentStatus) => {
     return (
       <div className="flex items-center gap-2">
-        <div className={`w-2 h-2 rounded-full ${STATUS_COLORS[status]}`} />
+        <div className="relative w-2 h-2">
+          <div className={`w-2 h-2 rounded-full ${STATUS_COLORS[status]}`} />
+          {status === 'running' && (
+            <span className="absolute inset-0 rounded-full bg-blue-500 animate-ping opacity-75" />
+          )}
+        </div>
         <span className="text-xs text-slate-400 capitalize">{status}</span>
       </div>
     );
@@ -102,7 +107,7 @@ export default function AgentStatusPanel({ refreshInterval = 1000 }: AgentStatus
             return (
               <div
                 key={agent.id}
-                className="bg-slate-800/50 rounded-lg p-4 border border-white/[0.06]"
+                className="bg-slate-800/50 rounded-lg p-4 border border-white/[0.06] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200"
               >
                 {/* Agent Header */}
                 <div className="flex items-start justify-between mb-3">

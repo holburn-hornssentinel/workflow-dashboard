@@ -117,7 +117,7 @@ export default function AgentsPage() {
 
         {/* Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
+          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
             <div className="text-3xl mb-3">📋</div>
             <h3 className="text-white font-semibold mb-2">Planner</h3>
             <p className="text-slate-400 text-sm">
@@ -126,7 +126,7 @@ export default function AgentsPage() {
             </p>
           </div>
 
-          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
+          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
             <div className="text-3xl mb-3">⚡</div>
             <h3 className="text-white font-semibold mb-2">Executor</h3>
             <p className="text-slate-400 text-sm">
@@ -135,7 +135,7 @@ export default function AgentsPage() {
             </p>
           </div>
 
-          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
+          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
             <div className="text-3xl mb-3">✅</div>
             <h3 className="text-white font-semibold mb-2">Reviewer</h3>
             <p className="text-slate-400 text-sm">
@@ -144,7 +144,7 @@ export default function AgentsPage() {
             </p>
           </div>
 
-          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
+          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
             <div className="text-3xl mb-3">🔍</div>
             <h3 className="text-white font-semibold mb-2">Researcher</h3>
             <p className="text-slate-400 text-sm">
@@ -152,7 +152,7 @@ export default function AgentsPage() {
             </p>
           </div>
 
-          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
+          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
             <div className="text-3xl mb-3">🎯</div>
             <h3 className="text-white font-semibold mb-2">Coordinator</h3>
             <p className="text-slate-400 text-sm">
@@ -160,7 +160,7 @@ export default function AgentsPage() {
             </p>
           </div>
 
-          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
+          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
             <div className="text-3xl mb-3">🔄</div>
             <h3 className="text-white font-semibold mb-2">Handoffs</h3>
             <p className="text-slate-400 text-sm">

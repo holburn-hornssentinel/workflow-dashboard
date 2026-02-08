@@ -117,7 +117,10 @@ export default function StreamingTerminal({
           <span className="text-sm text-gray-400 ml-2">
             {isStreaming ? (
               <span className="flex items-center gap-2">
-                <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span className="relative inline-block w-2 h-2">
+                  <span className="absolute inset-0 rounded-full bg-green-500"></span>
+                  <span className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75"></span>
+                </span>
                 Streaming...
               </span>
             ) : (

@@ -62,21 +62,21 @@ export default function Home() {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-lg p-4">
+          <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
             <div className="text-2xl font-semibold tracking-tight text-blue-400">{workflows.length}</div>
             <div className="text-slate-400 text-sm mt-1">Workflows Available</div>
           </div>
-          <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-lg p-4">
+          <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
             <div className="text-2xl font-semibold tracking-tight text-green-400">
               {workflows.reduce((acc, w) => acc + Object.keys(w.steps).length, 0)}
             </div>
             <div className="text-slate-400 text-sm mt-1">Total Steps</div>
           </div>
-          <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-lg p-4">
+          <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
             <div className="text-2xl font-semibold tracking-tight text-purple-400">✅</div>
             <div className="text-slate-400 text-sm mt-1">Claude Max Active</div>
           </div>
-          <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-lg p-4">
+          <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
             <div className="text-2xl font-semibold tracking-tight text-orange-400">
               {workflows.filter(w => w.difficulty === 'high').length}
             </div>
@@ -95,7 +95,7 @@ export default function Home() {
                 href={`/workflows/${workflowToSlug(workflow)}`}
                 className="group"
               >
-                <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-xl p-4 hover:border-blue-500 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/20">
+                <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-xl p-4 hover:border-blue-500 hover:-translate-y-0.5 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/20">
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div>
