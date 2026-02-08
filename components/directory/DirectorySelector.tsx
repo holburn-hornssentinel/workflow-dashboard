@@ -52,9 +52,9 @@ export default function DirectorySelector() {
           />
 
           {/* Dropdown Content */}
-          <div className="absolute top-full right-0 mt-2 w-96 bg-slate-900 border border-slate-700 rounded-lg shadow-2xl z-50">
+          <div className="absolute top-full right-0 mt-2 w-96 bg-slate-900 border border-white/[0.06] rounded-lg shadow-2xl z-50">
             {/* Tabs */}
-            <div className="flex border-b border-slate-700">
+            <div className="flex border-b border-white/[0.06]">
               <button
                 onClick={() => setActiveTab('git')}
                 className={`

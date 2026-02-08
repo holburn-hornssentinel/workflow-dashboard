@@ -17,7 +17,7 @@ export default function SmartWidget() {
   if (!recommendations.length) return null;
 
   return (
-    <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/30 rounded-xl p-6 mb-8">
+    <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/30 rounded-xl p-6 mb-6">
       <div className="flex items-start gap-4">
         <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center text-2xl flex-shrink-0">
           💡

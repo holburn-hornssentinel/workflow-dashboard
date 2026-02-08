@@ -37,16 +37,16 @@ export function PermissionModal({ request, onClose }: PermissionModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <div className="bg-slate-800 border border-slate-700 rounded-lg shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="bg-slate-800 border border-white/[0.06] rounded-lg shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-700">
+        <div className="flex items-center justify-between p-4 border-b border-white/[0.06]">
           <div className="flex items-center gap-3">
             <Shield className="w-6 h-6 text-blue-400" />
             <h2 className="text-base font-medium text-white">Permission Required</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors"
+            className="p-2 text-gray-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors active:scale-[0.98]"
           >
             <X className="w-5 h-5" />
           </button>
@@ -172,16 +172,16 @@ export function PermissionModal({ request, onClose }: PermissionModalProps) {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3 p-6 border-t border-slate-700 bg-slate-800/50">
+        <div className="flex gap-3 p-4 border-t border-white/[0.06] bg-slate-800/50">
           <button
             onClick={handleDeny}
-            className="flex-1 px-4 py-3 bg-red-600/10 hover:bg-red-600/20 text-red-400 border border-red-600/30 rounded-lg transition-colors font-semibold"
+            className="flex-1 px-4 py-3 bg-red-600/10 hover:bg-red-600/20 text-red-400 border border-red-600/30 rounded-lg transition-colors text-sm font-medium active:scale-[0.98]"
           >
             Deny
           </button>
           <button
             onClick={handleApprove}
-            className="flex-1 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-semibold"
+            className="flex-1 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm font-medium active:scale-[0.98]"
           >
             Approve
           </button>

@@ -203,7 +203,7 @@ export default function BuilderPage() {
   return (
     <div className="h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex flex-col">
       {/* Header */}
-      <div className="border-b border-slate-700 bg-slate-900/50 backdrop-blur p-4">
+      <div className="border-b border-white/[0.06] bg-slate-900/50 backdrop-blur p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link
@@ -256,7 +256,7 @@ export default function BuilderPage() {
             {/* Toggle Panel */}
             <button
               onClick={togglePanel}
-              className="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded transition-colors"
+              className="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded transition-colors active:scale-[0.98]"
             >
               {isPanelOpen ? 'Hide Panel' : 'Show Panel'}
             </button>
@@ -385,7 +385,7 @@ export default function BuilderPage() {
           )}
 
           {/* Node Count Badge */}
-          <div className="absolute top-4 left-4 bg-slate-900/90 backdrop-blur border border-slate-700 rounded-lg px-4 py-2 text-white text-sm">
+          <div className="absolute top-4 left-4 bg-slate-900/90 backdrop-blur border border-white/[0.06] rounded-lg px-4 py-2 text-white text-sm">
             <span className="font-medium">{nodes.length}</span> nodes,{' '}
             <span className="font-medium">{edges.length}</span> edges
           </div>

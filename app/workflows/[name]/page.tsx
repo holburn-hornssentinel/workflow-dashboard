@@ -107,7 +107,7 @@ export default function WorkflowDetailPage() {
   return (
     <div className="h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex flex-col">
       {/* Header */}
-      <div className="border-b border-slate-700 bg-slate-900/50 backdrop-blur p-4">
+      <div className="border-b border-white/[0.06] bg-slate-900/50 backdrop-blur p-4">
         <div className="max-w-7xl mx-auto">
           {/* Top Row: Back button + Title */}
           <div className="flex items-center gap-4 mb-2">
@@ -158,7 +158,7 @@ export default function WorkflowDetailPage() {
 
         {/* Right: Wizard Panel (collapsible) */}
         {showWizard && (
-          <div className="w-[500px] border-l border-slate-700">
+          <div className="w-[500px] border-l border-white/[0.06]">
             <WizardPanel onExecuteStep={handleExecuteStep} terminalRef={terminalRef} />
           </div>
         )}

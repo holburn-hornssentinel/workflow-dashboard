@@ -143,7 +143,7 @@ export default function ModelSelector({ selectedModel, onChange, recommendation 
               className={`text-left p-3 rounded-lg transition-all ${
                 model.id === selectedModel
                   ? model.colorButton
-                  : 'bg-slate-800/50 border border-slate-700 hover:border-slate-600'
+                  : 'bg-slate-800/50 border border-white/[0.06] hover:border-slate-600'
               }`}
             >
               <div className="flex items-center justify-between mb-1">

@@ -141,7 +141,7 @@ export default function MemoryBrowser() {
   return (
     <div className="flex h-full bg-slate-900">
       {/* Left Sidebar: Stats & Filters */}
-      <div className="w-80 border-r border-slate-700 p-6 overflow-y-auto">
+      <div className="w-80 border-r border-white/[0.06] p-6 overflow-y-auto">
         <h3 className="text-base font-medium text-white mb-6">Memory System</h3>
 
         {/* Stats */}
@@ -199,7 +199,7 @@ export default function MemoryBrowser() {
           </button>
 
           {showAddForm && (
-            <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4 space-y-3">
+            <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4 space-y-3">
               <div>
                 <label className="text-xs text-slate-400 mb-1 block">Type</label>
                 <select
@@ -238,7 +238,7 @@ export default function MemoryBrowser() {
 
               <button
                 onClick={handleAddMemory}
-                className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors text-sm"
+                className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors text-sm active:scale-[0.98]"
               >
                 Save Memory
               </button>
@@ -249,7 +249,7 @@ export default function MemoryBrowser() {
         {/* Clear Button */}
         <button
           onClick={handleClear}
-          className="w-full px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
+          className="w-full px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded transition-colors active:scale-[0.98]"
         >
           Clear All Memories
         </button>
@@ -270,7 +270,7 @@ export default function MemoryBrowser() {
             />
             <button
               onClick={handleSearch}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors active:scale-[0.98]"
             >
               Search
             </button>
@@ -296,7 +296,7 @@ export default function MemoryBrowser() {
             {memories.map((memory) => (
               <div
                 key={memory.id}
-                className="bg-slate-800/50 border border-slate-700 rounded-lg p-4"
+                className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4"
               >
                 <div className="flex items-start justify-between mb-2">
                   <span className="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded capitalize">

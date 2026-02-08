@@ -52,7 +52,7 @@ export default function GitRepoList({ onSelect, selectedPath }: GitRepoListProps
           <div className="text-red-400 text-sm">{error}</div>
           <button
             onClick={loadGitRepos}
-            className="mt-2 text-sm text-blue-400 hover:text-blue-300"
+            className="mt-2 text-sm text-blue-400 hover:text-blue-300 active:scale-[0.98]"
           >
             Try again
           </button>
@@ -68,7 +68,7 @@ export default function GitRepoList({ onSelect, selectedPath }: GitRepoListProps
         <div className="text-slate-400 text-sm mb-2">No git repositories found</div>
         <button
           onClick={loadGitRepos}
-          className="text-sm text-blue-400 hover:text-blue-300"
+          className="text-sm text-blue-400 hover:text-blue-300 active:scale-[0.98]"
         >
           Scan again
         </button>
@@ -104,10 +104,10 @@ export default function GitRepoList({ onSelect, selectedPath }: GitRepoListProps
       </div>
 
       {/* Refresh button */}
-      <div className="p-2 border-t border-slate-700">
+      <div className="p-2 border-t border-white/[0.06]">
         <button
           onClick={loadGitRepos}
-          className="w-full py-2 text-sm text-slate-400 hover:text-slate-300 transition-colors"
+          className="w-full py-2 text-sm text-slate-400 hover:text-slate-300 transition-colors active:scale-[0.98]"
         >
           🔄 Refresh
         </button>

@@ -55,9 +55,9 @@ export default function ProgressChecklist() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-30 w-80 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl">
+    <div className="fixed bottom-6 right-6 z-30 w-80 bg-slate-900 border border-white/[0.06] rounded-xl shadow-2xl">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-slate-700">
+      <div className="flex items-center justify-between p-4 border-b border-white/[0.06]">
         <div>
           <h3 className="text-white font-semibold">Getting Started</h3>
           <p className="text-xs text-slate-400 mt-1">
@@ -90,7 +90,7 @@ export default function ProgressChecklist() {
             className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
               item.completed
                 ? 'bg-green-500/10 border border-green-500/30'
-                : 'bg-slate-800/50 border border-slate-700'
+                : 'bg-slate-800/50 border border-white/[0.06]'
             }`}
           >
             <div
@@ -115,7 +115,7 @@ export default function ProgressChecklist() {
 
       {/* Footer */}
       {progress === 100 && (
-        <div className="p-4 border-t border-slate-700 bg-gradient-to-r from-purple-500/10 to-blue-500/10">
+        <div className="p-4 border-t border-white/[0.06] bg-gradient-to-r from-purple-500/10 to-blue-500/10">
           <p className="text-center text-sm text-white font-medium">
             🎉 You are all set! Happy building!
           </p>

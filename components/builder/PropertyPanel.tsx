@@ -9,7 +9,7 @@ export default function PropertyPanel() {
 
   if (!selectedNode) {
     return (
-      <div className="w-80 bg-slate-900/95 backdrop-blur border-l border-slate-700 p-4">
+      <div className="w-80 bg-slate-900/95 backdrop-blur border-l border-white/[0.06] p-4">
         <div className="text-center text-slate-400 mt-8">
           <div className="text-4xl mb-2">📝</div>
           <p className="text-sm">Select a node to edit properties</p>
@@ -25,7 +25,7 @@ export default function PropertyPanel() {
   };
 
   return (
-    <div className="w-80 bg-slate-900/95 backdrop-blur border-l border-slate-700 p-4 overflow-y-auto">
+    <div className="w-80 bg-slate-900/95 backdrop-blur border-l border-white/[0.06] p-4 overflow-y-auto">
       <div className="mb-4">
         <h3 className="text-base font-medium text-white mb-1">Properties</h3>
         <p className="text-xs text-slate-400">Node ID: {selectedNode.id}</p>
@@ -50,7 +50,7 @@ export default function PropertyPanel() {
           <label className="block text-sm font-medium text-slate-300 mb-2">
             Type
           </label>
-          <div className="bg-slate-800/50 text-slate-400 px-3 py-2 rounded border border-slate-700">
+          <div className="bg-slate-800/50 text-slate-400 px-3 py-2 rounded border border-white/[0.06]">
             {data.type}
           </div>
         </div>
@@ -156,7 +156,7 @@ export default function PropertyPanel() {
         )}
 
         {/* Delete Button */}
-        <div className="pt-4 border-t border-slate-700">
+        <div className="pt-4 border-t border-white/[0.06]">
           <button
             onClick={() => {
               useBuilderStore.getState().deleteNode(selectedNode.id);

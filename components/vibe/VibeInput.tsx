@@ -76,7 +76,7 @@ export default function VibeInput({
   return (
     <div className="w-full max-w-4xl mx-auto">
       {/* Main Input */}
-      <div className="bg-slate-900/95 backdrop-blur border-2 border-slate-700 rounded-xl p-6 shadow-2xl">
+      <div className="bg-slate-900/95 backdrop-blur border-2 border-white/[0.06] rounded-xl p-4 shadow-2xl">
         <div className="flex items-start gap-4 mb-4">
           <div className="flex-shrink-0 w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-2xl">
             ✨
@@ -159,7 +159,7 @@ export default function VibeInput({
             onClick={handleGenerate}
             disabled={isGenerating || !description.trim()}
             className={`
-              px-6 py-3 rounded-lg font-semibold transition-all
+              px-4 py-2 rounded-lg font-semibold transition-all
               ${
                 isGenerating || !description.trim()
                   ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
@@ -187,7 +187,7 @@ export default function VibeInput({
             <button
               key={idx}
               onClick={() => setDescription(example)}
-              className="w-full text-left px-4 py-3 bg-slate-800/50 hover:bg-slate-800 border border-slate-700 hover:border-slate-600 rounded-lg text-sm text-slate-300 transition-all"
+              className="w-full text-left px-4 py-3 bg-slate-800/50 hover:bg-slate-800 border border-white/[0.06] hover:border-slate-600 rounded-lg text-sm text-slate-300 transition-all"
             >
               <span className="text-blue-400 mr-2">💡</span>
               {example}

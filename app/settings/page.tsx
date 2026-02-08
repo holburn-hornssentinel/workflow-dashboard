@@ -144,10 +144,10 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6">
           <Link
             href="/"
             className="text-slate-400 hover:text-white transition-colors mb-4 inline-block"
@@ -179,7 +179,7 @@ export default function SettingsPage() {
               label: 'Budget & Usage',
               icon: '💰',
               content: (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <div className="space-y-6">
                     <SpendingChart />
                     <BudgetConfig />
@@ -197,7 +197,7 @@ export default function SettingsPage() {
               content: (
                 <div className="space-y-6">
                   {/* AI Providers Section */}
-                  <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
+                  <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-xl p-4">
                     <h2 className="text-lg font-medium text-white mb-4">AI Providers</h2>
                     <p className="text-slate-400 mb-6">Configure at least one AI provider to use workflow generation features.</p>
 
@@ -285,7 +285,7 @@ export default function SettingsPage() {
                   </div>
 
                   {/* Model Routing Rules Section */}
-                  <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
+                  <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-xl p-4">
                     <h2 className="text-lg font-medium text-white mb-4">Model Routing Rules</h2>
                     <p className="text-slate-400 mb-6">Configure which models to use for different task types.</p>
                     <ModelRoutingPanel />
@@ -298,7 +298,7 @@ export default function SettingsPage() {
               label: 'Security',
               icon: '🛡️',
               content: (
-                <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
+                <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-xl p-4">
                   <h2 className="text-lg font-medium text-white mb-4">Security Settings</h2>
                   <p className="text-slate-400 mb-6">Configure security and privacy options.</p>
                   <div className="text-slate-400 text-sm">
@@ -312,7 +312,7 @@ export default function SettingsPage() {
               label: 'Performance',
               icon: '⚡',
               content: (
-                <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
+                <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-xl p-4">
                   <h2 className="text-lg font-medium text-white mb-4">Memory Settings</h2>
                   <p className="text-slate-400 mb-6">Configure persistent memory storage for AI agents.</p>
 
@@ -360,21 +360,21 @@ export default function SettingsPage() {
           <button
             onClick={handleRestart}
             disabled={restarting}
-            className="px-6 py-3 bg-orange-600 hover:bg-orange-700 disabled:bg-slate-600 text-white font-semibold rounded-lg transition-colors"
+            className="px-4 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors active:scale-[0.98]"
           >
             {restarting ? 'Restarting...' : '🔄 Restart Server'}
           </button>
           <div className="flex gap-4">
             <Link
               href="/"
-              className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors"
+              className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-colors"
             >
               Cancel
             </Link>
             <button
               onClick={handleSave}
               disabled={saving}
-              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-slate-600 text-white font-semibold rounded-lg transition-colors"
+              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors active:scale-[0.98]"
             >
               {saving ? 'Saving...' : 'Save Configuration'}
             </button>

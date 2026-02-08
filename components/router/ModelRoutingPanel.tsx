@@ -63,7 +63,7 @@ export function ModelRoutingPanel() {
       </div>
 
       {/* Budget Settings */}
-      <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+      <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
         <h3 className="text-base font-medium text-white mb-4">
           Budget Settings
         </h3>
@@ -102,7 +102,7 @@ export function ModelRoutingPanel() {
 
           <button
             onClick={handleSaveBudget}
-            className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2"
+            className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2 active:scale-[0.98]"
           >
             <Save className="w-4 h-4" />
             Save Budget Settings
@@ -111,7 +111,7 @@ export function ModelRoutingPanel() {
       </div>
 
       {/* Routing Rules */}
-      <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+      <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-base font-medium text-white">Routing Rules</h3>
           <button
@@ -240,7 +240,7 @@ export function ModelRoutingPanel() {
               <div className="flex gap-2">
                 <button
                   onClick={handleAddRule}
-                  className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm"
+                  className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm active:scale-[0.98]"
                 >
                   Add Rule
                 </button>
@@ -263,7 +263,7 @@ export function ModelRoutingPanel() {
       </div>
 
       {/* Model Capabilities Reference */}
-      <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+      <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
         <h3 className="text-base font-medium text-white mb-4">
           Model Capabilities Reference
         </h3>

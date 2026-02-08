@@ -96,14 +96,14 @@ export function BudgetDashboard() {
           <button
             onClick={refreshBudgetStatus}
             disabled={isLoading}
-            className="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2"
+            className="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2 active:scale-[0.98]"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
             Refresh
           </button>
           <button
             onClick={handleExport}
-            className="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors flex items-center gap-2"
+            className="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors flex items-center gap-2 active:scale-[0.98]"
           >
             <Download className="w-4 h-4" />
             Export
@@ -122,7 +122,7 @@ export function BudgetDashboard() {
       </div>
 
       {/* Budget Status Card */}
-      <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+      <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
         <div className="flex items-center justify-between mb-4">
           <div>
             <p className="text-sm text-gray-400">Current Period</p>
@@ -175,7 +175,7 @@ export function BudgetDashboard() {
         )}
 
         {/* Projected spend */}
-        <div className="mt-4 pt-4 border-t border-slate-700">
+        <div className="mt-4 pt-4 border-t border-white/[0.06]">
           <div className="flex items-center justify-between">
             <span className="text-sm text-gray-400 flex items-center gap-1">
               <TrendingUp className="w-4 h-4" />
@@ -195,7 +195,7 @@ export function BudgetDashboard() {
       </div>
 
       {/* Model Breakdown */}
-      <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+      <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
         <h3 className="text-base font-medium text-white mb-4">
           Cost by Model
         </h3>
@@ -235,7 +235,7 @@ export function BudgetDashboard() {
       </div>
 
       {/* Recent Usage */}
-      <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+      <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
         <h3 className="text-base font-medium text-white mb-4">
           Recent Usage
         </h3>

@@ -128,7 +128,7 @@ export default function StreamingTerminal({
         {isStreaming && onStop && (
           <button
             onClick={onStop}
-            className="px-3 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
+            className="px-3 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded transition-colors active:scale-[0.98]"
           >
             Stop
           </button>

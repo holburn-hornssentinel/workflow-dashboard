@@ -50,9 +50,9 @@ function WorkflowGraph({
         maxZoom={1.5}
       >
         <Background color="#475569" gap={16} />
-        <Controls className="bg-slate-800 border-slate-700" />
+        <Controls className="bg-slate-800 border-white/[0.06]" />
         <MiniMap
-          className="bg-slate-800 border-slate-700"
+          className="bg-slate-800 border-white/[0.06]"
           nodeColor={(node) => (node.selected ? '#60a5fa' : '#3b82f6')}
         />
       </ReactFlow>

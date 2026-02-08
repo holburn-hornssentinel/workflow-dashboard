@@ -42,7 +42,7 @@ export default function HomeContent() {
         <div className="fixed bottom-8 right-8 z-30">
           <button
             onClick={() => setShowWalkthrough(true)}
-            className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow-lg transition-all hover:scale-105"
+            className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium active:scale-[0.98] rounded-lg shadow-lg transition-all hover:scale-105"
           >
             📖 Tutorial
           </button>

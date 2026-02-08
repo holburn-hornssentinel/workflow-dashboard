@@ -98,7 +98,7 @@ const nodeTemplates: NodeTemplate[] = [
 
 export default function NodePalette({ onDragStart }: NodePaletteProps) {
   return (
-    <div className="w-64 bg-slate-900/95 backdrop-blur border-r border-slate-700 p-4 overflow-y-auto h-screen">
+    <div className="w-64 bg-slate-900/95 backdrop-blur border-r border-white/[0.06] p-4 overflow-y-auto h-screen">
       <div className="mb-4">
         <h3 className="text-base font-medium text-white mb-2">Node Palette</h3>
         <p className="text-sm text-slate-400">Drag nodes onto the canvas</p>
@@ -120,7 +120,7 @@ export default function NodePalette({ onDragStart }: NodePaletteProps) {
               e.dataTransfer.setDragImage(ghost, 50, 25);
               setTimeout(() => document.body.removeChild(ghost), 0);
             }}
-            className="group cursor-grab active:cursor-grabbing bg-slate-800/50 hover:bg-slate-800 border border-slate-700 hover:border-slate-600 hover:shadow-lg hover:shadow-blue-500/20 rounded-lg p-3 transition-all duration-200 touch-manipulation"
+            className="group cursor-grab active:cursor-grabbing bg-slate-800/50 hover:bg-slate-800 border border-white/[0.06] hover:border-slate-600 hover:shadow-lg hover:shadow-blue-500/20 rounded-lg p-3 transition-all duration-200 touch-manipulation"
             style={{ minHeight: '44px' }} // Touch-friendly minimum size
           >
             <div className="flex items-start gap-3">
@@ -143,7 +143,7 @@ export default function NodePalette({ onDragStart }: NodePaletteProps) {
         ))}
       </div>
 
-      <div className="mt-6 pt-6 border-t border-slate-700">
+      <div className="mt-6 pt-6 border-t border-white/[0.06]">
         <h4 className="text-sm font-semibold text-slate-300 mb-3">
           Keyboard Shortcuts
         </h4>

@@ -33,7 +33,7 @@ export function BudgetConfig() {
   return (
     <div className="space-y-6">
       {/* Budget Limits Section */}
-      <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
+      <div className="bg-slate-800/50 border border-white/[0.06] rounded-xl p-4">
         <div className="flex items-center gap-2 mb-4">
           <DollarSign className="w-5 h-5 text-blue-400" />
           <h3 className="text-base font-medium text-white">Budget Limits</h3>
@@ -88,7 +88,7 @@ export function BudgetConfig() {
       </div>
 
       {/* Budget Exceeded Actions */}
-      <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
+      <div className="bg-slate-800/50 border border-white/[0.06] rounded-xl p-4">
         <h3 className="text-base font-medium text-white mb-4">
           Budget Exceeded Actions
         </h3>
@@ -163,7 +163,7 @@ export function BudgetConfig() {
       </div>
 
       {/* Model Parameters */}
-      <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
+      <div className="bg-slate-800/50 border border-white/[0.06] rounded-xl p-4">
         <div className="flex items-center gap-2 mb-4">
           <Sliders className="w-5 h-5 text-purple-400" />
           <h3 className="text-base font-medium text-white">Model Parameters</h3>
@@ -223,7 +223,7 @@ export function BudgetConfig() {
       {/* Save Button */}
       <button
         onClick={handleSave}
-        className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
+        className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2 active:scale-[0.98]"
       >
         <Save className="w-5 h-5" />
         Save Configuration

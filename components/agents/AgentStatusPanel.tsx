@@ -79,7 +79,7 @@ export default function AgentStatusPanel({ refreshInterval = 1000 }: AgentStatus
   }
 
   return (
-    <div className="bg-slate-900/95 backdrop-blur border border-slate-700 rounded-lg p-6">
+    <div className="bg-slate-900/95 backdrop-blur border border-white/[0.06] rounded-lg p-4">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-base font-medium text-white">Agent Status</h3>
         <div className="text-sm text-slate-400">
@@ -102,7 +102,7 @@ export default function AgentStatusPanel({ refreshInterval = 1000 }: AgentStatus
             return (
               <div
                 key={agent.id}
-                className="bg-slate-800/50 rounded-lg p-4 border border-slate-700"
+                className="bg-slate-800/50 rounded-lg p-4 border border-white/[0.06]"
               >
                 {/* Agent Header */}
                 <div className="flex items-start justify-between mb-3">
@@ -132,7 +132,7 @@ export default function AgentStatusPanel({ refreshInterval = 1000 }: AgentStatus
 
                 {/* Active Tasks */}
                 {activeTasks.length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-slate-700">
+                  <div className="mt-3 pt-3 border-t border-white/[0.06]">
                     <div className="text-xs text-slate-400 mb-2">
                       Active Tasks ({activeTasks.length})
                     </div>

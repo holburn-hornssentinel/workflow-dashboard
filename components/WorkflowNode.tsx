@@ -46,7 +46,7 @@ function WorkflowNode({ data, selected }: any) {
 
         {/* Description Preview */}
         {data?.description && (
-          <div className="text-slate-400 text-xs leading-relaxed line-clamp-2 mt-2 pt-2 border-t border-slate-700">
+          <div className="text-slate-400 text-xs leading-relaxed line-clamp-2 mt-2 pt-2 border-t border-white/[0.06]">
             {data.description}
           </div>
         )}

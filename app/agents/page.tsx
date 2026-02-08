@@ -40,10 +40,10 @@ export default function AgentsPage() {
     }
   };
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6">
           <Link
             href="/"
             className="text-slate-400 hover:text-white transition-colors mb-4 inline-block"
@@ -62,7 +62,7 @@ export default function AgentsPage() {
         <AgentStatusPanel />
 
         {/* Task Assignment Interface */}
-        <div className="mt-8 bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+        <div className="mt-8 bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
           <h2 className="text-lg font-medium text-white mb-4 flex items-center gap-2">
             📝 Assign Task to Agent
           </h2>
@@ -104,7 +104,7 @@ export default function AgentsPage() {
             <button
               onClick={handleAssignTask}
               disabled={isAssigning || !taskDescription.trim()}
-              className={`w-full px-6 py-3 rounded-lg font-medium transition-colors ${
+              className={`w-full px-4 py-2 rounded-lg font-medium transition-colors ${
                 isAssigning || !taskDescription.trim()
                   ? 'bg-slate-600 text-slate-400 cursor-not-allowed'
                   : 'bg-blue-600 hover:bg-blue-700 text-white'
@@ -116,8 +116,8 @@ export default function AgentsPage() {
         </div>
 
         {/* Info Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
             <div className="text-3xl mb-3">📋</div>
             <h3 className="text-white font-semibold mb-2">Planner</h3>
             <p className="text-slate-400 text-sm">
@@ -126,7 +126,7 @@ export default function AgentsPage() {
             </p>
           </div>
 
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
             <div className="text-3xl mb-3">⚡</div>
             <h3 className="text-white font-semibold mb-2">Executor</h3>
             <p className="text-slate-400 text-sm">
@@ -135,7 +135,7 @@ export default function AgentsPage() {
             </p>
           </div>
 
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
             <div className="text-3xl mb-3">✅</div>
             <h3 className="text-white font-semibold mb-2">Reviewer</h3>
             <p className="text-slate-400 text-sm">
@@ -144,7 +144,7 @@ export default function AgentsPage() {
             </p>
           </div>
 
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
             <div className="text-3xl mb-3">🔍</div>
             <h3 className="text-white font-semibold mb-2">Researcher</h3>
             <p className="text-slate-400 text-sm">
@@ -152,7 +152,7 @@ export default function AgentsPage() {
             </p>
           </div>
 
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
             <div className="text-3xl mb-3">🎯</div>
             <h3 className="text-white font-semibold mb-2">Coordinator</h3>
             <p className="text-slate-400 text-sm">
@@ -160,7 +160,7 @@ export default function AgentsPage() {
             </p>
           </div>
 
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+          <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
             <div className="text-3xl mb-3">🔄</div>
             <h3 className="text-white font-semibold mb-2">Handoffs</h3>
             <p className="text-slate-400 text-sm">

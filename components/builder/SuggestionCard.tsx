@@ -106,7 +106,7 @@ export function SuggestionCard({ suggestion }: SuggestionCardProps) {
             </div>
             <button
               onClick={handleDismiss}
-              className="text-gray-400 hover:text-white transition-colors"
+              className="text-gray-400 hover:text-white transition-colors active:scale-[0.98]"
               title="Dismiss"
             >
               <X className="w-4 h-4" />
@@ -173,7 +173,7 @@ export function SuggestionCard({ suggestion }: SuggestionCardProps) {
       {suggestion.nodeIds && suggestion.nodeIds.length > 0 && (
         <button
           onClick={handleFocus}
-          className="w-full flex items-center justify-center gap-2 px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded text-xs transition-colors"
+          className="w-full flex items-center justify-center gap-2 px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white rounded text-xs transition-colors active:scale-[0.98]"
         >
           <Focus className="w-3 h-3" />
           Focus affected node{suggestion.nodeIds.length > 1 ? 's' : ''}

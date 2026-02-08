@@ -57,7 +57,7 @@ export function ApprovalQueue() {
         {pendingRequests.length > 0 && (
           <button
             onClick={clearPendingRequests}
-            className="px-3 py-2 bg-red-600/10 hover:bg-red-600/20 text-red-400 border border-red-600/30 rounded-lg transition-colors text-sm"
+            className="px-3 py-2 bg-red-600/10 hover:bg-red-600/20 text-red-400 border border-red-600/30 rounded-lg transition-colors text-sm active:scale-[0.98]"
           >
             Clear All
           </button>
@@ -65,7 +65,7 @@ export function ApprovalQueue() {
       </div>
 
       {/* Pending Requests */}
-      <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+      <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
         <h3 className="text-base font-medium text-white mb-4">
           Pending Approvals ({pendingRequests.length})
         </h3>
@@ -157,7 +157,7 @@ export function ApprovalQueue() {
       </div>
 
       {/* Request History */}
-      <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+      <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-base font-medium text-white">
             Recent History ({requestHistory.slice(-10).length})
@@ -165,7 +165,7 @@ export function ApprovalQueue() {
           {requestHistory.length > 0 && (
             <button
               onClick={clearRequestHistory}
-              className="px-3 py-2 text-sm text-gray-400 hover:text-white transition-colors"
+              className="px-3 py-2 text-sm text-gray-400 hover:text-white transition-colors active:scale-[0.98]"
             >
               Clear History
             </button>

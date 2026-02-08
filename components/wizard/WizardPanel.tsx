@@ -39,7 +39,7 @@ export default function WizardPanel({ onExecuteStep, terminalRef }: WizardPanelP
   return (
     <div className="h-full bg-slate-900/95 backdrop-blur flex flex-col">
       {/* Wizard Header */}
-      <div className="border-b border-slate-700 bg-slate-800/50 p-4">
+      <div className="border-b border-white/[0.06] bg-slate-800/50 p-4">
         <h2 className="text-base font-medium text-white mb-4">Workflow Wizard</h2>
         <WizardProgressBar
           currentStep={index}
@@ -62,7 +62,7 @@ export default function WizardPanel({ onExecuteStep, terminalRef }: WizardPanelP
       </div>
 
       {/* Wizard Footer */}
-      <div className="border-t border-slate-700 bg-slate-800/50 p-4">
+      <div className="border-t border-white/[0.06] bg-slate-800/50 p-4">
         <WizardNavigation
           currentStep={index}
           totalSteps={total}

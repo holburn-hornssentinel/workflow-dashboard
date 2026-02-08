@@ -76,7 +76,7 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
   return (
     <div className="flex h-full bg-slate-900">
       {/* Left Sidebar: Categories */}
-      <div className="w-64 border-r border-slate-700 p-4 overflow-y-auto">
+      <div className="w-64 border-r border-white/[0.06] p-4 overflow-y-auto">
         <h3 className="text-base font-medium text-white mb-4">Tool Categories</h3>
         <div className="space-y-2">
           {TOOL_CATEGORIES.map((category) => {
@@ -158,7 +158,7 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
                   <div
                     key={idx}
                     onClick={() => onSelectTool?.(tool)}
-                    className="bg-slate-800/50 hover:bg-slate-800 border border-slate-700 hover:border-slate-600 rounded-lg p-4 cursor-pointer transition-all"
+                    className="bg-slate-800/50 hover:bg-slate-800 border border-white/[0.06] hover:border-slate-600 rounded-lg p-4 cursor-pointer transition-all"
                   >
                     <h4 className="text-white font-medium mb-2">{tool.name}</h4>
                     <p className="text-slate-400 text-sm line-clamp-3">

@@ -22,12 +22,12 @@ export function Tabs({ tabs, defaultTab }: TabsProps) {
   return (
     <div className="w-full">
       {/* Tab Headers */}
-      <div className="flex border-b border-slate-700 mb-6">
+      <div className="flex border-b border-white/[0.06] mb-6">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-6 py-3 font-semibold transition-all relative ${
+            className={`px-4 py-2 text-sm font-medium transition-all relative ${
               activeTab === tab.id
                 ? 'text-blue-400 border-b-2 border-blue-400'
                 : 'text-slate-400 hover:text-white'

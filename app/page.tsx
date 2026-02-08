@@ -7,10 +7,10 @@ export default function Home() {
   const workflows = loadWorkflows();
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-8">
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-12">
+        <div className="mb-6">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-semibold tracking-tight text-white mb-4">
@@ -23,31 +23,31 @@ export default function Home() {
             <div className="flex gap-3">
               <Link
                 href="/settings"
-                className="px-6 py-3 bg-slate-600 hover:bg-slate-700 text-white font-semibold rounded-lg transition-colors"
+                className="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white text-sm font-medium active:scale-[0.98] rounded-lg transition-colors"
               >
                 ⚙️ Settings
               </Link>
               <Link
                 href="/memory"
-                className="px-6 py-3 bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-lg transition-colors"
+                className="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white text-sm font-medium active:scale-[0.98] rounded-lg transition-colors"
               >
                 🧠 Memory
               </Link>
               <Link
                 href="/agents"
-                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors"
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium active:scale-[0.98] rounded-lg transition-colors"
               >
                 🤖 Agents
               </Link>
               <Link
                 href="/tools"
-                className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors"
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium active:scale-[0.98] rounded-lg transition-colors"
               >
                 🔧 MCP Tools
               </Link>
               <Link
                 href="/builder"
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium active:scale-[0.98] rounded-lg transition-colors"
               >
                 🎨 Visual Builder
               </Link>
@@ -61,22 +61,22 @@ export default function Home() {
         <SmartWidget />
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg p-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-lg p-4">
             <div className="text-2xl font-semibold tracking-tight text-blue-400">{workflows.length}</div>
             <div className="text-slate-400 text-sm mt-1">Workflows Available</div>
           </div>
-          <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg p-6">
+          <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-lg p-4">
             <div className="text-2xl font-semibold tracking-tight text-green-400">
               {workflows.reduce((acc, w) => acc + Object.keys(w.steps).length, 0)}
             </div>
             <div className="text-slate-400 text-sm mt-1">Total Steps</div>
           </div>
-          <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg p-6">
+          <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-lg p-4">
             <div className="text-2xl font-semibold tracking-tight text-purple-400">✅</div>
             <div className="text-slate-400 text-sm mt-1">Claude Max Active</div>
           </div>
-          <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-lg p-6">
+          <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-lg p-4">
             <div className="text-2xl font-semibold tracking-tight text-orange-400">
               {workflows.filter(w => w.difficulty === 'high').length}
             </div>
@@ -85,7 +85,7 @@ export default function Home() {
         </div>
 
         {/* Workflow Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {workflows.map((workflow, index) => {
             const stats = getWorkflowStats(workflow);
 
@@ -95,7 +95,7 @@ export default function Home() {
                 href={`/workflows/${workflowToSlug(workflow)}`}
                 className="group"
               >
-                <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6 hover:border-blue-500 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/20">
+                <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-xl p-4 hover:border-blue-500 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/20">
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div>
@@ -118,7 +118,7 @@ export default function Home() {
                   </div>
 
                   {/* Stats */}
-                  <div className="grid grid-cols-3 gap-4 mb-4 pb-4 border-b border-slate-700">
+                  <div className="grid grid-cols-3 gap-4 mb-4 pb-4 border-b border-white/[0.06]">
                     <div>
                       <div className="text-sm text-slate-500">Steps</div>
                       <div className="text-base font-medium text-white">{stats.stepCount}</div>

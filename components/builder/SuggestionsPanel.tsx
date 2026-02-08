@@ -33,14 +33,14 @@ export function SuggestionsPanel() {
 
   return (
     <div
-      className={`bg-slate-900/95 backdrop-blur border-l border-slate-700 transition-all duration-300 ${
+      className={`bg-slate-900/95 backdrop-blur border-l border-white/[0.06] transition-all duration-300 ${
         isOpen ? 'w-80' : 'w-12'
       }`}
     >
       {/* Toggle Button */}
       <button
         onClick={toggleOpen}
-        className="w-full h-12 flex items-center justify-center bg-slate-800/50 hover:bg-slate-700/50 transition-colors border-b border-slate-700"
+        className="w-full h-12 flex items-center justify-center bg-slate-800/50 hover:bg-slate-700/50 transition-colors border-b border-white/[0.06] active:scale-[0.98]"
         title={isOpen ? 'Collapse suggestions' : 'Expand suggestions'}
       >
         {isOpen ? (
@@ -89,7 +89,7 @@ export function SuggestionsPanel() {
 
             {/* Security Score */}
             {securityScore !== undefined && (
-              <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-3">
+              <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-3">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-gray-400 flex items-center gap-1">
                     <Shield className="w-4 h-4" />
@@ -130,7 +130,7 @@ export function SuggestionsPanel() {
             )}
 
             {/* Workflow Score */}
-            <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-3">
+            <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-3">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-gray-400">Workflow Score</span>
                 <span

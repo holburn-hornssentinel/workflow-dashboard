@@ -54,7 +54,7 @@ export function SpendingChart() {
   const avgSpending = totalSpending / 7;
 
   return (
-    <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6">
+    <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-xl p-4">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-base font-medium text-white">7-Day Spending Trend</h3>

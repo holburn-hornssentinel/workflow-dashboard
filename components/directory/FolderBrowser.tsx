@@ -89,7 +89,7 @@ export default function FolderBrowser({ onSelect, selectedPath }: FolderBrowserP
   return (
     <div className="flex flex-col h-full">
       {/* Current Path Header */}
-      <div className="border-b border-slate-700 p-3 bg-slate-800/50">
+      <div className="border-b border-white/[0.06] p-3 bg-slate-800/50">
         <div className="flex items-center justify-between gap-2 mb-2">
           <button
             onClick={handleNavigateUp}
@@ -107,7 +107,7 @@ export default function FolderBrowser({ onSelect, selectedPath }: FolderBrowserP
           </button>
           <button
             onClick={handleSelectCurrent}
-            className="px-3 py-1 rounded text-sm bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+            className="px-3 py-1 rounded text-sm bg-blue-600 hover:bg-blue-700 text-white transition-colors active:scale-[0.98]"
           >
             ✓ Select This Folder
           </button>

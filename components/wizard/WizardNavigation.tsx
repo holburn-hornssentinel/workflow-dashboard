@@ -25,7 +25,7 @@ export default function WizardNavigation({
         onClick={onPrevious}
         disabled={isFirstStep || isExecuting}
         className={`
-          flex-1 py-3 px-6 rounded-lg font-semibold transition-colors
+          flex-1 py-2 px-4 rounded-lg font-semibold transition-colors
           ${
             isFirstStep || isExecuting
               ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
@@ -41,7 +41,7 @@ export default function WizardNavigation({
         onClick={onNext}
         disabled={isLastStep || isExecuting}
         className={`
-          flex-1 py-3 px-6 rounded-lg font-semibold transition-colors
+          flex-1 py-2 px-4 rounded-lg font-semibold transition-colors
           ${
             isLastStep || isExecuting
               ? 'bg-slate-700 text-slate-500 cursor-not-allowed'

@@ -94,7 +94,7 @@ export default function WalkthroughModal({ onComplete, onSkip }: WalkthroughModa
             <div className="flex gap-3 justify-between">
               <button
                 onClick={handleSkipTour}
-                className="px-4 py-2 text-slate-400 hover:text-white transition-colors"
+                className="px-4 py-2 text-slate-400 hover:text-white transition-colors active:scale-[0.98]"
               >
                 Skip Tour
               </button>
@@ -102,14 +102,14 @@ export default function WalkthroughModal({ onComplete, onSkip }: WalkthroughModa
                 {currentStep > 0 && (
                   <button
                     onClick={handlePrevious}
-                    className="px-6 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+                    className="px-6 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors active:scale-[0.98]"
                   >
                     Previous
                   </button>
                 )}
                 <button
                   onClick={handleNext}
-                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-lg"
+                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-lg active:scale-[0.98]"
                 >
                   {currentStep === walkthroughSteps.length - 1 ? 'Get Started!' : 'Next'}
                 </button>
