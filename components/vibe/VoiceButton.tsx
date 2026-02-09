@@ -75,6 +75,7 @@ export default function VoiceButton({ onTranscript }: VoiceButtonProps) {
         }
       `}
       title={isListening ? 'Stop listening' : 'Start voice input'}
+      aria-label={isListening ? 'Stop voice input' : 'Start voice input'}
     >
       {isListening ? (
         <CircleDot className="h-4 w-4 text-white" />

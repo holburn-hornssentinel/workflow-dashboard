@@ -238,6 +238,7 @@ export default function BuilderPage() {
                   : 'bg-slate-800 text-slate-600 cursor-not-allowed'
               }`}
               title="Undo (Ctrl+Z)"
+              aria-label="Undo last action"
             >
               ↶
             </button>
@@ -250,6 +251,7 @@ export default function BuilderPage() {
                   : 'bg-slate-800 text-slate-600 cursor-not-allowed'
               }`}
               title="Redo (Ctrl+Y)"
+              aria-label="Redo last action"
             >
               ↷
             </button>

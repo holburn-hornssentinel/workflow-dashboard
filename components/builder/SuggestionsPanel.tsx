@@ -42,6 +42,7 @@ export function SuggestionsPanel() {
         onClick={toggleOpen}
         className="w-full h-12 flex items-center justify-center bg-slate-800/50 hover:bg-slate-700/50 transition-colors border-b border-white/[0.06] active:scale-[0.98]"
         title={isOpen ? 'Collapse suggestions' : 'Expand suggestions'}
+        aria-label={isOpen ? 'Collapse suggestions panel' : 'Expand suggestions panel'}
       >
         {isOpen ? (
           <ChevronRight className="w-5 h-5 text-gray-400" />

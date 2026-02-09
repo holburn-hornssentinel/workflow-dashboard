@@ -139,12 +139,14 @@ export function ApprovalQueue() {
                     <button
                       onClick={() => handleQuickApprove(request.id)}
                       className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center gap-1"
+                      aria-label="Approve request"
                     >
                       <CheckCircle className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleQuickDeny(request.id)}
                       className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors flex items-center gap-1"
+                      aria-label="Deny request"
                     >
                       <XCircle className="w-4 h-4" />
                     </button>
