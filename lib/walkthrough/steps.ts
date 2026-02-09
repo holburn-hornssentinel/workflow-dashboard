@@ -11,7 +11,7 @@ export interface WalkthroughStep {
 export const walkthroughSteps: WalkthroughStep[] = [
   {
     id: 'welcome',
-    title: 'Welcome to Workflow Dashboard! 🎯',
+    title: 'Welcome to Workflow Dashboard!',
     description: 'Transform natural language into AI-powered workflows. Let me show you around!',
     target: 'body',
     position: 'bottom',
@@ -66,7 +66,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
   },
   {
     id: 'complete',
-    title: 'You are All Set! 🎉',
+    title: 'You are All Set!',
     description: 'Start building workflows with natural language or the visual builder. Happy coding!',
     target: 'body',
     position: 'bottom',

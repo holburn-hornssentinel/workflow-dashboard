@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import AgentStatusPanel from '@/components/agents/AgentStatusPanel';
+import { FileEdit, ClipboardList, Zap, CheckCircle, Search, Target, RefreshCw } from 'lucide-react';
 
 export default function AgentsPage() {
   const [taskDescription, setTaskDescription] = useState('');
@@ -64,7 +65,7 @@ export default function AgentsPage() {
         {/* Task Assignment Interface */}
         <div className="mt-8 bg-slate-800/50 border border-white/[0.06] rounded-lg p-4">
           <h2 className="text-lg font-medium text-white mb-4 flex items-center gap-2">
-            📝 Assign Task to Agent
+            <FileEdit className="h-5 w-5" /> Assign Task to Agent
           </h2>
 
           <div className="space-y-4">
@@ -78,11 +79,11 @@ export default function AgentsPage() {
                 onChange={(e) => setSelectedAgent(e.target.value)}
                 className="w-full bg-slate-700 text-white px-4 py-3 rounded-lg border border-slate-600 focus:outline-none focus:border-blue-500"
               >
-                <option value="planner">📋 Planner - Strategy & Planning</option>
-                <option value="executor">⚡ Executor - Task Execution</option>
-                <option value="reviewer">✅ Reviewer - Quality Assurance</option>
-                <option value="researcher">🔍 Researcher - Information Gathering</option>
-                <option value="coordinator">🎯 Coordinator - Orchestration</option>
+                <option value="planner">Planner - Strategy & Planning</option>
+                <option value="executor">Executor - Task Execution</option>
+                <option value="reviewer">Reviewer - Quality Assurance</option>
+                <option value="researcher">Researcher - Information Gathering</option>
+                <option value="coordinator">Coordinator - Orchestration</option>
               </select>
             </div>
 
@@ -118,7 +119,7 @@ export default function AgentsPage() {
         {/* Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
           <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
-            <div className="text-3xl mb-3">📋</div>
+            <div className="mb-3"><ClipboardList className="h-8 w-8 text-blue-400" /></div>
             <h3 className="text-white font-semibold mb-2">Planner</h3>
             <p className="text-slate-400 text-sm">
               Breaks down complex goals into actionable steps and creates execution
@@ -127,7 +128,7 @@ export default function AgentsPage() {
           </div>
 
           <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
-            <div className="text-3xl mb-3">⚡</div>
+            <div className="mb-3"><Zap className="h-8 w-8 text-yellow-400" /></div>
             <h3 className="text-white font-semibold mb-2">Executor</h3>
             <p className="text-slate-400 text-sm">
               Carries out tasks efficiently using available tools and reports
@@ -136,7 +137,7 @@ export default function AgentsPage() {
           </div>
 
           <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
-            <div className="text-3xl mb-3">✅</div>
+            <div className="mb-3"><CheckCircle className="h-8 w-8 text-green-400" /></div>
             <h3 className="text-white font-semibold mb-2">Reviewer</h3>
             <p className="text-slate-400 text-sm">
               Reviews outputs for quality, provides feedback, and ensures standards
@@ -145,7 +146,7 @@ export default function AgentsPage() {
           </div>
 
           <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
-            <div className="text-3xl mb-3">🔍</div>
+            <div className="mb-3"><Search className="h-8 w-8 text-purple-400" /></div>
             <h3 className="text-white font-semibold mb-2">Researcher</h3>
             <p className="text-slate-400 text-sm">
               Gathers information from multiple sources and synthesizes findings
@@ -153,7 +154,7 @@ export default function AgentsPage() {
           </div>
 
           <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
-            <div className="text-3xl mb-3">🎯</div>
+            <div className="mb-3"><Target className="h-8 w-8 text-orange-400" /></div>
             <h3 className="text-white font-semibold mb-2">Coordinator</h3>
             <p className="text-slate-400 text-sm">
               Manages workflow between agents and ensures smooth collaboration
@@ -161,7 +162,7 @@ export default function AgentsPage() {
           </div>
 
           <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
-            <div className="text-3xl mb-3">🔄</div>
+            <div className="mb-3"><RefreshCw className="h-8 w-8 text-cyan-400" /></div>
             <h3 className="text-white font-semibold mb-2">Handoffs</h3>
             <p className="text-slate-400 text-sm">
               Seamless context transfer between agents for efficient collaboration

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { loadWorkflows, getWorkflowStats, workflowToSlug } from '@/lib/workflow-parser';
 import HomeContent from '@/components/home/HomeContent';
 import SmartWidget from '@/components/dashboard/SmartWidget';
+import { Target, Settings as SettingsIcon, Brain, Bot, Wrench, Palette, CheckCircle, Inbox } from 'lucide-react';
 
 export default function Home() {
   const workflows = loadWorkflows();
@@ -13,8 +14,8 @@ export default function Home() {
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-white mb-4">
-                🎯 Horns Workflow Control Center
+              <h1 className="text-2xl font-semibold tracking-tight text-white mb-4 flex items-center gap-2">
+                <Target className="h-6 w-6" /> Horns Workflow Control Center
               </h1>
               <p className="text-slate-300 text-lg">
                 Visual workflow management for your AI development platform
@@ -23,33 +24,33 @@ export default function Home() {
             <div className="flex gap-3">
               <Link
                 href="/settings"
-                className="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white text-sm font-medium active:scale-[0.98] rounded-lg transition-colors"
+                className="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white text-sm font-medium active:scale-[0.98] rounded-lg transition-colors flex items-center gap-2"
               >
-                ⚙️ Settings
+                <SettingsIcon className="h-4 w-4" /> Settings
               </Link>
               <Link
                 href="/memory"
-                className="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white text-sm font-medium active:scale-[0.98] rounded-lg transition-colors"
+                className="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white text-sm font-medium active:scale-[0.98] rounded-lg transition-colors flex items-center gap-2"
               >
-                🧠 Memory
+                <Brain className="h-4 w-4" /> Memory
               </Link>
               <Link
                 href="/agents"
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium active:scale-[0.98] rounded-lg transition-colors"
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium active:scale-[0.98] rounded-lg transition-colors flex items-center gap-2"
               >
-                🤖 Agents
+                <Bot className="h-4 w-4" /> Agents
               </Link>
               <Link
                 href="/tools"
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium active:scale-[0.98] rounded-lg transition-colors"
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium active:scale-[0.98] rounded-lg transition-colors flex items-center gap-2"
               >
-                🔧 MCP Tools
+                <Wrench className="h-4 w-4" /> MCP Tools
               </Link>
               <Link
                 href="/builder"
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium active:scale-[0.98] rounded-lg transition-colors"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium active:scale-[0.98] rounded-lg transition-colors flex items-center gap-2"
               >
-                🎨 Visual Builder
+                <Palette className="h-4 w-4" /> Visual Builder
               </Link>
             </div>
           </div>
@@ -73,7 +74,7 @@ export default function Home() {
             <div className="text-slate-400 text-sm mt-1">Total Steps</div>
           </div>
           <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
-            <div className="text-2xl font-semibold tracking-tight text-purple-400">✅</div>
+            <div className="text-2xl font-semibold tracking-tight text-purple-400"><CheckCircle className="h-8 w-8" /></div>
             <div className="text-slate-400 text-sm mt-1">Claude Max Active</div>
           </div>
           <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-lg p-4 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200">
@@ -164,7 +165,7 @@ export default function Home() {
         {/* Empty State */}
         {workflows.length === 0 && (
           <div className="text-center py-16">
-            <div className="text-6xl mb-4">📭</div>
+            <div className="text-6xl mb-4 flex justify-center"><Inbox className="h-12 w-12 text-slate-500" /></div>
             <h3 className="text-lg font-medium text-white mb-2">No Workflows Found</h3>
             <p className="text-slate-400">
               Workflows should be located at <code className="bg-slate-700 px-2 py-1 rounded">~/.claude/workflows/</code>

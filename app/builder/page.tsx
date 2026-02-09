@@ -13,6 +13,7 @@ import { Builder3DCanvas } from '@/components/builder/Builder3DCanvas';
 import { SuggestionsPanel } from '@/components/builder/SuggestionsPanel';
 import { useSuggestionsStore } from '@/stores/suggestionsStore';
 import Link from 'next/link';
+import { Sparkles } from 'lucide-react';
 
 const nodeTypes = {
   custom: AgentNode,
@@ -222,9 +223,9 @@ export default function BuilderPage() {
             {/* Vibe Coding */}
             <button
               onClick={() => setShowVibeInput(true)}
-              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded transition-colors"
+              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded transition-colors flex items-center gap-2"
             >
-              ✨ Vibe Code
+              <Sparkles className="h-4 w-4" /> Vibe Code
             </button>
 
             {/* Undo/Redo */}

@@ -8,6 +8,7 @@ import WizardPanel from '@/components/wizard/WizardPanel';
 import { useWorkflowStore } from '@/stores/workflowStore';
 import { useStreamingExecution } from '@/lib/hooks/useStreamingExecution';
 import { WorkflowData } from '@/types/workflow';
+import { Timer, Wand2 } from 'lucide-react';
 
 export default function WorkflowDetailPage() {
   const params = useParams();
@@ -131,8 +132,8 @@ export default function WorkflowDetailPage() {
             }`}>
               {workflow.difficulty || 'medium'}
             </span>
-            <span className="text-slate-400 text-sm">
-              ⏱️ {workflow.estimated_duration}
+            <span className="text-slate-400 text-sm flex items-center gap-1">
+              <Timer className="h-4 w-4" /> {workflow.estimated_duration}
             </span>
           </div>
         </div>
@@ -150,9 +151,9 @@ export default function WorkflowDetailPage() {
           />
           <button
             onClick={() => setShowWizard(!showWizard)}
-            className="absolute bottom-4 right-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-lg transition-colors"
+            className="absolute bottom-4 right-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-lg transition-colors flex items-center gap-2"
           >
-            {showWizard ? 'Hide Wizard' : 'Show Wizard'} 🧙‍♂️
+            {showWizard ? 'Hide Wizard' : 'Show Wizard'} <Wand2 className="h-4 w-4" />
           </button>
         </div>
 

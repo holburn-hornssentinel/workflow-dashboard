@@ -5,7 +5,7 @@ import { ReactNode, useState } from 'react';
 export interface Tab {
   id: string;
   label: string;
-  icon?: string;
+  icon?: React.ReactNode;
   content: ReactNode;
 }
 
@@ -27,13 +27,13 @@ export function Tabs({ tabs, defaultTab }: TabsProps) {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 text-sm font-medium transition-all relative ${
+            className={`px-4 py-2 text-sm font-medium transition-all relative flex items-center gap-2 ${
               activeTab === tab.id
                 ? 'text-blue-400 border-b-2 border-blue-400'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            {tab.icon && <span className="mr-2">{tab.icon}</span>}
+            {tab.icon && <span>{tab.icon}</span>}
             {tab.label}
           </button>
         ))}

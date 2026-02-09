@@ -7,6 +7,7 @@ import { ModelRoutingPanel } from '@/components/router/ModelRoutingPanel';
 import { SpendingChart } from '@/components/router/SpendingChart';
 import { BudgetConfig } from '@/components/router/BudgetConfig';
 import { Tabs, Tab } from '@/components/ui/Tabs';
+import { Settings as SettingsIcon, RefreshCw, DollarSign, Bot, Shield, Zap } from 'lucide-react';
 
 interface EnvConfig {
   anthropicKey: string;
@@ -154,7 +155,9 @@ export default function SettingsPage() {
           >
             ← Back to Dashboard
           </Link>
-          <h1 className="text-lg font-medium tracking-tight text-white mb-2">⚙️ Settings</h1>
+          <h1 className="text-lg font-medium tracking-tight text-white mb-2 flex items-center gap-2">
+            <SettingsIcon className="h-6 w-6" /> Settings
+          </h1>
           <p className="text-slate-300">Configure AI providers and system settings</p>
         </div>
 
@@ -177,7 +180,7 @@ export default function SettingsPage() {
             {
               id: 'budget',
               label: 'Budget & Usage',
-              icon: '💰',
+              icon: <DollarSign className="h-4 w-4" />,
               content: (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <div className="space-y-6">
@@ -193,7 +196,7 @@ export default function SettingsPage() {
             {
               id: 'models',
               label: 'AI Models',
-              icon: '🤖',
+              icon: <Bot className="h-4 w-4" />,
               content: (
                 <div className="space-y-6">
                   {/* AI Providers Section */}
@@ -296,7 +299,7 @@ export default function SettingsPage() {
             {
               id: 'security',
               label: 'Security',
-              icon: '🛡️',
+              icon: <Shield className="h-4 w-4" />,
               content: (
                 <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-xl p-4">
                   <h2 className="text-lg font-medium text-white mb-4">Security Settings</h2>
@@ -310,7 +313,7 @@ export default function SettingsPage() {
             {
               id: 'performance',
               label: 'Performance',
-              icon: '⚡',
+              icon: <Zap className="h-4 w-4" />,
               content: (
                 <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-xl p-4">
                   <h2 className="text-lg font-medium text-white mb-4">Memory Settings</h2>
@@ -360,9 +363,9 @@ export default function SettingsPage() {
           <button
             onClick={handleRestart}
             disabled={restarting}
-            className="px-4 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors active:scale-[0.98]"
+            className="px-4 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors active:scale-[0.98] flex items-center gap-2"
           >
-            {restarting ? 'Restarting...' : '🔄 Restart Server'}
+            <RefreshCw className="h-4 w-4" /> {restarting ? 'Restarting...' : 'Restart Server'}
           </button>
           <div className="flex gap-4">
             <Link

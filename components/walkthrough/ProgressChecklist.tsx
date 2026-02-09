@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { PartyPopper } from 'lucide-react';
 
 interface ChecklistItem {
   id: string;
@@ -116,8 +117,8 @@ export default function ProgressChecklist() {
       {/* Footer */}
       {progress === 100 && (
         <div className="p-4 border-t border-white/[0.06] bg-gradient-to-r from-purple-500/10 to-blue-500/10">
-          <p className="text-center text-sm text-white font-medium">
-            🎉 You are all set! Happy building!
+          <p className="text-center text-sm text-white font-medium flex items-center justify-center gap-2">
+            <PartyPopper className="h-5 w-5" /> You are all set! Happy building!
           </p>
         </div>
       )}
