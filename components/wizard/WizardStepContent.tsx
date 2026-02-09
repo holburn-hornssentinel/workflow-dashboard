@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import ModelSelector from '@/components/ModelSelector';
-import StreamingTerminal from '@/components/execution/StreamingTerminal';
+import StreamingTerminal, { StreamingTerminalHandle } from '@/components/execution/StreamingTerminal';
 import { useStreamingExecution } from '@/lib/hooks/useStreamingExecution';
 import { WorkflowStep } from '@/types/workflow';
 import { Timer, Bot, Hourglass, Play } from 'lucide-react';
@@ -14,7 +14,7 @@ interface WizardStepContentProps {
   isExecuting: boolean;
   onModelChange: (model: string) => void;
   onExecute: (stepKey: string) => void;
-  terminalRef?: React.RefObject<HTMLDivElement>;
+  terminalRef?: React.RefObject<StreamingTerminalHandle>;
 }
 
 export default function WizardStepContent({
@@ -26,7 +26,7 @@ export default function WizardStepContent({
   onExecute,
   terminalRef: externalTerminalRef,
 }: WizardStepContentProps) {
-  const internalTerminalRef = useRef<HTMLDivElement>(null);
+  const internalTerminalRef = useRef<StreamingTerminalHandle>(null);
   const terminalRef = externalTerminalRef || internalTerminalRef;
   const { isStreaming, abort } = useStreamingExecution();
 
@@ -88,7 +88,7 @@ export default function WizardStepContent({
 
       {/* Streaming Terminal */}
       <div className="h-96">
-        <StreamingTerminal isStreaming={isStreaming} onStop={abort} />
+        <StreamingTerminal ref={terminalRef} isStreaming={isStreaming} onStop={abort} />
       </div>
 
       {/* AI Prompt */}

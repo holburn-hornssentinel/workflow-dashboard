@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { TOOL_CATEGORIES, getToolCategory } from '@/lib/mcp/tool-registry';
 import { Folder, GitBranch, Globe, Search, MessageSquare, Box, Wrench, Github } from 'lucide-react';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 interface Tool {
   name: string;
@@ -29,6 +30,8 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
   const [tools, setTools] = useState<Tool[]>([]);
   const [loading, setLoading] = useState(false);
   const [connectedServers, setConnectedServers] = useState<string[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [connectingServer, setConnectingServer] = useState<string | null>(null);
 
   useEffect(() => {
     fetchConnectedServers();
@@ -40,22 +43,31 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
       if (response.ok) {
         const data = await response.json();
         setConnectedServers(data.servers || []);
+        setError(null);
+      } else {
+        setError('Failed to fetch MCP servers');
       }
     } catch (error) {
       console.error('Failed to fetch servers:', error);
+      setError('Unable to connect to MCP servers. Check if the service is running.');
     }
   };
 
   const fetchTools = async (category: string) => {
     setLoading(true);
+    setError(null);
     try {
       const response = await fetch(`/api/mcp/tools?category=${category}`);
       if (response.ok) {
         const data = await response.json();
         setTools(data.tools || []);
+      } else {
+        const data = await response.json();
+        setError(data.error || 'Failed to fetch tools');
       }
     } catch (error) {
       console.error('Failed to fetch tools:', error);
+      setError('Unable to load tools. Server connection failed.');
     } finally {
       setLoading(false);
     }
@@ -67,6 +79,8 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
   };
 
   const handleConnectServer = async (categoryId: string) => {
+    setConnectingServer(categoryId);
+    setError(null);
     try {
       const response = await fetch('/api/mcp/connect', {
         method: 'POST',
@@ -77,9 +91,15 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
       if (response.ok) {
         fetchConnectedServers();
         handleCategoryClick(categoryId);
+      } else {
+        const data = await response.json();
+        setError(data.error || `Failed to connect to ${categoryId} server. This may take 10-30 seconds for first connection.`);
       }
     } catch (error) {
       console.error('Failed to connect server:', error);
+      setError(`Connection to ${categoryId} failed. Check API keys in settings.`);
+    } finally {
+      setConnectingServer(null);
     }
   };
 
@@ -133,6 +153,30 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
 
       {/* Right Content: Tools */}
       <div className="flex-1 p-6 overflow-y-auto">
+        {/* Error Banner */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
+            <div className="flex items-start justify-between">
+              <span className="text-red-400 text-sm">{error}</span>
+              <button
+                onClick={() => setError(null)}
+                className="text-red-400 hover:text-red-300 text-sm font-medium ml-4"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Connecting Indicator */}
+        {connectingServer && (
+          <div className="mb-4 p-4 bg-blue-500/20 border border-blue-500/50 rounded-lg">
+            <span className="text-blue-400 text-sm">
+              Connecting to {connectingServer}... This may take 10-30 seconds for first connection.
+            </span>
+          </div>
+        )}
+
         {!selectedCategory ? (
           <div className="flex items-center justify-center h-full text-center">
             <div>
@@ -149,7 +193,7 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
           </div>
         ) : loading ? (
           <div className="flex items-center justify-center h-full">
-            <div className="text-white">Loading tools...</div>
+            <LoadingSpinner message="Loading tools..." />
           </div>
         ) : (
           <div>

@@ -2,7 +2,7 @@
 
 import { memo, useState, useMemo } from 'react';
 import { Handle, Position, NodeProps } from '@xyflow/react';
-import { AgentNodeData, NodeType } from '@/stores/builderStore';
+import { AgentNodeData, NodeType, useBuilderStore } from '@/stores/builderStore';
 import { useSuggestionsStore } from '@/stores/suggestionsStore';
 import { SuggestionBadge } from './SuggestionBadge';
 import { Bot, Wrench, GitBranch, RefreshCw, Zap, CircleDot, StopCircle, Settings } from 'lucide-react';
@@ -32,6 +32,7 @@ function AgentNode({ data, selected, id }: NodeProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [label, setLabel] = useState(nodeData.label);
   const { suggestions } = useSuggestionsStore();
+  const updateNode = useBuilderStore((state) => state.updateNode);
 
   // Count suggestions for this node
   const nodeSuggestions = useMemo(() => {
@@ -51,7 +52,7 @@ function AgentNode({ data, selected, id }: NodeProps) {
   const handleBlur = () => {
     setIsEditing(false);
     if (nodeData.label !== label) {
-      // Update handled by parent component through onNodeUpdate
+      updateNode(id, { label });
     }
   };
 

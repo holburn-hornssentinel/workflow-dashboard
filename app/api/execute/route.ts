@@ -12,6 +12,18 @@ import {
   validateRequest,
   formatValidationError,
 } from '@/lib/security/validators';
+import { validateApiKey } from '@/lib/security/auth';
+
+// Session storage for execution results
+interface ExecutionSession {
+  sessionId: string;
+  stdout: string[];
+  stderr: string[];
+  status: 'running' | 'completed' | 'failed';
+  exitCode?: number;
+}
+
+const sessions = new Map<string, ExecutionSession>();
 
 /**
  * Validate that a working directory path is safe
@@ -41,6 +53,23 @@ function isWorkingDirectorySafe(targetPath: string): boolean {
 
 export async function POST(request: NextRequest) {
   try {
+    // Require API key authentication
+    const apiKey = process.env.DASHBOARD_API_KEY;
+
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'Execution is disabled. Configure DASHBOARD_API_KEY to enable.' },
+        { status: 403 }
+      );
+    }
+
+    if (!validateApiKey(request)) {
+      return NextResponse.json(
+        { error: 'Unauthorized. Valid API key required.' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
 
     // Validate request body with Zod schema
@@ -82,6 +111,15 @@ export async function POST(request: NextRequest) {
     // Build safe command using argument array (prevents command injection)
     const safeCommand = buildSafeCommand(prompt, model, executionDir);
 
+    // Create session
+    const session: ExecutionSession = {
+      sessionId,
+      stdout: [],
+      stderr: [],
+      status: 'running',
+    };
+    sessions.set(sessionId, session);
+
     // Execute using spawn with argument array for security
     const child = spawn(safeCommand.command, safeCommand.args, {
       cwd: executionDir,
@@ -90,19 +128,23 @@ export async function POST(request: NextRequest) {
 
     // Set up event handlers
     child.stdout.on('data', (data) => {
-      // Output is handled by streaming API
+      session.stdout.push(data.toString());
     });
 
     child.stderr.on('data', (data) => {
-      // Errors are handled by error handler
+      session.stderr.push(data.toString());
     });
 
     child.on('error', (error) => {
-      // Execution errors are logged to system error handler
+      session.status = 'failed';
+      session.stderr.push(error.message);
     });
 
     child.on('close', (code) => {
-      // Process completion is tracked by session manager
+      session.status = code === 0 ? 'completed' : 'failed';
+      session.exitCode = code ?? undefined;
+      // Add TTL cleanup: remove session after 30 minutes
+      setTimeout(() => sessions.delete(sessionId), 30 * 60 * 1000);
     });
 
     return NextResponse.json({
@@ -114,6 +156,42 @@ export async function POST(request: NextRequest) {
     console.error('API error:', error);
     return NextResponse.json(
       { error: 'Failed to execute workflow step' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const sessionId = searchParams.get('sessionId');
+
+    if (!sessionId) {
+      return NextResponse.json(
+        { error: 'Missing sessionId parameter' },
+        { status: 400 }
+      );
+    }
+
+    const session = sessions.get(sessionId);
+    if (!session) {
+      return NextResponse.json(
+        { error: 'Session not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      sessionId: session.sessionId,
+      status: session.status,
+      exitCode: session.exitCode,
+      stdout: session.stdout.join(''),
+      stderr: session.stderr.join(''),
+    });
+  } catch (error) {
+    console.error('API error:', error);
+    return NextResponse.json(
+      { error: 'Failed to retrieve session' },
       { status: 500 }
     );
   }

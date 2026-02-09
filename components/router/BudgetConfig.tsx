@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import { Save, DollarSign, Sliders } from 'lucide-react';
 import { useRouterStore } from '@/stores/routerStore';
+import { useToast } from '@/lib/hooks/useToast';
 
 export function BudgetConfig() {
   const { config, updateBudget, updateConfig } = useRouterStore();
+  const { success } = useToast();
 
   // Budget limits
   const [dailyLimit, setDailyLimit] = useState(config.budgetLimit);
@@ -27,7 +29,7 @@ export function BudgetConfig() {
 
     // Note: In a full implementation, you would save these to config
     // For now, just show a success message
-    alert('Budget configuration saved successfully!');
+    success('Budget configuration saved successfully!');
   };
 
   return (

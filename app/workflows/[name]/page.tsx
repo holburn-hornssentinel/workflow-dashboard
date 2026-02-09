@@ -8,6 +8,8 @@ import WizardPanel from '@/components/wizard/WizardPanel';
 import { useWorkflowStore } from '@/stores/workflowStore';
 import { useStreamingExecution } from '@/lib/hooks/useStreamingExecution';
 import { WorkflowData } from '@/types/workflow';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { StreamingTerminalHandle } from '@/components/execution/StreamingTerminal';
 import { Timer, Wand2 } from 'lucide-react';
 
 export default function WorkflowDetailPage() {
@@ -30,7 +32,8 @@ export default function WorkflowDetailPage() {
 
   const { streamExecution } = useStreamingExecution();
   const [showWizard, setShowWizard] = useState(false);
-  const terminalRef = useRef<HTMLDivElement>(null);
+  const terminalRef = useRef<StreamingTerminalHandle>(null);
+  const goToStepByKey = useWorkflowStore((state) => state.goToStepByKey);
 
   const handleExecuteStep = async (stepKey: string) => {
     if (!workflow) return;
@@ -42,12 +45,13 @@ export default function WorkflowDetailPage() {
 
     try {
       const prompt = step.ai_prompt || `Execute step: ${step.name}`;
+      const effectiveWorkingDir = workingDirectory || '/tmp';
 
       await streamExecution(stepKey, {
         prompt,
         model: selectedModel,
-        systemPrompt: `You are executing a workflow step in the directory: ${workingDirectory}`,
-        terminalRef,
+        systemPrompt: `You are executing a workflow step in the directory: ${effectiveWorkingDir}`,
+        terminalRef: terminalRef as React.RefObject<StreamingTerminalHandle>,
       });
     } catch (error) {
       console.error('Execution error:', error);
@@ -89,7 +93,7 @@ export default function WorkflowDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
-        <div className="text-white text-base">Loading workflow...</div>
+        <LoadingSpinner size="lg" message="Loading workflow..." />
       </div>
     );
   }
@@ -146,7 +150,10 @@ export default function WorkflowDetailPage() {
           <WorkflowGraph
             nodes={nodes}
             edges={edges}
-            onNodeClick={undefined}
+            onNodeClick={(_event, node) => {
+              goToStepByKey(node.id);
+              setShowWizard(true);
+            }}
             selectedNodeId={undefined}
           />
           <button
@@ -160,7 +167,7 @@ export default function WorkflowDetailPage() {
         {/* Right: Wizard Panel (collapsible) */}
         {showWizard && (
           <div className="w-[500px] border-l border-white/[0.06]">
-            <WizardPanel onExecuteStep={handleExecuteStep} terminalRef={terminalRef} />
+            <WizardPanel onExecuteStep={handleExecuteStep} terminalRef={terminalRef as React.RefObject<StreamingTerminalHandle>} />
           </div>
         )}
       </div>

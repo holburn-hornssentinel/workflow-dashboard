@@ -1,13 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import VoiceButton from './VoiceButton';
 import { Sparkles, Bot, AlertCircle, Lightbulb } from 'lucide-react';
 
 interface VibeInputProps {
-  onGenerate?: (description: string) => Promise<void>;
+  onGenerate?: (description: string, provider: 'claude' | 'gemini') => Promise<void>;
   placeholder?: string;
+}
+
+interface Provider {
+  id: 'claude' | 'gemini';
+  name: string;
+  configured: boolean;
 }
 
 export default function VibeInput({
@@ -18,11 +24,44 @@ export default function VibeInput({
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [provider, setProvider] = useState<'claude' | 'gemini'>('claude');
+  const [providers, setProviders] = useState<Provider[]>([]);
+  const [loadingProviders, setLoadingProviders] = useState(true);
   const router = useRouter();
+
+  // Fetch available providers on mount
+  useEffect(() => {
+    async function fetchProviders() {
+      try {
+        const response = await fetch('/api/providers');
+        if (response.ok) {
+          const data = await response.json();
+          setProviders(data.providers || []);
+
+          // Set default provider to first configured one
+          const configured = data.providers.find((p: Provider) => p.configured);
+          if (configured) {
+            setProvider(configured.id);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch providers:', error);
+      } finally {
+        setLoadingProviders(false);
+      }
+    }
+    fetchProviders();
+  }, []);
 
   const handleGenerate = async () => {
     if (!description.trim()) {
       setError('Please enter a description');
+      return;
+    }
+
+    // Check if provider is configured
+    const selectedProvider = providers.find(p => p.id === provider);
+    if (!selectedProvider?.configured) {
+      setError('Please configure your API key in Settings → AI Models');
       return;
     }
 
@@ -31,7 +70,7 @@ export default function VibeInput({
 
     try {
       if (onGenerate) {
-        await onGenerate(description);
+        await onGenerate(description, provider);
       } else {
         // Default: call API and redirect to builder
         const response = await fetch('/api/vibe/generate', {
@@ -74,6 +113,10 @@ export default function VibeInput({
     'Process incoming emails and categorize them by urgency',
   ];
 
+  const handleTranscript = useCallback((text: string) => {
+    setDescription((prev) => (prev ? `${prev} ${text}` : text));
+  }, []);
+
   return (
     <div className="w-full max-w-4xl mx-auto">
       {/* Main Input */}
@@ -98,32 +141,46 @@ export default function VibeInput({
           <label className="block text-sm font-medium text-slate-300 mb-2">
             AI Provider
           </label>
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={() => setProvider('claude')}
-              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${
-                provider === 'claude'
-                  ? 'bg-purple-600 text-white ring-2 ring-purple-400'
-                  : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-              }`}
-            >
-              <Bot className="h-4 w-4" />
-              Claude Sonnet 4.5
-            </button>
-            <button
-              type="button"
-              onClick={() => setProvider('gemini')}
-              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${
-                provider === 'gemini'
-                  ? 'bg-blue-600 text-white ring-2 ring-blue-400'
-                  : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-              }`}
-            >
-              <Sparkles className="h-4 w-4" />
-              Gemini 2.5 Flash
-            </button>
-          </div>
+          {loadingProviders ? (
+            <div className="text-center py-4 text-slate-400 text-sm">
+              Checking available providers...
+            </div>
+          ) : providers.length === 0 || !providers.some(p => p.configured) ? (
+            <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 text-sm text-yellow-400">
+              <AlertCircle className="h-4 w-4 inline mr-2" />
+              No AI providers configured. Please add your API keys in Settings.
+            </div>
+          ) : (
+            <div className="flex gap-3">
+              {providers.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => p.configured && setProvider(p.id)}
+                  disabled={!p.configured}
+                  className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${
+                    !p.configured
+                      ? 'bg-slate-800 text-slate-600 cursor-not-allowed opacity-50'
+                      : provider === p.id
+                      ? p.id === 'claude'
+                        ? 'bg-purple-600 text-white ring-2 ring-purple-400'
+                        : 'bg-blue-600 text-white ring-2 ring-blue-400'
+                      : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                  }`}
+                >
+                  {p.id === 'claude' ? (
+                    <Bot className="h-4 w-4" />
+                  ) : (
+                    <Sparkles className="h-4 w-4" />
+                  )}
+                  {p.id === 'claude' ? 'Claude Sonnet 4.5' : 'Gemini 2.5 Flash'}
+                  {!p.configured && (
+                    <span className="text-xs ml-1">(not configured)</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="relative">
@@ -136,13 +193,7 @@ export default function VibeInput({
             rows={6}
           />
           <div className="absolute bottom-3 right-3">
-            <VoiceButton
-              onTranscript={(text) => {
-                setDescription((prev) =>
-                  prev ? `${prev} ${text}` : text
-                );
-              }}
-            />
+            <VoiceButton onTranscript={handleTranscript} />
           </div>
         </div>
 

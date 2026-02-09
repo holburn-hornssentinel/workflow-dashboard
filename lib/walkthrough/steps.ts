@@ -36,17 +36,9 @@ export const walkthroughSteps: WalkthroughStep[] = [
     id: 'vibe-button',
     title: 'Vibe Coding',
     description: 'Describe what you want in plain English and let AI generate the workflow!',
-    target: 'button:has-text("Vibe Code")',
+    target: 'body',
     position: 'bottom',
     route: '/builder',
-  },
-  {
-    id: 'qa-tests',
-    title: 'Quality Assurance',
-    description: 'Run automated tests to ensure everything works perfectly.',
-    target: '[href="/qa"]',
-    position: 'bottom',
-    route: '/',
   },
   {
     id: 'memory',

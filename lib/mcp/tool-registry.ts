@@ -1,54 +1,99 @@
 import { MCPServer } from './client';
 
-// Pre-configured MCP servers
-export const DEFAULT_MCP_SERVERS: MCPServer[] = [
-  {
-    name: 'filesystem',
-    command: 'npx',
-    args: ['-y', '@modelcontextprotocol/server-filesystem', process.cwd()],
-    enabled: true,
-  },
-  {
-    name: 'github',
-    command: 'npx',
-    args: ['-y', '@modelcontextprotocol/server-github'],
-    env: {
-      GITHUB_PERSONAL_ACCESS_TOKEN: process.env.GITHUB_TOKEN || '',
+// Helper to get filesystem base path
+const getFilesystemPath = () => process.env.HOME || '/tmp';
+
+// Helper to check if server is enabled (evaluated at runtime)
+const isGithubEnabled = () => !!process.env.GITHUB_TOKEN;
+const isBraveEnabled = () => !!process.env.BRAVE_API_KEY;
+const isSlackEnabled = () => !!process.env.SLACK_BOT_TOKEN;
+
+// Pre-configured MCP servers (with lazy evaluation for enabled flags)
+export const getDefaultMCPServers = (): MCPServer[] => {
+  const servers: MCPServer[] = [
+    {
+      name: 'filesystem',
+      command: 'npx',
+      args: ['-y', '@modelcontextprotocol/server-filesystem', getFilesystemPath()],
+      enabled: true,
     },
-    enabled: !!process.env.GITHUB_TOKEN,
-  },
-  {
-    name: 'git',
-    command: 'npx',
-    args: ['-y', '@modelcontextprotocol/server-git'],
-    enabled: true,
-  },
-  {
-    name: 'fetch',
-    command: 'npx',
-    args: ['-y', '@modelcontextprotocol/server-fetch'],
-    enabled: true,
-  },
-  {
-    name: 'brave-search',
-    command: 'npx',
-    args: ['-y', '@modelcontextprotocol/server-brave-search'],
-    env: {
-      BRAVE_API_KEY: process.env.BRAVE_API_KEY || '',
+    {
+      name: 'git',
+      command: 'npx',
+      args: ['-y', '@modelcontextprotocol/server-git'],
+      enabled: true,
     },
-    enabled: !!process.env.BRAVE_API_KEY,
-  },
-  {
-    name: 'slack',
-    command: 'npx',
-    args: ['-y', '@modelcontextprotocol/server-slack'],
-    env: {
-      SLACK_BOT_TOKEN: process.env.SLACK_BOT_TOKEN || '',
-      SLACK_TEAM_ID: process.env.SLACK_TEAM_ID || '',
+    // Note: @modelcontextprotocol/server-fetch does not exist in npm registry
+    // Disabled until proper package is available
+    {
+      name: 'fetch',
+      command: 'npx',
+      args: ['-y', '@modelcontextprotocol/server-fetch'],
+      enabled: false,
     },
-    enabled: !!process.env.SLACK_BOT_TOKEN,
-  },
-];
+  ];
+
+  // Only add env config if the environment variable is actually set
+  if (process.env.GITHUB_TOKEN) {
+    servers.push({
+      name: 'github',
+      command: 'npx',
+      args: ['-y', '@modelcontextprotocol/server-github'],
+      env: {
+        GITHUB_PERSONAL_ACCESS_TOKEN: process.env.GITHUB_TOKEN,
+      },
+      enabled: true,
+    });
+  } else {
+    servers.push({
+      name: 'github',
+      command: 'npx',
+      args: ['-y', '@modelcontextprotocol/server-github'],
+      enabled: false,
+    });
+  }
+
+  if (process.env.BRAVE_API_KEY) {
+    servers.push({
+      name: 'brave-search',
+      command: 'npx',
+      args: ['-y', '@modelcontextprotocol/server-brave-search'],
+      env: {
+        BRAVE_API_KEY: process.env.BRAVE_API_KEY,
+      },
+      enabled: true,
+    });
+  } else {
+    servers.push({
+      name: 'brave-search',
+      command: 'npx',
+      args: ['-y', '@modelcontextprotocol/server-brave-search'],
+      enabled: false,
+    });
+  }
+
+  if (process.env.SLACK_BOT_TOKEN && process.env.SLACK_TEAM_ID) {
+    servers.push({
+      name: 'slack',
+      command: 'npx',
+      args: ['-y', '@modelcontextprotocol/server-slack'],
+      env: {
+        SLACK_BOT_TOKEN: process.env.SLACK_BOT_TOKEN,
+        SLACK_TEAM_ID: process.env.SLACK_TEAM_ID,
+      },
+      enabled: true,
+    });
+  } else {
+    servers.push({
+      name: 'slack',
+      command: 'npx',
+      args: ['-y', '@modelcontextprotocol/server-slack'],
+      enabled: false,
+    });
+  }
+
+  return servers;
+};
 
 export interface ToolCategory {
   id: string;
@@ -107,12 +152,8 @@ export function getToolCategory(categoryId: string): ToolCategory | undefined {
   return TOOL_CATEGORIES.find((cat) => cat.id === categoryId);
 }
 
-export function getEnabledServers(): MCPServer[] {
-  return DEFAULT_MCP_SERVERS.filter((server) => server.enabled);
-}
-
 export function getServerByName(name: string): MCPServer | undefined {
-  return DEFAULT_MCP_SERVERS.find((server) => server.name === name);
+  return getDefaultMCPServers().find((server) => server.name === name);
 }
 
 export function validateServerConfig(server: MCPServer): {

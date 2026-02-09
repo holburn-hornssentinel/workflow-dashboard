@@ -12,8 +12,10 @@ import { ViewToggle } from '@/components/builder/ViewToggle';
 import { Builder3DCanvas } from '@/components/builder/Builder3DCanvas';
 import { SuggestionsPanel } from '@/components/builder/SuggestionsPanel';
 import { useSuggestionsStore } from '@/stores/suggestionsStore';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import Link from 'next/link';
 import { Sparkles } from 'lucide-react';
+import { markChecklistComplete } from '@/components/walkthrough/ProgressChecklist';
 
 const nodeTypes = {
   custom: AgentNode,
@@ -25,6 +27,7 @@ export default function BuilderPage() {
   const [draggedNodeType, setDraggedNodeType] = useState<NodeType | null>(null);
   const [showVibeInput, setShowVibeInput] = useState(false);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { setSuggestions, setIsAnalyzing } = useSuggestionsStore();
 
@@ -48,6 +51,9 @@ export default function BuilderPage() {
 
   // Load vibe-generated workflow from session storage
   useEffect(() => {
+    // Mark builder as visited for walkthrough checklist
+    markChecklistComplete('builder');
+
     if (typeof window !== 'undefined') {
       const vibeData = sessionStorage.getItem('vibeWorkflow');
       if (vibeData) {
@@ -124,6 +130,19 @@ export default function BuilderPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [canUndo, canRedo, undo, redo, selectedNodeId, selectNode]);
 
+  // Warn before leaving with unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (nodes.length > 0 || edges.length > 0) {
+        e.preventDefault();
+        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [nodes.length, edges.length]);
+
   // Handle drag start from palette
   const handleDragStart = (type: NodeType) => {
     setDraggedNodeType(type);
@@ -165,6 +184,8 @@ export default function BuilderPage() {
     (connection: Connection) => {
       if (connection.source && connection.target) {
         addEdge(connection.source, connection.target);
+        // Mark workflow as complete when first connection is made
+        markChecklistComplete('workflow');
       }
     },
     [addEdge]
@@ -183,26 +204,37 @@ export default function BuilderPage() {
     selectNode(null);
   }, [selectNode]);
 
-  const handleVibeGenerate = async (description: string) => {
-    const response = await fetch('/api/vibe/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ description }),
-    });
+  const handleVibeGenerate = async (description: string, provider: 'claude' | 'gemini') => {
+    setErrorMessage(null);
+    try {
+      const response = await fetch('/api/vibe/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description, provider }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (!response.ok) {
-      // Show actual API error message instead of generic one
-      throw new Error(data.error || 'Failed to generate workflow');
+      if (!response.ok) {
+        setErrorMessage(data.error || 'Failed to generate workflow');
+        throw new Error(data.error || 'Failed to generate workflow');
+      }
+
+      useBuilderStore.getState().importWorkflow(data.nodes, data.edges);
+      setShowVibeInput(false);
+
+      // Mark vibe and workflow checklist items as complete
+      markChecklistComplete('vibe');
+      markChecklistComplete('workflow');
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Failed to generate workflow');
+      throw error;
     }
-
-    useBuilderStore.getState().importWorkflow(data.nodes, data.edges);
-    setShowVibeInput(false);
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex flex-col">
+    <ErrorBoundary>
+      <div className="h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex flex-col">
       {/* Header */}
       <div className="border-b border-white/[0.06] bg-slate-900/50 backdrop-blur p-4">
         <div className="flex items-center justify-between">
@@ -276,6 +308,7 @@ export default function BuilderPage() {
                     const reader = new FileReader();
                     reader.onload = async (e) => {
                       const content = e.target?.result as string;
+                      setErrorMessage(null);
                       try {
                         const response = await fetch('/api/builder/import', {
                           method: 'POST',
@@ -283,9 +316,14 @@ export default function BuilderPage() {
                           body: JSON.stringify({ yaml: content }),
                         });
                         const data = await response.json();
-                        useBuilderStore.getState().importWorkflow(data.nodes, data.edges);
+                        if (response.ok) {
+                          useBuilderStore.getState().importWorkflow(data.nodes, data.edges);
+                        } else {
+                          setErrorMessage(data.error || 'Failed to import workflow');
+                        }
                       } catch (error) {
                         console.error('Import failed:', error);
+                        setErrorMessage('Failed to import workflow. Invalid file format.');
                       }
                     };
                     reader.readAsText(file);
@@ -326,14 +364,29 @@ export default function BuilderPage() {
         </div>
       </div>
 
+      {/* Error Message Banner */}
+      {errorMessage && (
+        <div className="bg-red-500/20 border-b border-red-500/50 px-4 py-3">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <span className="text-red-400 text-sm">{errorMessage}</span>
+            <button
+              onClick={() => setErrorMessage(null)}
+              className="text-red-400 hover:text-red-300 text-sm font-medium"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden min-h-0">
         {/* Left: Node Palette */}
         <NodePalette onDragStart={handleDragStart} />
 
         {/* Center: Canvas */}
         <div
-          className={`flex-1 relative transition-all ${isDraggingOver ? 'ring-4 ring-blue-500/50 ring-inset' : ''}`}
+          className={`flex-1 relative transition-all w-full h-full ${isDraggingOver ? 'ring-4 ring-blue-500/50 ring-inset' : ''}`}
           ref={reactFlowWrapper}
         >
           {isDraggingOver && viewMode === '2d' && (
@@ -384,7 +437,9 @@ export default function BuilderPage() {
             />
           </ReactFlow>
           ) : (
-            <Builder3DCanvas nodes={nodes} edges={edges} />
+            <ErrorBoundary fallback={<div className="flex items-center justify-center h-full text-white">3D view failed to load. Please use 2D view.</div>}>
+              <Builder3DCanvas nodes={nodes} edges={edges} />
+            </ErrorBoundary>
           )}
 
           {/* Node Count Badge */}
@@ -417,6 +472,7 @@ export default function BuilderPage() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }

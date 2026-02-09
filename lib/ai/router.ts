@@ -102,9 +102,9 @@ export class ModelRouter {
 
     // High complexity or reasoning required → Claude Opus
     if (estimatedComplexity === 'high' || requiresReasoning) {
-      const cost = this.estimateCost('claude-opus-4-5-20251101', context.estimatedTokens || 2000);
+      const cost = this.estimateCost('claude-opus-4-6', context.estimatedTokens || 2000);
       if (this.costTracker.isWithinBudget(cost)) {
-        return this.getModelConfig('claude-opus-4-5-20251101');
+        return this.getModelConfig('claude-opus-4-6');
       }
     }
 
@@ -173,12 +173,19 @@ export class ModelRouter {
         temperature: 0.7,
         capabilities: ['reasoning', 'coding', 'analysis'],
       },
-      'claude-opus-4-5-20251101': {
-        model: 'claude-opus-4-5-20251101',
+      'claude-opus-4-6': {
+        model: 'claude-opus-4-6',
         priority: 4,
         maxTokens: 4096,
         temperature: 0.7,
         capabilities: ['reasoning', 'coding', 'analysis', 'complex-tasks'],
+      },
+      'claude-haiku-4-5-20251001': {
+        model: 'claude-haiku-4-5-20251001',
+        priority: 1,
+        maxTokens: 4096,
+        temperature: 0.7,
+        capabilities: ['speed', 'basic-tasks'],
       },
       'gemini-2.5-pro': {
         model: 'gemini-2.5-pro',
@@ -296,7 +303,7 @@ export function createDefaultRouterConfig(): RouterConfig {
   return {
     models: [
       {
-        model: 'claude-opus-4-5-20251101',
+        model: 'claude-opus-4-6',
         priority: 4,
         maxTokens: 4096,
         temperature: 0.7,
@@ -335,7 +342,7 @@ export function createDefaultRouterConfig(): RouterConfig {
       {
         id: 'complex-reasoning',
         taskType: 'reasoning',
-        preferredModel: 'claude-opus-4-5-20251101',
+        preferredModel: 'claude-opus-4-6',
         fallbackModel: 'claude-sonnet-4-5-20250929',
       },
       {

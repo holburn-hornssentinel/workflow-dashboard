@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
+import { validateApiKey } from '@/lib/security/auth';
 
 const ENV_PATH = join(process.cwd(), '.env.local');
 
@@ -41,6 +42,23 @@ export async function GET() {
 // POST: Update environment configuration
 export async function POST(request: NextRequest) {
   try {
+    // Require API key authentication
+    const apiKey = process.env.DASHBOARD_API_KEY;
+
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'Environment updates are disabled. Configure DASHBOARD_API_KEY to enable.' },
+        { status: 403 }
+      );
+    }
+
+    if (!validateApiKey(request)) {
+      return NextResponse.json(
+        { error: 'Unauthorized. Valid API key required.' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { anthropicKey, geminiKey, memoryBackend, lancedbPath } = body;
 
@@ -111,23 +129,51 @@ function parseEnvFile(content: string): Record<string, string> {
 
 // Build .env file content from key-value pairs
 function buildEnvFile(vars: Record<string, string>): string {
-  const lines = [
-    '# AI Provider API Keys',
-    '# You need at least ONE of these configured',
-    '',
-    '# Anthropic Claude API Key',
-    '# Get your key from: https://console.anthropic.com/',
-    `ANTHROPIC_API_KEY=${vars.ANTHROPIC_API_KEY || ''}`,
-    '',
-    '# Google Gemini API Key',
-    '# Get your key from: https://aistudio.google.com/app/apikey',
-    `GEMINI_API_KEY=${vars.GEMINI_API_KEY || ''}`,
-    '',
-    '# Memory Backend (local or cloud)',
-    `MEMORY_BACKEND=${vars.MEMORY_BACKEND || 'local'}`,
-    `LANCEDB_PATH=${vars.LANCEDB_PATH || './data/lancedb'}`,
-    '',
-  ];
+  // Preserve all variables, only format the known ones specially
+  const lines: string[] = [];
+
+  // Header
+  lines.push('# AI Provider API Keys');
+  lines.push('# You need at least ONE of these configured');
+  lines.push('');
+
+  // Handle known variables with nice formatting
+  if (vars.ANTHROPIC_API_KEY !== undefined) {
+    lines.push('# Anthropic Claude API Key');
+    lines.push('# Get your key from: https://console.anthropic.com/');
+    lines.push(`ANTHROPIC_API_KEY="${vars.ANTHROPIC_API_KEY}"`);
+    lines.push('');
+  }
+
+  if (vars.GEMINI_API_KEY !== undefined) {
+    lines.push('# Google Gemini API Key');
+    lines.push('# Get your key from: https://aistudio.google.com/app/apikey');
+    lines.push(`GEMINI_API_KEY="${vars.GEMINI_API_KEY}"`);
+    lines.push('');
+  }
+
+  if (vars.MEMORY_BACKEND !== undefined || vars.LANCEDB_PATH !== undefined) {
+    lines.push('# Memory Backend Configuration');
+    if (vars.MEMORY_BACKEND !== undefined) {
+      lines.push(`MEMORY_BACKEND="${vars.MEMORY_BACKEND}"`);
+    }
+    if (vars.LANCEDB_PATH !== undefined) {
+      lines.push(`LANCEDB_PATH="${vars.LANCEDB_PATH}"`);
+    }
+    lines.push('');
+  }
+
+  // Add all other variables that aren't in the known set
+  const knownKeys = new Set(['ANTHROPIC_API_KEY', 'GEMINI_API_KEY', 'MEMORY_BACKEND', 'LANCEDB_PATH']);
+  const otherVars = Object.entries(vars).filter(([key]) => !knownKeys.has(key));
+
+  if (otherVars.length > 0) {
+    lines.push('# Other Configuration');
+    for (const [key, value] of otherVars) {
+      lines.push(`${key}="${value}"`);
+    }
+    lines.push('');
+  }
 
   return lines.join('\n');
 }

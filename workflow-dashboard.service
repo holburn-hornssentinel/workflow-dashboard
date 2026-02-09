@@ -1,0 +1,27 @@
+[Unit]
+Description=Workflow Dashboard - AI Workflow Orchestration Platform
+Documentation=https://github.com/holburn-hornssentinel/workflow-dashboard
+After=network.target
+
+[Service]
+Type=simple
+User=horns
+WorkingDirectory=/home/horns/workflow-dashboard
+Environment="NODE_ENV=production"
+Environment="PORT=3004"
+ExecStart=/usr/bin/npm start
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=workflow-dashboard
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/horns/workflow-dashboard
+
+[Install]
+WantedBy=multi-user.target

@@ -42,6 +42,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Claude Code settings (user-specific)
+.claude/
+
+# SWC cache
+.swc/
+
 # QA test outputs (kept locally, not in repo)
 qa_screenshots/
 qa_screenshots_interactive/
@@ -55,3 +61,20 @@ qa/
 __tests__/
 dev.sh
 jest.config.js
+
+# Internal documentation (development only)
+*_REPORT.md
+*_CHECKLIST.md
+*_SUMMARY.md
+*_SCRIPT.md
+*_APPLIED.md
+*_PLAN.md
+*_GUIDE.md
+*_READY.md
+*_AUDIT_REPORT.md
+
+# QA test artifacts
+tests/screenshots/
+tests/videos/
+tests/__pycache__/
+*.pyc

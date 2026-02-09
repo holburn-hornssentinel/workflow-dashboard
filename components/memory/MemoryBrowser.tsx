@@ -1,7 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Brain } from 'lucide-react';
+import { Brain, Trash2, Plus } from 'lucide-react';
+import { useToast } from '@/lib/hooks/useToast';
+import { ToastContainer } from '@/components/ui/Toast';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 interface MemoryStats {
   totalConversations: number;
@@ -22,6 +25,7 @@ interface Memory {
 }
 
 export default function MemoryBrowser() {
+  const { success, error: showError, toasts, removeToast } = useToast();
   const [stats, setStats] = useState<MemoryStats | null>(null);
   const [selectedType, setSelectedType] = useState<string>('all');
   const [memories, setMemories] = useState<Memory[]>([]);
@@ -35,11 +39,7 @@ export default function MemoryBrowser() {
   }, []);
 
   useEffect(() => {
-    if (selectedType !== 'all') {
-      fetchMemories(selectedType);
-    } else {
-      setMemories([]);
-    }
+    fetchMemories(selectedType);
   }, [selectedType]);
 
   const fetchStats = async () => {
@@ -77,10 +77,13 @@ export default function MemoryBrowser() {
       const response = await fetch(`/api/memory/search?q=${encodeURIComponent(searchQuery)}`);
       if (response.ok) {
         const data = await response.json();
-        setMemories(data.results.map((r: any) => r.entry) || []);
+        setMemories(data.results?.map((r: any) => r.entry).filter(Boolean) || []);
+      } else {
+        showError('Search failed. Please try again.');
       }
     } catch (error) {
       console.error('Search failed:', error);
+      showError('Unable to search memories. Check your connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -98,23 +101,49 @@ export default function MemoryBrowser() {
     }
   };
 
+  const handleDeleteMemory = async (id: string) => {
+    if (!confirm('Delete this memory? This cannot be undone.')) return;
+
+    try {
+      const response = await fetch(`/api/memory?id=${id}`, { method: 'DELETE' });
+      if (response.ok) {
+        // Remove from local state
+        setMemories(memories.filter(m => m.id !== id));
+        fetchStats();
+        success('Memory deleted successfully');
+      } else {
+        showError('Failed to delete memory. Please try again.');
+      }
+    } catch (error) {
+      console.error('Failed to delete memory:', error);
+      showError('Error deleting memory. Check your connection.');
+    }
+  };
+
   const handleAddMemory = async () => {
     if (!newMemory.content.trim()) {
-      alert('Please enter memory content');
+      showError('Please enter memory content');
       return;
     }
 
     try {
+      const metadata: any = {
+        tags: newMemory.tags.split(',').map(t => t.trim()).filter(Boolean),
+        source: 'manual-entry'
+      };
+
+      // Add key for preference type
+      if (newMemory.type === 'preference') {
+        metadata.key = newMemory.tags.split(',')[0]?.trim() || 'default';
+      }
+
       const response = await fetch('/api/memory', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           content: newMemory.content,
           type: newMemory.type,
-          metadata: {
-            tags: newMemory.tags.split(',').map(t => t.trim()).filter(Boolean),
-            source: 'manual-entry'
-          },
+          metadata,
         }),
       });
 
@@ -125,13 +154,14 @@ export default function MemoryBrowser() {
         if (selectedType === newMemory.type || selectedType === 'all') {
           fetchMemories(selectedType);
         }
-        alert('Memory added successfully');
+        success('Memory added successfully!');
       } else {
-        alert('Failed to add memory');
+        const data = await response.json().catch(() => ({}));
+        showError(data.error || 'Failed to add memory. Please try again.');
       }
     } catch (error) {
       console.error('Failed to add memory:', error);
-      alert('Error adding memory');
+      showError('Error adding memory. Check your connection and try again.');
     }
   };
 
@@ -281,18 +311,28 @@ export default function MemoryBrowser() {
         {/* Memories List */}
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="text-white">Loading...</div>
+            <LoadingSpinner message="Loading memories..." />
           </div>
         ) : memories.length === 0 ? (
           <div className="text-center py-12">
-            <div className="flex justify-center mb-2">
-              <Brain className="h-12 w-12 text-slate-600" />
+            <div className="flex justify-center mb-4">
+              <Brain className="h-16 w-16 text-slate-600" />
             </div>
-            <p className="text-slate-400">
+            <h3 className="text-lg font-medium text-white mb-2">
+              {selectedType === 'all' ? 'No memories yet' : `No ${selectedType} memories found`}
+            </h3>
+            <p className="text-slate-400 text-sm mb-6 max-w-md mx-auto">
               {selectedType === 'all'
-                ? 'Select a type to view memories'
-                : 'No memories found'}
+                ? 'Memories help agents remember context across conversations. Click "Add Memory" to create your first one.'
+                : `Add a ${selectedType} memory using the "Add Memory" button above.`}
             </p>
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+            >
+              <Plus className="h-4 w-4" />
+              Add Your First Memory
+            </button>
           </div>
         ) : (
           <div className="space-y-4">
@@ -305,9 +345,18 @@ export default function MemoryBrowser() {
                   <span className="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded capitalize">
                     {memory.metadata.type}
                   </span>
-                  <span className="text-xs text-slate-500">
-                    {formatTimestamp(memory.metadata.timestamp)}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-slate-500">
+                      {formatTimestamp(memory.metadata.timestamp)}
+                    </span>
+                    <button
+                      onClick={() => handleDeleteMemory(memory.id)}
+                      className="p-1 text-slate-400 hover:text-red-400 transition-colors"
+                      aria-label="Delete memory"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
                 <p className="text-white text-sm whitespace-pre-wrap">{memory.content}</p>
                 {memory.metadata.tags && memory.metadata.tags.length > 0 && (
@@ -327,6 +376,9 @@ export default function MemoryBrowser() {
           </div>
         )}
       </div>
+
+      {/* Toast Notifications */}
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>
   );
 }

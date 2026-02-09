@@ -9,14 +9,17 @@ export default function AgentsPage() {
   const [taskDescription, setTaskDescription] = useState('');
   const [selectedAgent, setSelectedAgent] = useState('planner');
   const [isAssigning, setIsAssigning] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const handleAssignTask = async () => {
     if (!taskDescription.trim()) {
-      alert('Please enter a task description');
+      setMessage({ type: 'error', text: 'Please enter a task description' });
       return;
     }
 
     setIsAssigning(true);
+    setMessage(null);
+
     try {
       const response = await fetch('/api/agents/tasks', {
         method: 'POST',
@@ -28,14 +31,15 @@ export default function AgentsPage() {
       });
 
       if (response.ok) {
-        alert(`Task assigned to ${selectedAgent}`);
+        setMessage({ type: 'success', text: `Task assigned to ${selectedAgent} successfully!` });
         setTaskDescription('');
       } else {
-        alert('Failed to assign task');
+        const data = await response.json();
+        setMessage({ type: 'error', text: data.error || 'Failed to assign task' });
       }
     } catch (error) {
       console.error('Task assignment failed:', error);
-      alert('Error assigning task');
+      setMessage({ type: 'error', text: 'Error assigning task. Please try again.' });
     } finally {
       setIsAssigning(false);
     }
@@ -113,6 +117,19 @@ export default function AgentsPage() {
             >
               {isAssigning ? 'Assigning...' : 'Assign Task'}
             </button>
+
+            {/* Success/Error Message */}
+            {message && (
+              <div
+                className={`p-4 rounded-lg ${
+                  message.type === 'success'
+                    ? 'bg-green-500/20 border border-green-500/50 text-green-400'
+                    : 'bg-red-500/20 border border-red-500/50 text-red-400'
+                }`}
+              >
+                {message.text}
+              </div>
+            )}
           </div>
         </div>
 

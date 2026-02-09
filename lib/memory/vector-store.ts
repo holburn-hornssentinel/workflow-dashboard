@@ -1,6 +1,9 @@
 import { nanoid } from 'nanoid';
 import { getMemoryConfig } from './config';
 
+// Helper to escape special characters for LIKE queries
+const escLike = (s: string) => s.replace(/['\\%_]/g, '\\$&');
+
 export interface MemoryEntry {
   id: string;
   content: string;
@@ -128,9 +131,10 @@ export class VectorStore {
       const table = await this.db.openTable(tableName);
 
       // Use simple LIKE query instead of full-text search (which requires INVERTED index)
+      const escapedQuery = escLike(query);
       const results = await table
         .query()
-        .where(`content LIKE '%${query}%'`)
+        .where(`content LIKE '%${escapedQuery}%'`)
         .limit(limit)
         .toArray();
 
@@ -164,9 +168,10 @@ export class VectorStore {
       const table = await this.db.openTable(tableName);
 
       // LanceDB 0.23 API: use query().where() instead of filter()
+      const escapedType = escLike(type);
       const results = await table
         .query()
-        .where(`metadata LIKE '%"type":"${type}"%'`)
+        .where(`metadata LIKE '%"type":"${escapedType}"%'`)
         .limit(limit)
         .toArray();
 
@@ -193,7 +198,8 @@ export class VectorStore {
     try {
       const tableName = 'memories';
       const table = await this.db.openTable(tableName);
-      await table.delete(`id = '${id}'`);
+      const escapedId = escLike(id);
+      await table.delete(`id = '${escapedId}'`);
     } catch (error) {
       console.error('[Memory] Failed to delete:', error);
       throw error;

@@ -78,8 +78,8 @@ const initialState = {
   edges: [],
   selectedNodes: [],
   selectedEdges: [],
-  history: [],
-  historyIndex: -1,
+  history: [{ nodes: [], edges: [] }], // Save initial empty state
+  historyIndex: 0, // Start at 0 so first action becomes undoable
   isPanelOpen: true,
   selectedNodeId: null,
   viewMode: '2d' as ViewMode,

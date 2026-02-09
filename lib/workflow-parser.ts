@@ -178,7 +178,7 @@ export function workflowToGraph(workflow: Workflow): {
         label: step.name,
         duration: step.duration,
         model: step.model_recommendation,
-        description: step.ai_prompt?.substring(0, 100) + '...' || '',
+        description: step.ai_prompt ? step.ai_prompt.substring(0, 100) + '...' : '',
         stepKey,
       },
     });
@@ -218,6 +218,15 @@ export function getWorkflow(name: string): Workflow | null {
   // Normalize both the search name and workflow names for comparison
   const normalizedSearch = name.toLowerCase().replace(/[-_\s]+/g, '');
 
+  // Try exact match first
+  const exactMatch = workflows.find(w => {
+    const normalizedWorkflow = w.name.toLowerCase().replace(/[-_\s]+/g, '');
+    return normalizedWorkflow === normalizedSearch;
+  });
+
+  if (exactMatch) return exactMatch;
+
+  // Fall back to includes match
   return workflows.find(w => {
     const normalizedWorkflow = w.name.toLowerCase().replace(/[-_\s]+/g, '');
     return normalizedWorkflow.includes(normalizedSearch) ||

@@ -7,14 +7,18 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const type = searchParams.get('type');
 
-    if (!type) {
-      return NextResponse.json(
-        { error: 'Type parameter required' },
-        { status: 400 }
+    const vectorStore = getVectorStore();
+
+    // If no type or "all", return all memories
+    if (!type || type === 'all') {
+      const allTypes = ['conversation', 'fact', 'preference', 'context'];
+      const memoriesByType = await Promise.all(
+        allTypes.map(t => vectorStore.getByType(t as any))
       );
+      const memories = memoriesByType.flat();
+      return NextResponse.json({ memories });
     }
 
-    const vectorStore = getVectorStore();
     const memories = await vectorStore.getByType(type as any);
 
     return NextResponse.json({ memories });
@@ -50,11 +54,16 @@ export async function POST(request: NextRequest) {
         await contextManager.storePreference(metadata?.key || 'default', content);
         break;
       case 'message':
+      case 'conversation':
         await contextManager.storeMessage(
           metadata?.sessionId || 'default',
           metadata?.role || 'user',
           content
         );
+        break;
+      case 'context':
+        const vectorStore = getVectorStore();
+        await vectorStore.store(content, { type: 'context', ...metadata });
         break;
       default:
         return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
@@ -70,16 +79,26 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(request: NextRequest) {
   try {
-    const contextManager = getContextManager();
-    await contextManager.clearAllMemories();
+    const searchParams = request.nextUrl.searchParams;
+    const id = searchParams.get('id');
 
-    return NextResponse.json({ success: true });
+    if (id) {
+      // Delete single memory by ID
+      const vectorStore = getVectorStore();
+      await vectorStore.delete(id);
+      return NextResponse.json({ success: true });
+    } else {
+      // Clear all memories
+      const contextManager = getContextManager();
+      await contextManager.clearAllMemories();
+      return NextResponse.json({ success: true });
+    }
   } catch (error) {
-    console.error('[Memory] Failed to clear memories:', error);
+    console.error('[Memory] Failed to delete memories:', error);
     return NextResponse.json(
-      { error: 'Failed to clear memories' },
+      { error: 'Failed to delete memories' },
       { status: 500 }
     );
   }

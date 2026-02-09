@@ -47,7 +47,7 @@ async function* streamClaude(
 
   const stream = await anthropic.messages.create({
     model,
-    max_tokens: 8096,
+    max_tokens: 8192,
     messages: messages.map((m) => ({ role: m.role, content: m.content })),
     ...(options.systemPrompt && { system: options.systemPrompt }),
     stream: true,
@@ -106,23 +106,50 @@ async function* streamGemini(
   yield { text: '', done: true };
 }
 
-export async function generateText(
-  provider: AIProvider,
-  prompt: string,
-  options: {
-    model?: string;
-    systemPrompt?: string;
-    temperature?: number;
-  } = {}
-): Promise<string> {
-  const messages: AIMessage[] = [{ role: 'user', content: prompt }];
+export async function generateText(options: {
+  provider: AIProvider;
+  model: string;
+  prompt: string;
+  systemPrompt?: string;
+  temperature?: number;
+}): Promise<string> {
+  const messages: AIMessage[] = [{ role: 'user', content: options.prompt }];
   let fullText = '';
 
-  for await (const chunk of streamCompletion(provider, messages, options)) {
+  for await (const chunk of streamCompletion(options.provider, messages, {
+    model: options.model,
+    systemPrompt: options.systemPrompt,
+    temperature: options.temperature,
+  })) {
     if (chunk.text) {
       fullText += chunk.text;
     }
   }
 
   return fullText;
+}
+
+// Provider detection functions
+export function isKeyConfigured(provider: AIProvider): boolean {
+  const key = provider === 'claude'
+    ? process.env.ANTHROPIC_API_KEY
+    : process.env.GEMINI_API_KEY;
+
+  if (!key) return false;
+  if (key.includes('your_') || key.includes('placeholder')) return false;
+  if (key === 'your_anthropic_api_key_here' || key === 'your_gemini_api_key_here') return false;
+
+  return true;
+}
+
+export function getAvailableProviders(): AIProvider[] {
+  const providers: AIProvider[] = [];
+  if (isKeyConfigured('claude')) providers.push('claude');
+  if (isKeyConfigured('gemini')) providers.push('gemini');
+  return providers;
+}
+
+export function getDefaultProvider(): AIProvider | null {
+  const available = getAvailableProviders();
+  return available.length > 0 ? available[0] : null;
 }

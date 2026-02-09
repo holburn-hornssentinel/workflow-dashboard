@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { validateRequest, formatValidationError } from '@/lib/security/validators';
 import { ModelRouter, createDefaultRouterConfig } from '@/lib/ai/router';
-import { costTracker } from '../usage/route';
+import { CostTracker } from '@/lib/ai/cost-tracker';
 
 /**
  * Schema for routed completion request
@@ -19,6 +19,9 @@ const CompletionRequestSchema = z.object({
 
 // Initialize router with default config
 const router = new ModelRouter(createDefaultRouterConfig());
+
+// Initialize cost tracker
+const costTracker = new CostTracker();
 
 /**
  * POST /api/router/complete
@@ -79,17 +82,20 @@ export async function POST(request: NextRequest) {
       estimatedTokens || 1000
     );
 
-    // Log selection
-    console.log('[Router] Model selection:', {
+    // Execute with the selected model
+    const result = await executeWithModel(selectedModel.model, prompt, workingDirectory);
+
+    // Track actual usage
+    costTracker.record({
+      model: selectedModel.model,
+      inputTokens: result.inputTokens,
+      outputTokens: result.outputTokens,
       taskType,
-      selectedModel: selectedModel.model,
-      estimatedCost,
-      budgetUsed: budgetStatus.percentUsed.toFixed(1) + '%',
     });
 
-    // Return selected model and execution plan
-    // In production, this would actually call the model API
+    // Return selected model and execution result
     return NextResponse.json({
+      output: result.output,
       selectedModel: {
         model: selectedModel.model,
         maxTokens: selectedModel.maxTokens,
@@ -110,8 +116,11 @@ export async function POST(request: NextRequest) {
           estimatedComplexity ? `complexity "${estimatedComplexity}"` : 'heuristics'
         }`,
       },
-      // Include actual execution details (would be real in production)
-      message: `This is a demonstration response. In production, this would execute the prompt using ${selectedModel.model}.`,
+      tokensUsed: {
+        input: result.inputTokens,
+        output: result.outputTokens,
+        total: result.inputTokens + result.outputTokens,
+      },
     });
   } catch (error) {
     console.error('[Router Complete] Error:', error);
@@ -127,23 +136,38 @@ export async function POST(request: NextRequest) {
 
 /**
  * Helper function to actually execute with selected model
- * This would integrate with your Claude CLI or API in production
  */
 async function executeWithModel(
   model: string,
   prompt: string,
   workingDirectory?: string
 ): Promise<{ output: string; inputTokens: number; outputTokens: number }> {
-  // Placeholder implementation
-  // In production, this would call the actual model API or CLI
+  // Dynamically import to avoid circular dependencies
+  const { generateText } = await import('@/lib/ai/providers');
 
-  // Simulate token usage (replace with actual token counting)
-  const inputTokens = Math.ceil(prompt.length / 4);
-  const outputTokens = Math.ceil(inputTokens * 0.5); // Estimate
+  // Determine provider from model name
+  let provider: 'claude' | 'gemini' = 'claude';
+  if (model.includes('gemini')) {
+    provider = 'gemini';
+  }
 
-  return {
-    output: `Response from ${model}: This is a placeholder response. Integrate with actual model API.`,
-    inputTokens,
-    outputTokens,
-  };
+  try {
+    const output = await generateText({
+      provider,
+      model,
+      prompt,
+    });
+
+    // Estimate token usage (replace with actual token counting if available)
+    const inputTokens = Math.ceil(prompt.length / 4);
+    const outputTokens = Math.ceil(output.length / 4);
+
+    return {
+      output,
+      inputTokens,
+      outputTokens,
+    };
+  } catch (error) {
+    throw new Error(`Model execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 }

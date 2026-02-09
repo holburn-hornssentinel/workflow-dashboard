@@ -10,8 +10,11 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { useRouterStore } from '@/stores/routerStore';
+import { useToast } from '@/lib/hooks/useToast';
+import { ToastContainer } from '@/components/ui/Toast';
 
 export function BudgetDashboard() {
+  const { success, error: showError, toasts, removeToast } = useToast();
   const {
     budgetStatus,
     usageHistory,
@@ -47,9 +50,9 @@ export function BudgetDashboard() {
       try {
         const data = e.target?.result as string;
         importUsageData(data);
-        alert('Usage data imported successfully');
+        success('Usage data imported successfully!');
       } catch (error) {
-        alert('Failed to import data: ' + (error as Error).message);
+        showError('Failed to import data: ' + (error as Error).message);
       }
     };
     reader.readAsText(file);
@@ -274,6 +277,9 @@ export function BudgetDashboard() {
           </div>
         )}
       </div>
+
+      {/* Toast Notifications */}
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>
   );
 }

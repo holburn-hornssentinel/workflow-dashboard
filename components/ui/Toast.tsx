@@ -1,99 +1,102 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { CheckCircle, XCircle, AlertCircle, Info, X } from 'lucide-react';
 
-export type ToastType = 'success' | 'error' | 'info' | 'warning';
+export type ToastType = 'success' | 'error' | 'warning' | 'info';
 
 interface ToastProps {
   message: string;
   type: ToastType;
-  duration?: number;
   onClose: () => void;
+  duration?: number;
 }
 
-export default function Toast({ message, type, duration = 3000, onClose }: ToastProps) {
-  const [isExiting, setIsExiting] = useState(false);
+export function Toast({ message, type, onClose, duration = 5000 }: ToastProps) {
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsExiting(true);
-      setTimeout(onClose, 300); // Wait for exit animation
-    }, duration);
+    // Fade in animation
+    setIsVisible(true);
 
-    return () => clearTimeout(timer);
+    // Auto-dismiss after duration
+    if (duration > 0) {
+      const timer = setTimeout(() => {
+        setIsVisible(false);
+        setTimeout(onClose, 300); // Wait for fade-out animation
+      }, duration);
+
+      return () => clearTimeout(timer);
+    }
   }, [duration, onClose]);
 
-  const getStyles = () => {
-    switch (type) {
-      case 'success':
-        return 'bg-green-500/90 border-green-400 text-white';
-      case 'error':
-        return 'bg-red-500/90 border-red-400 text-white';
-      case 'warning':
-        return 'bg-yellow-500/90 border-yellow-400 text-white';
-      default:
-        return 'bg-blue-500/90 border-blue-400 text-white';
-    }
+  const icons = {
+    success: CheckCircle,
+    error: XCircle,
+    warning: AlertCircle,
+    info: Info,
   };
 
-  const getIcon = () => {
-    switch (type) {
-      case 'success':
-        return '✓';
-      case 'error':
-        return '✕';
-      case 'warning':
-        return '⚠';
-      default:
-        return 'ℹ';
-    }
+  const colors = {
+    success: 'bg-green-500/90 border-green-500',
+    error: 'bg-red-500/90 border-red-500',
+    warning: 'bg-yellow-500/90 border-yellow-500',
+    info: 'bg-blue-500/90 border-blue-500',
   };
+
+  const Icon = icons[type];
 
   return (
     <div
-      className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-lg border-2 shadow-2xl backdrop-blur transition-all duration-300 ${getStyles()} ${
-        isExiting ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'
-      }`}
+      className={`fixed bottom-6 right-6 z-50 flex items-start gap-3 p-4 rounded-lg border-2 shadow-2xl backdrop-blur-sm text-white transition-all duration-300 ${
+        colors[type]
+      } ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}
+      role="alert"
     >
-      <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center font-bold">
-        {getIcon()}
+      <Icon className="h-5 w-5 flex-shrink-0 mt-0.5" />
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium leading-relaxed">{message}</p>
       </div>
-      <span className="font-medium">{message}</span>
-      <button onClick={() => {
-        setIsExiting(true);
-        setTimeout(onClose, 300);
-      }} className="ml-2 hover:opacity-70 transition-opacity">
-        ✕
+      <button
+        onClick={() => {
+          setIsVisible(false);
+          setTimeout(onClose, 300);
+        }}
+        className="flex-shrink-0 hover:opacity-80 transition-opacity"
+        aria-label="Close notification"
+      >
+        <X className="h-4 w-4" />
       </button>
     </div>
   );
 }
 
-// Toast Manager Hook
-export function useToast() {
-  const [toasts, setToasts] = useState<Array<{ id: number; message: string; type: ToastType }>>([]);
+// Toast container component
+interface ToastContainerProps {
+  toasts: Array<{
+    id: string;
+    message: string;
+    type: ToastType;
+  }>;
+  onRemove: (id: string) => void;
+}
 
-  const showToast = (message: string, type: ToastType = 'info') => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
-  };
-
-  const removeToast = (id: number) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
-  };
-
-  const ToastContainer = () => (
-    <>
-      {toasts.map((toast) => (
-        <Toast
+export function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
+  return (
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none">
+      {toasts.map((toast, index) => (
+        <div
           key={toast.id}
-          message={toast.message}
-          type={toast.type}
-          onClose={() => removeToast(toast.id)}
-        />
+          className="pointer-events-auto"
+          style={{ marginBottom: `${index * 80}px` }}
+        >
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => onRemove(toast.id)}
+          />
+        </div>
       ))}
-    </>
+    </div>
   );
-
-  return { showToast, ToastContainer };
 }

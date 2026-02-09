@@ -29,7 +29,6 @@ export function SuggestionsPanel() {
   ).length;
 
   const totalIssues = suggestions.length;
-  const testsPassed = Math.max(0, 42 - totalIssues); // Mock calculation, can be enhanced
 
   return (
     <div
@@ -80,10 +79,10 @@ export function SuggestionsPanel() {
                   <div className="text-lg font-medium text-orange-400">{highRiskIssues}</div>
                 </div>
 
-                {/* Tests Passed */}
-                <div className="bg-green-500/10 border border-green-500/50 rounded-lg p-3">
-                  <div className="text-green-400 text-xs font-semibold mb-1">Passed</div>
-                  <div className="text-lg font-medium text-green-400">{testsPassed}</div>
+                {/* Medium Risk */}
+                <div className="bg-yellow-500/10 border border-yellow-500/50 rounded-lg p-3">
+                  <div className="text-yellow-400 text-xs font-semibold mb-1">Medium</div>
+                  <div className="text-lg font-medium text-yellow-400">{mediumRiskIssues}</div>
                 </div>
               </div>
             )}

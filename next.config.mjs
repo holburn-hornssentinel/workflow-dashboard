@@ -6,7 +6,6 @@ const nextConfig = {
   // Exclude native modules from bundling
   serverExternalPackages: [
     '@lancedb/lancedb',
-    'vectordb',
   ],
 
   webpack: (config, { isServer }) => {
@@ -15,7 +14,6 @@ const nextConfig = {
       config.externals = config.externals || [];
       config.externals.push({
         '@lancedb/lancedb': 'commonjs @lancedb/lancedb',
-        'vectordb': 'commonjs vectordb',
       });
     }
     return config;

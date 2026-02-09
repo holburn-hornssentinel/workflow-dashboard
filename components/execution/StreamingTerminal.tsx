@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import '@xterm/xterm/css/xterm.css';
@@ -10,10 +10,16 @@ interface StreamingTerminalProps {
   isStreaming?: boolean;
 }
 
-export default function StreamingTerminal({
-  onStop,
-  isStreaming = false,
-}: StreamingTerminalProps) {
+export interface StreamingTerminalHandle {
+  terminal: {
+    write: (text: string) => void;
+    writeln: (text: string) => void;
+    clear: () => void;
+  };
+}
+
+const StreamingTerminal = forwardRef<StreamingTerminalHandle, StreamingTerminalProps>(
+  ({ onStop, isStreaming = false }, ref) => {
   const terminalRef = useRef<HTMLDivElement>(null);
   const xtermRef = useRef<Terminal | null>(null);
   const fitAddonRef = useRef<FitAddon | null>(null);
@@ -93,16 +99,14 @@ export default function StreamingTerminal({
     xtermRef.current?.clear();
   };
 
-  // Expose methods via ref
-  useEffect(() => {
-    if (terminalRef.current && xtermRef.current) {
-      (terminalRef.current as any).terminal = {
-        write,
-        writeln,
-        clear,
-      };
-    }
-  }, [initialized]);
+  // Expose methods via imperative handle
+  useImperativeHandle(ref, () => ({
+    terminal: {
+      write,
+      writeln,
+      clear,
+    },
+  }), [initialized]);
 
   return (
     <div className="flex flex-col h-full bg-[#1a1b26] rounded-lg overflow-hidden border border-gray-700">
@@ -142,7 +146,11 @@ export default function StreamingTerminal({
       <div ref={terminalRef} className="flex-1 p-2" />
     </div>
   );
-}
+});
+
+StreamingTerminal.displayName = 'StreamingTerminal';
+
+export default StreamingTerminal;
 
 // Helper function to format log levels
 export const formatLog = {

@@ -13,21 +13,33 @@ export async function POST(request: NextRequest) {
       provider = 'claude'
     } = body;
 
+    // Validate provider
+    if (!['claude', 'gemini'].includes(provider)) {
+      return new Response(
+        JSON.stringify({ error: `Invalid provider: ${provider}. Must be 'claude' or 'gemini'` }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Check API key for selected provider
     const claudeKey = process.env.ANTHROPIC_API_KEY;
     const geminiKey = process.env.GEMINI_API_KEY;
 
-    if (provider === 'claude' && !claudeKey) {
+    // Check for placeholder keys
+    const isClaudeConfigured = claudeKey && claudeKey !== 'your_anthropic_api_key_here' && !claudeKey.includes('placeholder');
+    const isGeminiConfigured = geminiKey && geminiKey !== 'your_gemini_api_key_here' && !geminiKey.includes('placeholder');
+
+    if (provider === 'claude' && !isClaudeConfigured) {
       return new Response(
-        JSON.stringify({ error: 'ANTHROPIC_API_KEY not configured' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'Please configure your Anthropic API key in Settings → AI Models' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    if (provider === 'gemini' && !geminiKey) {
+    if (provider === 'gemini' && !isGeminiConfigured) {
       return new Response(
-        JSON.stringify({ error: 'GEMINI_API_KEY not configured' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'Please configure your Google Gemini API key in Settings → AI Models' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
@@ -42,6 +54,7 @@ export async function POST(request: NextRequest) {
           for await (const chunk of streamCompletion(provider as AIProvider, messages, {
             model,
             systemPrompt,
+            ...(tools && { tools }),
           })) {
             if (chunk.text) {
               const data = JSON.stringify({

@@ -5,8 +5,8 @@ import { Lightbulb, Star, Sparkles } from 'lucide-react';
 
 const MODELS = [
   {
-    id: 'claude-opus',
-    name: 'Claude Opus 4.5',
+    id: 'claude-opus-4-6',
+    name: 'Claude Opus 4.6',
     provider: 'Anthropic',
     cost: '$$$',
     bestFor: ['Critical production code', 'Complex algorithms', 'Architecture decisions'],
@@ -15,7 +15,7 @@ const MODELS = [
     colorButton: 'bg-purple-500/20 border-2 border-purple-500',
   },
   {
-    id: 'claude-sonnet',
+    id: 'claude-sonnet-4-5-20250929',
     name: 'Claude Sonnet 4.5',
     provider: 'Anthropic',
     cost: '$$',
@@ -25,7 +25,7 @@ const MODELS = [
     colorButton: 'bg-blue-500/20 border-2 border-blue-500',
   },
   {
-    id: 'claude-haiku',
+    id: 'claude-haiku-4-5-20251001',
     name: 'Claude Haiku 4.5',
     provider: 'Anthropic',
     cost: '$',
@@ -35,7 +35,7 @@ const MODELS = [
     colorButton: 'bg-cyan-500/20 border-2 border-cyan-500',
   },
   {
-    id: 'gemini-pro',
+    id: 'gemini-2.5-pro',
     name: 'Gemini 2.5 Pro',
     provider: 'Google',
     cost: '$$',
@@ -45,7 +45,7 @@ const MODELS = [
     colorButton: 'bg-green-500/20 border-2 border-green-500',
   },
   {
-    id: 'gemini-flash',
+    id: 'gemini-2.5-flash',
     name: 'Gemini 2.5 Flash',
     provider: 'Google',
     cost: '$',
@@ -54,16 +54,6 @@ const MODELS = [
     colorText: 'text-emerald-400',
     colorButton: 'bg-emerald-500/20 border-2 border-emerald-500',
     recommended: true,
-  },
-  {
-    id: 'gemini-flash-lite',
-    name: 'Gemini Flash Lite',
-    provider: 'Google',
-    cost: '¢',
-    bestFor: ['Maximum cost savings', 'Simple tasks', 'Bulk operations'],
-    colorCard: 'bg-gradient-to-r from-lime-500/10 to-lime-600/10 border border-lime-500/30',
-    colorText: 'text-lime-400',
-    colorButton: 'bg-lime-500/20 border-2 border-lime-500',
   },
 ];
 

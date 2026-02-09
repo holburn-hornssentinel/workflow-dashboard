@@ -139,12 +139,19 @@ export class AgentOrchestrator {
       agentId,
       description,
       input,
-      status: 'idle',
+      status: 'running',
+      startedAt: new Date(),
     };
 
     this.tasks.set(task.id, task);
     this.updateAgentStatus(agentId, 'running');
     this.emit('task:assigned', { agent, task });
+
+    // Execute AI task asynchronously (don't block the response)
+    this.executeTask(task.id, agent).catch((error) => {
+      console.error('[Agent] Task execution failed:', error);
+      this.failTask(task.id, error.message || 'Task execution failed');
+    });
 
     return task;
   }
@@ -255,6 +262,57 @@ export class AgentOrchestrator {
       }
     });
     return tasks;
+  }
+
+  getAllTasks(): AgentTask[] {
+    const tasks: AgentTask[] = [];
+    this.tasks.forEach((task) => tasks.push(task));
+    return tasks;
+  }
+
+  private async executeTask(taskId: string, agent: Agent): Promise<void> {
+    const task = this.tasks.get(taskId);
+    if (!task) {
+      throw new Error(`Task ${taskId} not found`);
+    }
+
+    try {
+      const provider = this.getAvailableProvider();
+      if (!provider) {
+        throw new Error('No AI provider configured');
+      }
+
+      // Import dynamically to avoid circular dependencies
+      const { generateText } = await import('@/lib/ai/providers');
+
+      const prompt = `${agent.systemPrompt}\n\nTask: ${task.description}`;
+
+      const response = await generateText({
+        provider,
+        model: provider === 'claude' ? 'claude-sonnet-4-5-20250929' : 'gemini-2.5-flash',
+        prompt,
+        systemPrompt: agent.systemPrompt,
+      });
+
+      await this.completeTask(taskId, response);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      await this.failTask(taskId, errorMessage);
+    }
+  }
+
+  private getAvailableProvider(): 'claude' | 'gemini' | null {
+    const claudeKey = process.env.ANTHROPIC_API_KEY;
+    const geminiKey = process.env.GEMINI_API_KEY;
+
+    // Check for placeholder keys
+    if (claudeKey && claudeKey !== 'your_anthropic_api_key_here' && !claudeKey.includes('placeholder')) {
+      return 'claude';
+    }
+    if (geminiKey && geminiKey !== 'your_gemini_api_key_here' && !geminiKey.includes('placeholder')) {
+      return 'gemini';
+    }
+    return null;
   }
 
   reset(): void {

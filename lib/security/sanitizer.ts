@@ -5,7 +5,8 @@
 
 export const ALLOWED_MODELS = [
   'claude-sonnet-4-5-20250929',
-  'claude-opus-4-5-20251101',
+  'claude-opus-4-6',
+  'claude-haiku-4-5-20251001',
   'gemini-2.5-pro',
   'gemini-2.5-flash',
   'ollama/llama3.1',
@@ -68,8 +69,10 @@ export function sanitizeFilePath(filePath: string): string {
   // Normalize path separators
   sanitized = sanitized.replace(/\\/g, '/');
 
-  // Remove dangerous patterns
-  sanitized = sanitized.replace(/\.\.\//g, '');
+  // Remove dangerous patterns (loop to prevent bypass)
+  while (sanitized.includes('../')) {
+    sanitized = sanitized.replace(/\.\.\//g, '');
+  }
   sanitized = sanitized.replace(/\.\.$/g, '');
 
   return sanitized;

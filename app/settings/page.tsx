@@ -8,6 +8,8 @@ import { SpendingChart } from '@/components/router/SpendingChart';
 import { BudgetConfig } from '@/components/router/BudgetConfig';
 import { Tabs, Tab } from '@/components/ui/Tabs';
 import { Settings as SettingsIcon, RefreshCw, DollarSign, Bot, Shield, Zap } from 'lucide-react';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { markChecklistComplete } from '@/components/walkthrough/ProgressChecklist';
 
 interface EnvConfig {
   anthropicKey: string;
@@ -35,6 +37,8 @@ export default function SettingsPage() {
   // Load current config
   useEffect(() => {
     loadConfig();
+    // Mark settings as visited for walkthrough checklist
+    markChecklistComplete('settings');
   }, []);
 
   const loadConfig = async () => {
@@ -139,7 +143,7 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
-        <div className="text-white text-xl">Loading configuration...</div>
+        <LoadingSpinner size="lg" message="Loading configuration..." />
       </div>
     );
   }

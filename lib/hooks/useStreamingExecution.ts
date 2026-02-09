@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react';
 import { useWorkflowStore } from '@/stores/workflowStore';
-import { formatLog } from '@/components/execution/StreamingTerminal';
+import { formatLog, StreamingTerminalHandle } from '@/components/execution/StreamingTerminal';
 
 interface StreamExecutionOptions {
   prompt: string;
@@ -8,7 +8,7 @@ interface StreamExecutionOptions {
   systemPrompt?: string;
   tools?: any[];
   onChunk?: (chunk: any) => void;
-  terminalRef?: React.RefObject<HTMLDivElement>;
+  terminalRef?: React.RefObject<StreamingTerminalHandle>;
 }
 
 export function useStreamingExecution() {
@@ -22,9 +22,9 @@ export function useStreamingExecution() {
 
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const getTerminal = (terminalRef?: React.RefObject<HTMLDivElement>) => {
+  const getTerminal = (terminalRef?: React.RefObject<StreamingTerminalHandle>) => {
     if (terminalRef?.current) {
-      return (terminalRef.current as any).terminal;
+      return terminalRef.current.terminal;
     }
     return null;
   };
@@ -49,11 +49,14 @@ export function useStreamingExecution() {
           terminal.writeln(formatLog.separator());
         }
 
+        // Detect provider from model name
+        const provider = model?.startsWith('gemini') ? 'gemini' : 'claude';
+
         // Call streaming API
         const response = await fetch('/api/agents/stream', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt, model, systemPrompt, tools }),
+          body: JSON.stringify({ prompt, model, systemPrompt, tools, provider }),
           signal: abortController.signal,
         });
 

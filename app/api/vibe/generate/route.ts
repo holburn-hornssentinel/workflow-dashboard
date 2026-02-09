@@ -71,14 +71,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate workflow using selected AI provider
-    const responseText = await generateText(
-      provider as AIProvider,
-      `Create a workflow for this request:\n\n${description}`,
-      {
-        systemPrompt: SYSTEM_PROMPT,
-        model: provider === 'claude' ? 'claude-sonnet-4-5-20250929' : 'gemini-2.5-flash',
-      }
-    );
+    const responseText = await generateText({
+      provider: provider as AIProvider,
+      model: provider === 'claude' ? 'claude-sonnet-4-5-20250929' : 'gemini-2.5-flash',
+      prompt: `Create a workflow for this request:\n\n${description}`,
+      systemPrompt: SYSTEM_PROMPT,
+    });
 
     // Extract JSON from response
     let workflowData;

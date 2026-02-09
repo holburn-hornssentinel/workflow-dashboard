@@ -6,10 +6,12 @@ import { useRouterStore } from '@/stores/routerStore';
 import type { RoutingRule } from '@/lib/ai/router';
 import type { AllowedModel } from '@/lib/security/sanitizer';
 import { ALLOWED_MODELS } from '@/lib/security/sanitizer';
+import { useToast } from '@/lib/hooks/useToast';
 
 export function ModelRoutingPanel() {
   const { config, addRoutingRule, removeRoutingRule, updateBudget } =
     useRouterStore();
+  const { success, error } = useToast();
 
   const [budgetLimit, setBudgetLimit] = useState(config.budgetLimit);
   const [budgetPeriod, setBudgetPeriod] = useState<'day' | 'week' | 'month'>(
@@ -25,12 +27,12 @@ export function ModelRoutingPanel() {
 
   const handleSaveBudget = () => {
     updateBudget(budgetLimit, budgetPeriod);
-    alert('Budget settings saved');
+    success('Budget settings saved');
   };
 
   const handleAddRule = () => {
     if (!newRule.taskType || !newRule.preferredModel) {
-      alert('Please fill in all required fields');
+      error('Please fill in all required fields');
       return;
     }
 

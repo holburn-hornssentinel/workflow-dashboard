@@ -50,7 +50,7 @@ function EnhancedWorkflowNode({ data, selected }: EnhancedWorkflowNodeProps) {
       className={`
         rounded-lg border-2 transition-all duration-200
         ${selected ? 'border-blue-400 shadow-lg shadow-blue-500/50' : getStatusStyles()}
-        ${selected ? 'scale-105' : 'hover:scale-102'}
+        ${selected ? 'scale-105' : 'hover:scale-[1.02]'}
       `}
       style={{ width: '420px', minHeight: '140px' }}
     >

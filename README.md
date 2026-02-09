@@ -2,15 +2,17 @@
 
 AI workflow orchestration with visual builder, security scanning, and multi-model routing.
 
-**[🚀 Live Demo](https://workflow.mikedeez.top/)** | [GitHub](https://github.com/holburn-hornssentinel/workflow-dashboard)
+[GitHub](https://github.com/holburn-hornssentinel/workflow-dashboard)
 
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Version](https://img.shields.io/badge/version-1.1.0-blue)
+![Version](https://img.shields.io/badge/version-0.1.0-blue)
+![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
 
 ## Features
 
 - **Visual Workflow Builder** - Drag-and-drop interface with 2D/3D visualization
 - **"Vibe Coding"** - Type natural language like "Create an email workflow" and AI generates the nodes
+- **QA Test Agent** - Automated UI testing with Playwright + Gemini Vision AI validation
 - **Security Scanner** - Real-time vulnerability detection (CWE-78, CWE-22, CWE-798) as you build
 - **Multi-Model Router** - Routes simple tasks to Gemini Flash, complex reasoning to Claude Opus
 - **Budget Enforcement** - Daily/weekly/monthly spending limits with automatic cutoffs
@@ -33,10 +35,13 @@ AI workflow orchestration with visual builder, security scanning, and multi-mode
 
 ## Quick Start
 
+**Requirements:** Node.js 18+ (22 recommended)
+
 ```bash
 git clone https://github.com/holburn-hornssentinel/workflow-dashboard.git
 cd workflow-dashboard
 npm install
+cp .env.example .env.local  # Configure API keys
 npm run dev
 ```
 
@@ -74,6 +79,50 @@ GEMINI_API_KEY=your_key_here
 Get free API keys:
 - [Anthropic Claude](https://console.anthropic.com/)
 - [Google Gemini](https://aistudio.google.com/app/apikey)
+
+## QA Test Agent
+
+Automated UI testing with Playwright browser automation and Gemini Vision AI validation.
+
+**Access:** Navigate to `/qa` in the dashboard
+
+**Features:**
+- 🧪 Real-time test streaming in browser
+- 📸 Screenshot capture for visual regression
+- 🤖 Optional AI-powered UI validation with Gemini Vision
+- 🐳 Docker-based execution (isolated, reproducible)
+- ✅ 88.9% automated test coverage
+
+**Run Tests:**
+
+Via dashboard (easiest):
+```bash
+npm run build && npm start
+# Open http://localhost:3004/qa
+# Click "Run Tests"
+```
+
+Via Docker (recommended for CI):
+```bash
+docker build -f tests/Dockerfile.qa -t qa-agent tests/
+docker run --rm --network host -e HEADLESS=true qa-agent \
+  python qa_agent.py --json --url http://localhost:3004
+```
+
+Via command line:
+```bash
+# Install dependencies
+pip3 install -r tests/requirements.txt
+playwright install chromium
+
+# Run tests
+python3 tests/qa_agent.py --url http://localhost:3004
+```
+
+**Requirements:**
+- Python 3.12+
+- Chromium (installed via `playwright install chromium`)
+- Optional: Gemini API key for AI validation
 
 ## Tech Stack
 

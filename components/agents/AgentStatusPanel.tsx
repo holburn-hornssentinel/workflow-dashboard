@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Agent, AgentTask, AgentStatus } from '@/lib/agents/orchestrator';
 import { ClipboardList, Zap, CheckCircle, Search, Target, Bot } from 'lucide-react';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 const AGENT_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   planner: ClipboardList,
@@ -24,7 +25,7 @@ interface AgentStatusPanelProps {
   refreshInterval?: number;
 }
 
-export default function AgentStatusPanel({ refreshInterval = 1000 }: AgentStatusPanelProps) {
+export default function AgentStatusPanel({ refreshInterval = 5000 }: AgentStatusPanelProps) {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [tasks, setTasks] = useState<AgentTask[]>([]);
   const [loading, setLoading] = useState(true);
@@ -79,7 +80,7 @@ export default function AgentStatusPanel({ refreshInterval = 1000 }: AgentStatus
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="text-white">Loading agents...</div>
+        <LoadingSpinner message="Loading agents..." />
       </div>
     );
   }
@@ -137,14 +138,14 @@ export default function AgentStatusPanel({ refreshInterval = 1000 }: AgentStatus
                   ))}
                 </div>
 
-                {/* Active Tasks */}
-                {activeTasks.length > 0 && (
+                {/* Recent Tasks - Show all statuses */}
+                {agentTasks.length > 0 && (
                   <div className="mt-3 pt-3 border-t border-white/[0.06]">
                     <div className="text-xs text-slate-400 mb-2">
-                      Active Tasks ({activeTasks.length})
+                      Recent Tasks ({agentTasks.slice(-5).length})
                     </div>
                     <div className="space-y-2">
-                      {activeTasks.map((task) => (
+                      {agentTasks.slice(-5).reverse().map((task) => (
                         <div
                           key={task.id}
                           className="bg-slate-900/50 rounded p-2"

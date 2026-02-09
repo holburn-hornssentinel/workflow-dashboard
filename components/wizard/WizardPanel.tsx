@@ -4,11 +4,12 @@ import { useWorkflowStore, useCurrentStep } from '@/stores/workflowStore';
 import WizardProgressBar from './WizardProgressBar';
 import WizardNavigation from './WizardNavigation';
 import WizardStepContent from './WizardStepContent';
+import { StreamingTerminalHandle } from '@/components/execution/StreamingTerminal';
 import { Wand2 } from 'lucide-react';
 
 interface WizardPanelProps {
   onExecuteStep: (stepKey: string) => void;
-  terminalRef?: React.RefObject<HTMLDivElement>;
+  terminalRef?: React.RefObject<StreamingTerminalHandle>;
 }
 
 export default function WizardPanel({ onExecuteStep, terminalRef }: WizardPanelProps) {

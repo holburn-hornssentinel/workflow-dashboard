@@ -175,6 +175,34 @@ export const useRouterStore = create<RouterState>()(
         config: state.config,
         usageHistory: state.usageHistory,
       }),
+      // Recreate router from persisted config after rehydration
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          // Recreate router instance with persisted config
+          const router = new ModelRouter(state.config);
+
+          // Restore usage history
+          if (state.usageHistory && state.usageHistory.length > 0) {
+            const costTracker = router.getCostTracker();
+            // Import usage data if available
+            try {
+              state.usageHistory.forEach((record) => {
+                costTracker.record({
+                  model: record.model,
+                  inputTokens: record.inputTokens,
+                  outputTokens: record.outputTokens,
+                  taskType: record.taskType,
+                });
+              });
+            } catch (error) {
+              console.error('[RouterStore] Failed to restore usage history:', error);
+            }
+          }
+
+          state.router = router;
+          state.budgetStatus = router.getBudgetStatus();
+        }
+      },
     }
   )
 );

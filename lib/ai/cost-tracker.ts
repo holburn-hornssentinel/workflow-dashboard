@@ -28,7 +28,8 @@ export type BudgetPeriod = 'day' | 'week' | 'month';
  */
 const MODEL_PRICING: Record<string, { input: number; output: number }> = {
   'claude-sonnet-4-5-20250929': { input: 3.0, output: 15.0 },
-  'claude-opus-4-5-20251101': { input: 15.0, output: 75.0 },
+  'claude-opus-4-6': { input: 15.0, output: 75.0 },
+  'claude-haiku-4-5-20251001': { input: 0.8, output: 4.0 },
   'gemini-2.5-pro': { input: 1.25, output: 5.0 },
   'gemini-2.5-flash': { input: 0.075, output: 0.3 },
   'ollama/llama3.1': { input: 0.0, output: 0.0 }, // Local model

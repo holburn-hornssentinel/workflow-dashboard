@@ -16,7 +16,6 @@ const initialChecklist: ChecklistItem[] = [
   { id: 'builder', label: 'Visit Visual Builder', completed: false },
   { id: 'vibe', label: 'Try Vibe Coding', completed: false },
   { id: 'workflow', label: 'Create First Workflow', completed: false },
-  { id: 'qa', label: 'Run QA Tests', completed: false },
 ];
 
 export default function ProgressChecklist() {
@@ -25,12 +24,30 @@ export default function ProgressChecklist() {
 
   useEffect(() => {
     // Load saved progress
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(CHECKLIST_KEY);
-      if (saved) {
-        setChecklist(JSON.parse(saved));
+    const loadChecklist = () => {
+      if (typeof window !== 'undefined') {
+        const saved = localStorage.getItem(CHECKLIST_KEY);
+        if (saved) {
+          try {
+            setChecklist(JSON.parse(saved));
+          } catch (error) {
+            console.error('Failed to parse checklist, resetting:', error);
+            localStorage.removeItem(CHECKLIST_KEY);
+            setChecklist(initialChecklist);
+          }
+        }
       }
-    }
+    };
+
+    loadChecklist();
+
+    // Listen for storage events to reactively update when markChecklistComplete is called
+    const handleStorageChange = () => {
+      loadChecklist();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const completedCount = checklist.filter((item) => item.completed).length;
@@ -40,7 +57,7 @@ export default function ProgressChecklist() {
     return (
       <button
         onClick={() => setIsExpanded(true)}
-        className="fixed bottom-6 right-6 z-30 px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow-lg transition-all flex items-center gap-2"
+        className="fixed bottom-6 left-6 z-30 px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow-lg transition-all flex items-center gap-2"
       >
         <span className="text-sm font-medium">
           Progress: {completedCount}/{checklist.length}
@@ -56,7 +73,7 @@ export default function ProgressChecklist() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-30 w-80 bg-slate-900 border border-white/[0.06] rounded-xl shadow-2xl">
+    <div className="fixed bottom-6 left-6 z-30 w-80 bg-slate-900 border border-white/[0.06] rounded-xl shadow-2xl">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-white/[0.06]">
         <div>
@@ -131,7 +148,15 @@ export function markChecklistComplete(itemId: string) {
   if (typeof window === 'undefined') return;
 
   const saved = localStorage.getItem(CHECKLIST_KEY);
-  const checklist = saved ? JSON.parse(saved) : initialChecklist;
+  let checklist = initialChecklist;
+  if (saved) {
+    try {
+      checklist = JSON.parse(saved);
+    } catch (error) {
+      console.error('Failed to parse checklist:', error);
+      localStorage.removeItem(CHECKLIST_KEY);
+    }
+  }
 
   const updated = checklist.map((item: ChecklistItem) =>
     item.id === itemId ? { ...item, completed: true } : item

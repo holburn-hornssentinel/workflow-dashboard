@@ -68,6 +68,30 @@ const getDefaultWorkingDir = () => {
   return '';
 };
 
+// Load recent directories from localStorage
+const loadRecentDirectories = (): string[] => {
+  if (typeof window === 'undefined') return [];
+
+  try {
+    const stored = localStorage.getItem('recentDirectories');
+    return stored ? JSON.parse(stored) : [];
+  } catch (error) {
+    console.error('[WorkflowStore] Failed to load recent directories:', error);
+    return [];
+  }
+};
+
+// Save recent directories to localStorage
+const saveRecentDirectories = (directories: string[]) => {
+  if (typeof window === 'undefined') return;
+
+  try {
+    localStorage.setItem('recentDirectories', JSON.stringify(directories));
+  } catch (error) {
+    console.error('[WorkflowStore] Failed to save recent directories:', error);
+  }
+};
+
 export const useWorkflowStore = create<WorkflowState>((set, get) => ({
   // Initial state
   workflow: null,
@@ -77,8 +101,8 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
   stepOrder: [],
   stepStatus: {},
   workingDirectory: getDefaultWorkingDir(),
-  recentDirectories: [],
-  selectedModel: 'gemini-flash',
+  recentDirectories: loadRecentDirectories(),
+  selectedModel: 'gemini-2.5-flash',
   isExecuting: false,
   executionOutput: [],
   streaming: {
@@ -136,7 +160,9 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
         newStatus[key] = 'pending';
       }
     });
-    newStatus[stepOrder[index]] = 'active';
+    if (newStatus[stepOrder[index]] !== 'completed') {
+      newStatus[stepOrder[index]] = 'active';
+    }
 
     set({
       currentStepIndex: index,
@@ -193,10 +219,8 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
     const updated = [path, ...filtered].slice(0, 10);
     set({ recentDirectories: updated });
 
-    // Persist to localStorage
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('recentDirectories', JSON.stringify(updated));
-    }
+    // Persist to localStorage using helper
+    saveRecentDirectories(updated);
   },
 
   // Set selected AI model
@@ -282,7 +306,7 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
       stepOrder: [],
       stepStatus: {},
       workingDirectory: getDefaultWorkingDir(),
-      selectedModel: 'gemini-flash',
+      selectedModel: 'gemini-2.5-flash',
       isExecuting: false,
       executionOutput: [],
       streaming: {

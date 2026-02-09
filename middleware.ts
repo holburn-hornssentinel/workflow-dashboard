@@ -10,8 +10,8 @@ export function middleware(request: NextRequest) {
     script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.mxpnl.com https://static.cloudflareinsights.com blob:;
     style-src 'self' 'unsafe-inline';
     img-src 'self' blob: data: https:;
-    font-src 'self' data:;
-    connect-src 'self' https://raw.githack.com https://cdn.mxpnl.com https://api-js.mixpanel.com https://raw.githubusercontent.com;
+    font-src 'self' data: https://cdn.jsdelivr.net;
+    connect-src 'self' https://raw.githack.com https://cdn.mxpnl.com https://api-js.mixpanel.com https://raw.githubusercontent.com https://cdn.jsdelivr.net;
     worker-src 'self' blob:;
     child-src 'self' blob:;
     frame-src 'self';
@@ -19,6 +19,10 @@ export function middleware(request: NextRequest) {
   `.replace(/\s{2,}/g, ' ').trim();
 
   response.headers.set('Content-Security-Policy', cspHeader);
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
   return response;
 }

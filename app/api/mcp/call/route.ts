@@ -6,6 +6,7 @@ import {
   formatValidationError,
 } from '@/lib/security/validators';
 import { validateToolId } from '@/lib/security/sanitizer';
+import { isDemoBlocked } from '@/lib/demo-mode';
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,6 +27,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Invalid tool ID format. Expected format: server:tool' },
         { status: 400 }
+      );
+    }
+
+    // Check if operation is blocked in demo mode
+    if (isDemoBlocked(toolId)) {
+      return NextResponse.json(
+        { error: 'This operation is disabled in demo mode for safety.' },
+        { status: 403 }
       );
     }
 
