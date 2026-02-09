@@ -57,21 +57,16 @@ qa_console_errors*.log
 qa_console_errors*.json
 
 # Internal tooling (development only)
-qa/
 __tests__/
 dev.sh
 jest.config.js
 
-# Internal documentation (development only)
-*_REPORT.md
+# Internal documentation (development only - but keep production docs)
 *_CHECKLIST.md
-*_SUMMARY.md
 *_SCRIPT.md
 *_APPLIED.md
 *_PLAN.md
-*_GUIDE.md
 *_READY.md
-*_AUDIT_REPORT.md
 
 # QA test artifacts
 tests/screenshots/
