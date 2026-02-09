@@ -1,6 +1,7 @@
 'use client';
 
 import { NodeType } from '@/stores/builderStore';
+import { Bot, Wrench, GitBranch, RefreshCw, Zap, CircleDot, StopCircle, ClipboardList, Settings, Search, BookOpen, Target } from 'lucide-react';
 
 interface NodePaletteProps {
   onDragStart: (type: NodeType) => void;
@@ -9,7 +10,7 @@ interface NodePaletteProps {
 interface NodeTemplate {
   type: NodeType;
   label: string;
-  icon: string;
+  icon: React.ComponentType<{ className?: string }>;
   description: string;
   color: string;
 }
@@ -19,35 +20,35 @@ const nodeTemplates: NodeTemplate[] = [
   {
     type: 'agent',
     label: 'Planner',
-    icon: '📋',
+    icon: ClipboardList,
     description: 'Breaks down complex tasks into actionable steps',
     color: 'bg-blue-500',
   },
   {
     type: 'agent',
     label: 'Executor',
-    icon: '⚙️',
+    icon: Settings,
     description: 'Implements code and executes technical tasks',
     color: 'bg-cyan-500',
   },
   {
     type: 'agent',
     label: 'Reviewer',
-    icon: '🔍',
+    icon: Search,
     description: 'Conducts security scans and quality checks',
     color: 'bg-purple-500',
   },
   {
     type: 'agent',
     label: 'Researcher',
-    icon: '📚',
+    icon: BookOpen,
     description: 'Gathers information and analyzes patterns',
     color: 'bg-indigo-500',
   },
   {
     type: 'agent',
     label: 'Coordinator',
-    icon: '🎯',
+    icon: Target,
     description: 'Orchestrates team workflows and manages tasks',
     color: 'bg-violet-500',
   },
@@ -55,42 +56,42 @@ const nodeTemplates: NodeTemplate[] = [
   {
     type: 'tool',
     label: 'Tool',
-    icon: '🔧',
+    icon: Wrench,
     description: 'External tool or function call',
     color: 'bg-green-500',
   },
   {
     type: 'condition',
     label: 'Condition',
-    icon: '🔀',
+    icon: GitBranch,
     description: 'Conditional branching logic',
     color: 'bg-yellow-500',
   },
   {
     type: 'loop',
     label: 'Loop',
-    icon: '🔄',
+    icon: RefreshCw,
     description: 'Repeat steps multiple times',
     color: 'bg-purple-500',
   },
   {
     type: 'parallel',
     label: 'Parallel',
-    icon: '⚡',
+    icon: Zap,
     description: 'Execute steps in parallel',
     color: 'bg-orange-500',
   },
   {
     type: 'start',
     label: 'Start',
-    icon: '🟢',
+    icon: CircleDot,
     description: 'Workflow start point',
     color: 'bg-emerald-500',
   },
   {
     type: 'end',
     label: 'End',
-    icon: '🔴',
+    icon: StopCircle,
     description: 'Workflow end point',
     color: 'bg-red-500',
   },
@@ -105,42 +106,45 @@ export default function NodePalette({ onDragStart }: NodePaletteProps) {
       </div>
 
       <div className="space-y-2 pb-6">
-        {nodeTemplates.map((template) => (
-          <div
-            key={template.type}
-            draggable
-            onDragStart={(e) => {
-              onDragStart(template.type);
-              // Create ghost image for better drag feedback
-              const ghost = e.currentTarget.cloneNode(true) as HTMLElement;
-              ghost.style.opacity = '0.5';
-              ghost.style.position = 'absolute';
-              ghost.style.top = '-1000px';
-              document.body.appendChild(ghost);
-              e.dataTransfer.setDragImage(ghost, 50, 25);
-              setTimeout(() => document.body.removeChild(ghost), 0);
-            }}
-            className="group cursor-grab active:cursor-grabbing bg-slate-800/50 hover:bg-slate-800 border border-white/[0.06] hover:border-slate-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 rounded-lg p-3 transition-all duration-200 touch-manipulation"
-            style={{ minHeight: '44px' }} // Touch-friendly minimum size
-          >
-            <div className="flex items-start gap-3">
-              <div
-                className={`w-11 h-11 ${template.color} rounded-lg flex items-center justify-center text-xl flex-shrink-0`}
-                style={{ minWidth: '44px', minHeight: '44px' }} // Touch-friendly tap target
-              >
-                {template.icon}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-white font-medium text-sm">
-                  {template.label}
+        {nodeTemplates.map((template) => {
+          const Icon = template.icon;
+          return (
+            <div
+              key={`${template.type}-${template.label}`}
+              draggable
+              onDragStart={(e) => {
+                onDragStart(template.type);
+                // Create ghost image for better drag feedback
+                const ghost = e.currentTarget.cloneNode(true) as HTMLElement;
+                ghost.style.opacity = '0.5';
+                ghost.style.position = 'absolute';
+                ghost.style.top = '-1000px';
+                document.body.appendChild(ghost);
+                e.dataTransfer.setDragImage(ghost, 50, 25);
+                setTimeout(() => document.body.removeChild(ghost), 0);
+              }}
+              className="group cursor-grab active:cursor-grabbing bg-slate-800/50 hover:bg-slate-800 border border-white/[0.06] hover:border-slate-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/10 rounded-lg p-3 transition-all duration-200 touch-manipulation"
+              style={{ minHeight: '44px' }} // Touch-friendly minimum size
+            >
+              <div className="flex items-start gap-3">
+                <div
+                  className={`w-11 h-11 ${template.color} rounded-lg flex items-center justify-center flex-shrink-0`}
+                  style={{ minWidth: '44px', minHeight: '44px' }} // Touch-friendly tap target
+                >
+                  <Icon className="h-6 w-6 text-white" />
                 </div>
-                <div className="text-slate-400 text-xs mt-1 line-clamp-2">
-                  {template.description}
+                <div className="flex-1 min-w-0">
+                  <div className="text-white font-medium text-sm">
+                    {template.label}
+                  </div>
+                  <div className="text-slate-400 text-xs mt-1 line-clamp-2">
+                    {template.description}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="mt-6 pt-6 border-t border-white/[0.06]">

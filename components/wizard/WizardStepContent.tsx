@@ -5,6 +5,7 @@ import ModelSelector from '@/components/ModelSelector';
 import StreamingTerminal from '@/components/execution/StreamingTerminal';
 import { useStreamingExecution } from '@/lib/hooks/useStreamingExecution';
 import { WorkflowStep } from '@/types/workflow';
+import { Timer, Bot, Hourglass, Play } from 'lucide-react';
 
 interface WizardStepContentProps {
   step: WorkflowStep;
@@ -35,12 +36,16 @@ export default function WizardStepContent({
       <div>
         <h2 className="text-lg font-medium text-white mb-2">{step.name}</h2>
         {step.duration && (
-          <p className="text-slate-400 text-sm">⏱️ Duration: {step.duration}</p>
+          <p className="text-slate-400 text-sm flex items-center gap-1">
+            <Timer className="h-4 w-4" />
+            Duration: {step.duration}
+          </p>
         )}
         {step.model_recommendation && (
           <div className="mt-2">
-            <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">
-              🤖 Recommended: {step.model_recommendation}
+            <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs flex items-center gap-1 inline-flex">
+              <Bot className="h-3 w-3" />
+              Recommended: {step.model_recommendation}
             </span>
           </div>
         )}
@@ -60,7 +65,7 @@ export default function WizardStepContent({
         onClick={() => onExecute(stepKey)}
         disabled={isExecuting}
         className={`
-          w-full font-semibold py-3 rounded-lg transition-colors
+          w-full font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2
           ${
             isExecuting
               ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
@@ -68,7 +73,17 @@ export default function WizardStepContent({
           }
         `}
       >
-        {isExecuting ? '⏳ Executing...' : '▶️ Execute This Step'}
+        {isExecuting ? (
+          <>
+            <Hourglass className="h-4 w-4" />
+            Executing...
+          </>
+        ) : (
+          <>
+            <Play className="h-4 w-4" />
+            Execute This Step
+          </>
+        )}
       </button>
 
       {/* Streaming Terminal */}

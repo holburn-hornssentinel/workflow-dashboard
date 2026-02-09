@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useWorkflowStore } from '@/stores/workflowStore';
 import GitRepoList from './GitRepoList';
 import FolderBrowser from './FolderBrowser';
+import { Folder, FolderOpen, ChevronDown } from 'lucide-react';
 
 type TabType = 'git' | 'browse';
 
@@ -30,16 +31,14 @@ export default function DirectorySelector() {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg transition-colors"
       >
-        <span className="text-lg">📁</span>
+        <Folder className="h-4 w-4 text-slate-400" />
         <div className="text-left">
           <div className="text-xs text-slate-400">Working Directory:</div>
           <div className="text-sm font-medium text-white truncate max-w-xs" title={workingDirectory}>
             {displayName}
           </div>
         </div>
-        <span className={`text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}>
-          ▼
-        </span>
+        <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {/* Dropdown Panel */}
@@ -58,7 +57,7 @@ export default function DirectorySelector() {
               <button
                 onClick={() => setActiveTab('git')}
                 className={`
-                  flex-1 py-3 px-4 text-sm font-medium transition-colors
+                  flex-1 py-3 px-4 text-sm font-medium transition-colors flex items-center justify-center gap-2
                   ${
                     activeTab === 'git'
                       ? 'bg-slate-800 text-white border-b-2 border-blue-500'
@@ -66,12 +65,13 @@ export default function DirectorySelector() {
                   }
                 `}
               >
-                📂 Git Repositories
+                <FolderOpen className="h-4 w-4" />
+                Git Repositories
               </button>
               <button
                 onClick={() => setActiveTab('browse')}
                 className={`
-                  flex-1 py-3 px-4 text-sm font-medium transition-colors
+                  flex-1 py-3 px-4 text-sm font-medium transition-colors flex items-center justify-center gap-2
                   ${
                     activeTab === 'browse'
                       ? 'bg-slate-800 text-white border-b-2 border-blue-500'
@@ -79,7 +79,8 @@ export default function DirectorySelector() {
                   }
                 `}
               >
-                🗂️ Browse Folders
+                <Folder className="h-4 w-4" />
+                Browse Folders
               </button>
             </div>
 

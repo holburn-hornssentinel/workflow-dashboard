@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { GitRepo } from '@/types/workflow';
+import { Folder, FolderOpen, RefreshCw } from 'lucide-react';
 
 interface GitRepoListProps {
   onSelect: (path: string) => void;
@@ -64,7 +65,7 @@ export default function GitRepoList({ onSelect, selectedPath }: GitRepoListProps
   if (repos.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-8 text-center">
-        <div className="text-4xl mb-4">📁</div>
+        <Folder className="h-12 w-12 text-slate-600 mb-4" />
         <div className="text-slate-400 text-sm mb-2">No git repositories found</div>
         <button
           onClick={loadGitRepos}
@@ -93,7 +94,7 @@ export default function GitRepoList({ onSelect, selectedPath }: GitRepoListProps
             `}
           >
             <div className="flex items-center gap-2">
-              <span className="text-lg">📂</span>
+              <FolderOpen className="h-4 w-4 flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <div className="font-medium truncate">{repo.name}</div>
                 <div className="text-xs opacity-70 truncate">{repo.path}</div>
@@ -107,9 +108,10 @@ export default function GitRepoList({ onSelect, selectedPath }: GitRepoListProps
       <div className="p-2 border-t border-white/[0.06]">
         <button
           onClick={loadGitRepos}
-          className="w-full py-2 text-sm text-slate-400 hover:text-slate-300 transition-colors active:scale-[0.98]"
+          className="w-full py-2 text-sm text-slate-400 hover:text-slate-300 transition-colors active:scale-[0.98] flex items-center justify-center gap-2"
         >
-          🔄 Refresh
+          <RefreshCw className="h-4 w-4" />
+          Refresh
         </button>
       </div>
     </div>

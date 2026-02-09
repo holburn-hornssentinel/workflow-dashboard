@@ -2,6 +2,7 @@
 
 import { Handle, Position } from '@xyflow/react';
 import { memo } from 'react';
+import { Timer, Bot } from 'lucide-react';
 
 interface EnhancedWorkflowNodeProps {
   data: {
@@ -70,13 +71,15 @@ function EnhancedWorkflowNode({ data, selected }: EnhancedWorkflowNodeProps) {
         {/* Metadata Row */}
         <div className="flex flex-wrap items-center gap-3">
           {duration && (
-            <span className="px-3 py-1 bg-slate-800/80 text-slate-300 rounded-md text-sm font-medium">
-              ⏱️ {duration}
+            <span className="px-3 py-1 bg-slate-800/80 text-slate-300 rounded-md text-sm font-medium flex items-center gap-1">
+              <Timer className="h-3 w-3" />
+              {duration}
             </span>
           )}
           {model_recommendation && (
-            <span className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-md text-sm font-medium">
-              🤖 {model_recommendation}
+            <span className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-md text-sm font-medium flex items-center gap-1">
+              <Bot className="h-3 w-3" />
+              {model_recommendation}
             </span>
           )}
         </div>

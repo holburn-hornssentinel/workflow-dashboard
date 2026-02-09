@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Lightbulb, Star, Sparkles } from 'lucide-react';
 
 const MODELS = [
   {
@@ -95,7 +96,7 @@ export default function ModelSelector({ selectedModel, onChange, recommendation 
       {recommended && recommended.id !== selectedModel && (
         <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3">
           <div className="flex items-start gap-2">
-            <span className="text-yellow-400 text-lg">💡</span>
+            <Lightbulb className="h-5 w-5 text-yellow-400 flex-shrink-0" />
             <div>
               <div className="text-yellow-400 text-sm font-medium mb-1">
                 Expert Recommendation
@@ -127,8 +128,9 @@ export default function ModelSelector({ selectedModel, onChange, recommendation 
           <span className="font-medium">Best for:</span> {selected.bestFor.join(', ')}
         </div>
         {selected.recommended && (
-          <div className="mt-2 inline-block bg-emerald-500/20 text-emerald-400 text-xs px-2 py-1 rounded">
-            ⭐ Best Value
+          <div className="mt-2 inline-flex items-center gap-1 bg-emerald-500/20 text-emerald-400 text-xs px-2 py-1 rounded">
+            <Star className="h-3 w-3" />
+            Best Value
           </div>
         )}
       </div>
@@ -152,7 +154,10 @@ export default function ModelSelector({ selectedModel, onChange, recommendation 
               </div>
               <div className="text-xs text-slate-500 truncate">{model.bestFor[0]}</div>
               {model.id === recommendation && (
-                <div className="mt-1 text-xs text-yellow-400">✨ Recommended</div>
+                <div className="mt-1 flex items-center gap-1 text-xs text-yellow-400">
+                  <Sparkles className="h-3 w-3" />
+                  Recommended
+                </div>
               )}
             </button>
           ))}

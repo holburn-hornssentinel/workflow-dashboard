@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import VoiceButton from './VoiceButton';
+import { Sparkles, Bot, AlertCircle, Lightbulb } from 'lucide-react';
 
 interface VibeInputProps {
   onGenerate?: (description: string) => Promise<void>;
@@ -78,8 +79,8 @@ export default function VibeInput({
       {/* Main Input */}
       <div className="bg-slate-900/95 backdrop-blur border-2 border-white/[0.06] rounded-xl p-4 shadow-2xl">
         <div className="flex items-start gap-4 mb-4">
-          <div className="flex-shrink-0 w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-2xl">
-            ✨
+          <div className="flex-shrink-0 w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+            <Sparkles className="h-6 w-6 text-white" />
           </div>
           <div className="flex-1">
             <h3 className="text-base font-medium text-white mb-2">
@@ -101,24 +102,26 @@ export default function VibeInput({
             <button
               type="button"
               onClick={() => setProvider('claude')}
-              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
+              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${
                 provider === 'claude'
                   ? 'bg-purple-600 text-white ring-2 ring-purple-400'
                   : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
               }`}
             >
-              🤖 Claude Sonnet 4.5
+              <Bot className="h-4 w-4" />
+              Claude Sonnet 4.5
             </button>
             <button
               type="button"
               onClick={() => setProvider('gemini')}
-              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
+              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${
                 provider === 'gemini'
                   ? 'bg-blue-600 text-white ring-2 ring-blue-400'
                   : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
               }`}
             >
-              ✨ Gemini 2.5 Flash
+              <Sparkles className="h-4 w-4" />
+              Gemini 2.5 Flash
             </button>
           </div>
         </div>
@@ -145,7 +148,7 @@ export default function VibeInput({
 
         {error && (
           <div className="mt-3 text-red-400 text-sm flex items-center gap-2">
-            <span>⚠️</span>
+            <AlertCircle className="h-4 w-4" />
             {error}
           </div>
         )}
@@ -159,7 +162,7 @@ export default function VibeInput({
             onClick={handleGenerate}
             disabled={isGenerating || !description.trim()}
             className={`
-              px-4 py-2 rounded-lg font-semibold transition-all
+              px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2
               ${
                 isGenerating || !description.trim()
                   ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
@@ -168,12 +171,15 @@ export default function VibeInput({
             `}
           >
             {isGenerating ? (
-              <span className="flex items-center gap-2">
+              <>
                 <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
                 Generating...
-              </span>
+              </>
             ) : (
-              '✨ Generate Workflow'
+              <>
+                <Sparkles className="h-4 w-4" />
+                Generate Workflow
+              </>
             )}
           </button>
         </div>
@@ -187,9 +193,9 @@ export default function VibeInput({
             <button
               key={idx}
               onClick={() => setDescription(example)}
-              className="w-full text-left px-4 py-3 bg-slate-800/50 hover:bg-slate-800 border border-white/[0.06] hover:border-slate-600 rounded-lg text-sm text-slate-300 transition-all"
+              className="w-full text-left px-4 py-3 bg-slate-800/50 hover:bg-slate-800 border border-white/[0.06] hover:border-slate-600 rounded-lg text-sm text-slate-300 transition-all flex items-start gap-2"
             >
-              <span className="text-blue-400 mr-2">💡</span>
+              <Lightbulb className="h-4 w-4 text-blue-400 flex-shrink-0 mt-0.5" />
               {example}
             </button>
           ))}

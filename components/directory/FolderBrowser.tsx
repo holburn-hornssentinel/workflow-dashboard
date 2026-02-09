@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { DirectoryEntry } from '@/types/workflow';
+import { ArrowUp, FolderOpen, Folder, Check, ChevronRight } from 'lucide-react';
 
 interface FolderBrowserProps {
   onSelect: (path: string) => void;
@@ -95,7 +96,7 @@ export default function FolderBrowser({ onSelect, selectedPath }: FolderBrowserP
             onClick={handleNavigateUp}
             disabled={!canGoUp}
             className={`
-              px-3 py-1 rounded text-sm transition-colors
+              px-3 py-1 rounded text-sm transition-colors flex items-center gap-1
               ${
                 canGoUp
                   ? 'bg-slate-700 hover:bg-slate-600 text-white'
@@ -103,13 +104,15 @@ export default function FolderBrowser({ onSelect, selectedPath }: FolderBrowserP
               }
             `}
           >
-            ⬆️ Up
+            <ArrowUp className="h-4 w-4" />
+            Up
           </button>
           <button
             onClick={handleSelectCurrent}
-            className="px-3 py-1 rounded text-sm bg-blue-600 hover:bg-blue-700 text-white transition-colors active:scale-[0.98]"
+            className="px-3 py-1 rounded text-sm bg-blue-600 hover:bg-blue-700 text-white transition-colors active:scale-[0.98] flex items-center gap-1"
           >
-            ✓ Select This Folder
+            <Check className="h-4 w-4" />
+            Select This Folder
           </button>
         </div>
         <div className="text-xs text-slate-400 truncate" title={currentPath}>
@@ -121,7 +124,7 @@ export default function FolderBrowser({ onSelect, selectedPath }: FolderBrowserP
       <div className="flex-1 overflow-y-auto">
         {entries.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-8 text-center">
-            <div className="text-4xl mb-4">📂</div>
+            <FolderOpen className="h-12 w-12 text-slate-600 mb-4" />
             <div className="text-slate-400 text-sm">No subdirectories</div>
           </div>
         ) : (
@@ -140,16 +143,18 @@ export default function FolderBrowser({ onSelect, selectedPath }: FolderBrowserP
                   }
                 `}
               >
-                <span className="text-lg">
-                  {entry.isGitRepo ? '📂' : '📁'}
-                </span>
+                {entry.isGitRepo ? (
+                  <FolderOpen className="h-4 w-4 flex-shrink-0" />
+                ) : (
+                  <Folder className="h-4 w-4 flex-shrink-0" />
+                )}
                 <div className="flex-1 min-w-0">
                   <div className="font-medium truncate">{entry.name}</div>
                   {entry.isGitRepo && (
                     <div className="text-xs opacity-70">Git Repository</div>
                   )}
                 </div>
-                <span className="text-slate-500">→</span>
+                <ChevronRight className="h-4 w-4 text-slate-500 flex-shrink-0" />
               </button>
             ))}
           </div>

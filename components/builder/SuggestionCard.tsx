@@ -144,7 +144,7 @@ export function SuggestionCard({ suggestion }: SuggestionCardProps) {
 
       {suggestion.estimatedSpeedup && (
         <div className="text-xs text-green-400">
-          ⚡ {suggestion.estimatedSpeedup}
+          <Zap className="h-3 w-3 inline" /> {suggestion.estimatedSpeedup}
         </div>
       )}
 

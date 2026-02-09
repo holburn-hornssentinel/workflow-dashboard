@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Brain } from 'lucide-react';
 
 interface MemoryStats {
   totalConversations: number;
@@ -193,13 +194,13 @@ export default function MemoryBrowser() {
         <div className="mb-6">
           <button
             onClick={() => setShowAddForm(!showAddForm)}
-            className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded transition-colors mb-3"
+            className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded transition-colors"
           >
             {showAddForm ? '− Cancel' : '+ Add Memory'}
           </button>
 
           {showAddForm && (
-            <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4 space-y-3">
+            <div className="bg-slate-800/50 border border-white/[0.06] rounded-lg p-4 space-y-3 mt-3">
               <div>
                 <label className="text-xs text-slate-400 mb-1 block">Type</label>
                 <select
@@ -284,7 +285,9 @@ export default function MemoryBrowser() {
           </div>
         ) : memories.length === 0 ? (
           <div className="text-center py-12">
-            <div className="text-4xl mb-2">🧠</div>
+            <div className="flex justify-center mb-2">
+              <Brain className="h-12 w-12 text-slate-600" />
+            </div>
             <p className="text-slate-400">
               {selectedType === 'all'
                 ? 'Select a type to view memories'

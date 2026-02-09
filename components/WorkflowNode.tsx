@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { Handle, Position } from '@xyflow/react';
+import { Timer, Bot } from 'lucide-react';
 
 // Enhanced workflow node with better visuals
 function WorkflowNode({ data, selected }: any) {
@@ -31,14 +32,14 @@ function WorkflowNode({ data, selected }: any) {
         <div className="flex items-center gap-2 mb-2 flex-wrap">
           {data?.duration && (
             <div className="text-slate-300 text-xs bg-slate-700/50 px-2 py-1 rounded flex items-center gap-1">
-              <span>⏱️</span>
+              <Timer className="h-3 w-3" />
               <span>{data.duration}</span>
             </div>
           )}
 
           {data?.model && (
             <div className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded flex items-center gap-1 border border-blue-500/30">
-              <span>🤖</span>
+              <Bot className="h-3 w-3" />
               <span className="font-medium">{data.model}</span>
             </div>
           )}

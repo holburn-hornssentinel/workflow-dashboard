@@ -5,15 +5,16 @@ import { Handle, Position, NodeProps } from '@xyflow/react';
 import { AgentNodeData, NodeType } from '@/stores/builderStore';
 import { useSuggestionsStore } from '@/stores/suggestionsStore';
 import { SuggestionBadge } from './SuggestionBadge';
+import { Bot, Wrench, GitBranch, RefreshCw, Zap, CircleDot, StopCircle, Settings } from 'lucide-react';
 
-const nodeIcons: Record<NodeType, string> = {
-  agent: '🤖',
-  tool: '🔧',
-  condition: '🔀',
-  loop: '🔄',
-  parallel: '⚡',
-  start: '🟢',
-  end: '🔴',
+const nodeIcons: Record<NodeType, React.ComponentType<{ className?: string }>> = {
+  agent: Bot,
+  tool: Wrench,
+  condition: GitBranch,
+  loop: RefreshCw,
+  parallel: Zap,
+  start: CircleDot,
+  end: StopCircle,
 };
 
 const nodeColors: Record<NodeType, string> = {
@@ -63,7 +64,7 @@ function AgentNode({ data, selected, id }: NodeProps) {
     }
   };
 
-  const icon = nodeIcons[nodeData.type] || '⚙️';
+  const Icon = nodeIcons[nodeData.type] || Settings;
   const colorClass = nodeColors[nodeData.type] || 'border-gray-500 bg-gray-500/10';
 
   return (
@@ -91,7 +92,9 @@ function AgentNode({ data, selected, id }: NodeProps) {
       <div className="p-4">
         {/* Icon + Label */}
         <div className="flex items-center gap-2 mb-2">
-          <div className="text-2xl">{icon}</div>
+          <div className="text-slate-300">
+            <Icon className="h-6 w-6" />
+          </div>
           {isEditing ? (
             <input
               type="text"
@@ -135,8 +138,9 @@ function AgentNode({ data, selected, id }: NodeProps) {
 
         {/* Tools Count */}
         {nodeData.tools && nodeData.tools.length > 0 && (
-          <div className="mt-2 text-xs text-slate-400">
-            🔧 {nodeData.tools.length} tools
+          <div className="mt-2 flex items-center gap-1 text-xs text-slate-400">
+            <Wrench className="h-3 w-3" />
+            <span>{nodeData.tools.length} tools</span>
           </div>
         )}
       </div>

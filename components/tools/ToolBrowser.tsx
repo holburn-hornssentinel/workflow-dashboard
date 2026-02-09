@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { TOOL_CATEGORIES, getToolCategory } from '@/lib/mcp/tool-registry';
+import { Folder, GitBranch, Globe, Search, MessageSquare, Box, Wrench, Github } from 'lucide-react';
 
 interface Tool {
   name: string;
@@ -13,6 +14,15 @@ interface Tool {
 interface ToolBrowserProps {
   onSelectTool?: (tool: Tool) => void;
 }
+
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  'folder': Folder,
+  'git-branch': GitBranch,
+  'globe': Globe,
+  'search': Search,
+  'message-square': MessageSquare,
+  'github': Github,
+};
 
 export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -82,6 +92,7 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
           {TOOL_CATEGORIES.map((category) => {
             const isConnected = connectedServers.includes(category.id);
             const isSelected = selectedCategory === category.id;
+            const Icon = ICON_MAP[category.icon] || Box;
 
             return (
               <div
@@ -101,7 +112,9 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
                 }
               >
                 <div className="flex items-center gap-3">
-                  <div className="text-2xl">{category.icon}</div>
+                  <div className={isSelected ? 'text-white' : 'text-slate-400'}>
+                    <Icon className="h-6 w-6" />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-medium text-sm">{category.name}</div>
                     <div className="text-xs opacity-75 line-clamp-1">
@@ -123,7 +136,9 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
         {!selectedCategory ? (
           <div className="flex items-center justify-center h-full text-center">
             <div>
-              <div className="text-6xl mb-4">🔧</div>
+              <div className="flex justify-center mb-4">
+                <Wrench className="h-16 w-16 text-slate-600" />
+              </div>
               <h3 className="text-base font-medium text-white mb-2">
                 Select a Tool Category
               </h3>
@@ -149,7 +164,9 @@ export default function ToolBrowser({ onSelectTool }: ToolBrowserProps) {
 
             {tools.length === 0 ? (
               <div className="text-center py-12">
-                <div className="text-4xl mb-2">📭</div>
+                <div className="flex justify-center mb-2">
+                  <Box className="h-12 w-12 text-slate-600" />
+                </div>
                 <p className="text-slate-400">No tools available in this category</p>
               </div>
             ) : (

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { CircleDot, Mic } from 'lucide-react';
 
 interface VoiceButtonProps {
   onTranscript: (text: string) => void;
@@ -75,7 +76,11 @@ export default function VoiceButton({ onTranscript }: VoiceButtonProps) {
       `}
       title={isListening ? 'Stop listening' : 'Start voice input'}
     >
-      {isListening ? '🔴' : '🎤'}
+      {isListening ? (
+        <CircleDot className="h-4 w-4 text-white" />
+      ) : (
+        <Mic className="h-4 w-4 text-white" />
+      )}
     </button>
   );
 }

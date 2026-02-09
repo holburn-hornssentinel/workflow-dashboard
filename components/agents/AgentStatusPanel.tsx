@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { Agent, AgentTask, AgentStatus } from '@/lib/agents/orchestrator';
+import { ClipboardList, Zap, CheckCircle, Search, Target, Bot } from 'lucide-react';
 
-const AGENT_ICONS = {
-  planner: '📋',
-  executor: '⚡',
-  reviewer: '✅',
-  researcher: '🔍',
-  coordinator: '🎯',
+const AGENT_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  planner: ClipboardList,
+  executor: Zap,
+  reviewer: CheckCircle,
+  researcher: Search,
+  coordinator: Target,
 };
 
 const STATUS_COLORS = {
@@ -103,6 +104,7 @@ export default function AgentStatusPanel({ refreshInterval = 1000 }: AgentStatus
             const activeTasks = agentTasks.filter(
               (t) => t.status === 'running' || t.status === 'waiting'
             );
+            const Icon = AGENT_ICONS[agent.role as keyof typeof AGENT_ICONS] || Bot;
 
             return (
               <div
@@ -112,8 +114,8 @@ export default function AgentStatusPanel({ refreshInterval = 1000 }: AgentStatus
                 {/* Agent Header */}
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-start gap-3">
-                    <div className="text-3xl">
-                      {AGENT_ICONS[agent.role as keyof typeof AGENT_ICONS] || '🤖'}
+                    <div className="text-slate-300">
+                      <Icon className="h-8 w-8" />
                     </div>
                     <div>
                       <h4 className="text-white font-medium">{agent.name}</h4>

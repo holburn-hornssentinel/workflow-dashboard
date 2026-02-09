@@ -4,6 +4,7 @@ import { useWorkflowStore, useCurrentStep } from '@/stores/workflowStore';
 import WizardProgressBar from './WizardProgressBar';
 import WizardNavigation from './WizardNavigation';
 import WizardStepContent from './WizardStepContent';
+import { Wand2 } from 'lucide-react';
 
 interface WizardPanelProps {
   onExecuteStep: (stepKey: string) => void;
@@ -23,7 +24,9 @@ export default function WizardPanel({ onExecuteStep, terminalRef }: WizardPanelP
     return (
       <div className="h-full bg-slate-900/95 backdrop-blur flex items-center justify-center">
         <div className="text-center p-8">
-          <div className="text-6xl mb-4">🧙‍♂️</div>
+          <div className="flex justify-center mb-4">
+            <Wand2 className="h-16 w-16 text-slate-600" />
+          </div>
           <h3 className="text-base font-medium text-white mb-2">No Workflow Loaded</h3>
           <p className="text-slate-400 text-sm">
             Select a workflow to begin the guided wizard

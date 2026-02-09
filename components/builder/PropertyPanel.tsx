@@ -1,6 +1,7 @@
 'use client';
 
 import { useBuilderStore, AgentNodeData } from '@/stores/builderStore';
+import { FileEdit } from 'lucide-react';
 
 export default function PropertyPanel() {
   const { selectedNodeId, nodes, updateNode } = useBuilderStore();
@@ -11,7 +12,9 @@ export default function PropertyPanel() {
     return (
       <div className="w-80 bg-slate-900/95 backdrop-blur border-l border-white/[0.06] p-4">
         <div className="text-center text-slate-400 mt-8">
-          <div className="text-4xl mb-2">📝</div>
+          <div className="flex justify-center mb-2">
+            <FileEdit className="h-12 w-12 text-slate-600" />
+          </div>
           <p className="text-sm">Select a node to edit properties</p>
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getPreferences, getRecommendations } from '@/lib/personalization/preferences';
-import Link from 'next/link';
+import { Lightbulb } from 'lucide-react';
 
 export default function SmartWidget() {
   const [recommendations, setRecommendations] = useState<string[]>([]);
@@ -19,8 +19,8 @@ export default function SmartWidget() {
   return (
     <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/30 rounded-xl p-6 mb-6">
       <div className="flex items-start gap-4">
-        <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center text-2xl flex-shrink-0">
-          💡
+        <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+          <Lightbulb className="h-6 w-6 text-white" />
         </div>
         <div className="flex-1">
           <h3 className="text-white font-semibold mb-2">Smart Recommendations</h3>
