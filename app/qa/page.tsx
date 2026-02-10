@@ -144,6 +144,19 @@ export default function QAPage() {
                 terminalRef.current?.terminal.writeln('');
                 break;
 
+              case 'discovery':
+                if (event.phase === 'platform') {
+                  terminalRef.current?.terminal.writeln(
+                    `\x1b[36mPlatform: ${event.platform}\x1b[0m`
+                  );
+                } else if (event.phase === 'pages') {
+                  terminalRef.current?.terminal.writeln(
+                    `\x1b[36mDiscovered ${event.count} pages\x1b[0m`
+                  );
+                  terminalRef.current?.terminal.writeln('');
+                }
+                break;
+
               case 'result':
                 const result: TestResult = {
                   name: event.name,
