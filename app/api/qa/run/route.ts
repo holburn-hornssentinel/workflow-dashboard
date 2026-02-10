@@ -30,16 +30,18 @@ export async function POST(request: NextRequest) {
 
     const stream = new ReadableStream({
       start(controller) {
-        // Spawn Python QA agent subprocess
-        const proc = spawn('python3', [
-          'tests/qa_agent.py',
+        // Spawn QA agent via Docker container
+        const proc = spawn('docker', [
+          'run',
+          '--rm',
+          '--network', 'host',
+          '-e', `HEADLESS=${String(headless)}`,
+          'qa-agent:latest',
+          'python', 'qa_agent.py',
           '--json',
           '--url', targetUrl,
         ], {
-          env: {
-            ...process.env,
-            HEADLESS: String(headless),
-          },
+          env: process.env,
           cwd: process.cwd(),
         });
 
