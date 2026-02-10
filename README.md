@@ -49,6 +49,11 @@ Open http://localhost:3004
 
 The UI works immediately. Add API keys via Settings when ready for AI features.
 
+**Optional:** To use the QA test feature, build the Docker image:
+```bash
+docker build -f tests/Dockerfile.qa -t qa-agent tests/
+```
+
 ## Why This Exists
 
 I built this to solve problems I kept hitting when building AI workflows:
@@ -93,6 +98,13 @@ Automated UI testing with Playwright browser automation and Gemini Vision AI val
 - 🐳 Docker-based execution (isolated, reproducible)
 - ✅ 88.9% automated test coverage
 
+**Setup (Required):**
+
+Build the QA Docker image (one-time setup):
+```bash
+docker build -f tests/Dockerfile.qa -t qa-agent tests/
+```
+
 **Run Tests:**
 
 Via dashboard (easiest):
@@ -102,14 +114,13 @@ npm run build && npm start
 # Click "Run Tests"
 ```
 
-Via Docker (recommended for CI):
+Via Docker CLI (recommended for CI):
 ```bash
-docker build -f tests/Dockerfile.qa -t qa-agent tests/
 docker run --rm --network host -e HEADLESS=true qa-agent \
   python qa_agent.py --json --url http://localhost:3004
 ```
 
-Via command line:
+Via command line (requires Python setup):
 ```bash
 # Install dependencies
 pip3 install -r tests/requirements.txt
@@ -120,8 +131,7 @@ python3 tests/qa_agent.py --url http://localhost:3004
 ```
 
 **Requirements:**
-- Python 3.12+
-- Chromium (installed via `playwright install chromium`)
+- Docker (required for dashboard QA feature)
 - Optional: Gemini API key for AI validation
 
 ## Tech Stack
