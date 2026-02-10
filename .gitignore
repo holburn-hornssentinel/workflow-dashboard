@@ -14,7 +14,8 @@
 *.tsbuildinfo
 
 # local data
-/data
+/data/*
+!/data/templates/
 
 # next.js
 /.next/

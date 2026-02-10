@@ -1,0 +1,87 @@
+{
+  "id": "security-audit",
+  "name": "Security Audit Pipeline",
+  "description": "Automated security audit workflow with CWE scanning and vulnerability detection",
+  "category": "security",
+  "difficulty": "intermediate",
+  "tags": ["security", "audit", "cwe", "vulnerability"],
+  "securityScore": 92,
+  "metadata": {
+    "author": "Horns Sentinel",
+    "version": "1.0.0",
+    "createdAt": "2026-02-10",
+    "estimatedCost": "$0.10-0.30",
+    "requiredProviders": ["claude"]
+  },
+  "nodes": [
+    {
+      "id": "start-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 100 },
+      "data": {
+        "label": "Start",
+        "type": "start"
+      }
+    },
+    {
+      "id": "researcher-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 200 },
+      "data": {
+        "label": "Researcher",
+        "type": "agent",
+        "prompt": "Analyze the codebase and identify potential security vulnerabilities. Focus on common attack vectors like injection flaws, authentication issues, and insecure configurations.",
+        "model": "claude-3-5-sonnet-20241022"
+      }
+    },
+    {
+      "id": "reviewer-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 320 },
+      "data": {
+        "label": "Reviewer",
+        "type": "agent",
+        "prompt": "Conduct detailed security review using CWE database. Generate security score and prioritize findings by severity (Critical, High, Medium, Low).",
+        "model": "claude-3-5-sonnet-20241022"
+      }
+    },
+    {
+      "id": "condition-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 440 },
+      "data": {
+        "label": "Vulnerabilities Found?",
+        "type": "condition",
+        "prompt": "if security_score < 70"
+      }
+    },
+    {
+      "id": "executor-1",
+      "type": "custom",
+      "position": { "x": 300, "y": 540 },
+      "data": {
+        "label": "Executor",
+        "type": "agent",
+        "prompt": "Generate remediation plan with code patches for identified vulnerabilities. Include test cases to verify fixes.",
+        "model": "claude-3-5-sonnet-20241022"
+      }
+    },
+    {
+      "id": "end-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 640 },
+      "data": {
+        "label": "End",
+        "type": "end"
+      }
+    }
+  ],
+  "edges": [
+    { "id": "e1-2", "source": "start-1", "target": "researcher-1" },
+    { "id": "e2-3", "source": "researcher-1", "target": "reviewer-1" },
+    { "id": "e3-4", "source": "reviewer-1", "target": "condition-1" },
+    { "id": "e4-5", "source": "condition-1", "target": "executor-1", "label": "yes" },
+    { "id": "e4-6", "source": "condition-1", "target": "end-1", "label": "no" },
+    { "id": "e5-6", "source": "executor-1", "target": "end-1" }
+  ]
+}

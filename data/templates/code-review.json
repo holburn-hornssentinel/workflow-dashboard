@@ -1,0 +1,111 @@
+{
+  "id": "code-review",
+  "name": "Automated Code Review",
+  "description": "Multi-dimensional code review workflow covering style, security, and logic validation",
+  "category": "code-review",
+  "difficulty": "beginner",
+  "tags": ["code-review", "quality", "style", "security"],
+  "securityScore": 85,
+  "metadata": {
+    "author": "Horns Sentinel",
+    "version": "1.0.0",
+    "createdAt": "2026-02-10",
+    "estimatedCost": "$0.15-0.40",
+    "requiredProviders": ["claude"]
+  },
+  "nodes": [
+    {
+      "id": "start-1",
+      "type": "custom",
+      "position": { "x": 250, "y": 50 },
+      "data": {
+        "label": "Start",
+        "type": "start"
+      }
+    },
+    {
+      "id": "researcher-1",
+      "type": "custom",
+      "position": { "x": 250, "y": 150 },
+      "data": {
+        "label": "Researcher",
+        "type": "agent",
+        "prompt": "Analyze code changes in the pull request. Extract modified files, functions, and dependencies.",
+        "model": "claude-3-5-sonnet-20241022"
+      }
+    },
+    {
+      "id": "parallel-1",
+      "type": "custom",
+      "position": { "x": 250, "y": 270 },
+      "data": {
+        "label": "Parallel Review",
+        "type": "parallel"
+      }
+    },
+    {
+      "id": "reviewer-1",
+      "type": "custom",
+      "position": { "x": 50, "y": 390 },
+      "data": {
+        "label": "Style Reviewer",
+        "type": "agent",
+        "prompt": "Check code style, naming conventions, and adherence to project style guide. Suggest improvements.",
+        "model": "claude-3-5-haiku-20241022"
+      }
+    },
+    {
+      "id": "reviewer-2",
+      "type": "custom",
+      "position": { "x": 250, "y": 390 },
+      "data": {
+        "label": "Security Reviewer",
+        "type": "agent",
+        "prompt": "Identify security vulnerabilities, unsafe patterns, and potential exploits. Flag CWE violations.",
+        "model": "claude-3-5-sonnet-20241022"
+      }
+    },
+    {
+      "id": "reviewer-3",
+      "type": "custom",
+      "position": { "x": 450, "y": 390 },
+      "data": {
+        "label": "Logic Reviewer",
+        "type": "agent",
+        "prompt": "Analyze business logic, edge cases, and potential bugs. Verify correctness and completeness.",
+        "model": "claude-3-5-sonnet-20241022"
+      }
+    },
+    {
+      "id": "coordinator-1",
+      "type": "custom",
+      "position": { "x": 250, "y": 510 },
+      "data": {
+        "label": "Coordinator",
+        "type": "agent",
+        "prompt": "Aggregate review findings from all reviewers. Generate final summary with prioritized action items.",
+        "model": "claude-3-5-sonnet-20241022"
+      }
+    },
+    {
+      "id": "end-1",
+      "type": "custom",
+      "position": { "x": 250, "y": 630 },
+      "data": {
+        "label": "End",
+        "type": "end"
+      }
+    }
+  ],
+  "edges": [
+    { "id": "e1-2", "source": "start-1", "target": "researcher-1" },
+    { "id": "e2-3", "source": "researcher-1", "target": "parallel-1" },
+    { "id": "e3-4", "source": "parallel-1", "target": "reviewer-1" },
+    { "id": "e3-5", "source": "parallel-1", "target": "reviewer-2" },
+    { "id": "e3-6", "source": "parallel-1", "target": "reviewer-3" },
+    { "id": "e4-7", "source": "reviewer-1", "target": "coordinator-1" },
+    { "id": "e5-7", "source": "reviewer-2", "target": "coordinator-1" },
+    { "id": "e6-7", "source": "reviewer-3", "target": "coordinator-1" },
+    { "id": "e7-8", "source": "coordinator-1", "target": "end-1" }
+  ]
+}

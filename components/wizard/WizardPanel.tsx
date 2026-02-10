@@ -14,12 +14,21 @@ interface WizardPanelProps {
 
 export default function WizardPanel({ onExecuteStep, terminalRef }: WizardPanelProps) {
   const currentStep = useCurrentStep();
-  const stepOrder = useWorkflowStore((state) => state.stepOrder);
-  const selectedModel = useWorkflowStore((state) => state.selectedModel);
-  const isExecuting = useWorkflowStore((state) => state.isExecuting);
-  const setSelectedModel = useWorkflowStore((state) => state.setSelectedModel);
-  const nextStep = useWorkflowStore((state) => state.nextStep);
-  const previousStep = useWorkflowStore((state) => state.previousStep);
+  const {
+    stepOrder,
+    selectedModel,
+    isExecuting,
+    setSelectedModel,
+    nextStep,
+    previousStep,
+  } = useWorkflowStore((state) => ({
+    stepOrder: state.stepOrder,
+    selectedModel: state.selectedModel,
+    isExecuting: state.isExecuting,
+    setSelectedModel: state.setSelectedModel,
+    nextStep: state.nextStep,
+    previousStep: state.previousStep,
+  }));
 
   if (!currentStep) {
     return (

@@ -1,0 +1,87 @@
+{
+  "id": "vuln-remediation",
+  "name": "Vulnerability Remediation",
+  "description": "Automated vulnerability fix workflow with CVE analysis, prioritization, patching, and verification",
+  "category": "security",
+  "difficulty": "advanced",
+  "tags": ["security", "vulnerability", "cve", "remediation", "patching"],
+  "securityScore": 95,
+  "metadata": {
+    "author": "Horns Sentinel",
+    "version": "1.0.0",
+    "createdAt": "2026-02-10",
+    "estimatedCost": "$0.25-0.60",
+    "requiredProviders": ["claude"]
+  },
+  "nodes": [
+    {
+      "id": "start-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 50 },
+      "data": {
+        "label": "Start",
+        "type": "start"
+      }
+    },
+    {
+      "id": "researcher-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 150 },
+      "data": {
+        "label": "CVE Researcher",
+        "type": "agent",
+        "prompt": "Scan dependencies for known CVEs. Gather vulnerability details, CVSS scores, and exploit information.",
+        "model": "claude-3-5-sonnet-20241022"
+      }
+    },
+    {
+      "id": "planner-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 270 },
+      "data": {
+        "label": "Prioritizer",
+        "type": "agent",
+        "prompt": "Prioritize vulnerabilities by severity, exploitability, and business impact. Create remediation roadmap.",
+        "model": "claude-3-5-sonnet-20241022"
+      }
+    },
+    {
+      "id": "executor-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 390 },
+      "data": {
+        "label": "Patcher",
+        "type": "agent",
+        "prompt": "Apply patches and security updates. Update dependencies to patched versions. Document changes.",
+        "model": "claude-3-5-sonnet-20241022"
+      }
+    },
+    {
+      "id": "reviewer-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 510 },
+      "data": {
+        "label": "Verifier",
+        "type": "agent",
+        "prompt": "Verify patches resolve vulnerabilities. Run security tests and regression tests. Confirm no new issues.",
+        "model": "claude-3-5-sonnet-20241022"
+      }
+    },
+    {
+      "id": "end-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 630 },
+      "data": {
+        "label": "End",
+        "type": "end"
+      }
+    }
+  ],
+  "edges": [
+    { "id": "e1-2", "source": "start-1", "target": "researcher-1" },
+    { "id": "e2-3", "source": "researcher-1", "target": "planner-1" },
+    { "id": "e3-4", "source": "planner-1", "target": "executor-1" },
+    { "id": "e4-5", "source": "executor-1", "target": "reviewer-1" },
+    { "id": "e5-6", "source": "reviewer-1", "target": "end-1" }
+  ]
+}

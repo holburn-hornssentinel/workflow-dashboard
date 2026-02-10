@@ -1,0 +1,87 @@
+{
+  "id": "content-generation",
+  "name": "Content Generation Workflow",
+  "description": "AI-powered content creation pipeline with planning, research, drafting, and editing stages",
+  "category": "content",
+  "difficulty": "beginner",
+  "tags": ["content", "writing", "ai", "generation"],
+  "securityScore": 65,
+  "metadata": {
+    "author": "Horns Sentinel",
+    "version": "1.0.0",
+    "createdAt": "2026-02-10",
+    "estimatedCost": "$0.20-0.50",
+    "requiredProviders": ["claude", "gemini"]
+  },
+  "nodes": [
+    {
+      "id": "start-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 50 },
+      "data": {
+        "label": "Start",
+        "type": "start"
+      }
+    },
+    {
+      "id": "planner-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 150 },
+      "data": {
+        "label": "Planner",
+        "type": "agent",
+        "prompt": "Create content outline with key topics, sections, and target audience. Define tone and style guidelines.",
+        "model": "claude-3-5-sonnet-20241022"
+      }
+    },
+    {
+      "id": "researcher-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 270 },
+      "data": {
+        "label": "Researcher",
+        "type": "agent",
+        "prompt": "Research topic thoroughly: gather facts, statistics, quotes, and examples. Verify sources and accuracy.",
+        "model": "gemini-2.0-flash-exp"
+      }
+    },
+    {
+      "id": "executor-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 390 },
+      "data": {
+        "label": "Draft Writer",
+        "type": "agent",
+        "prompt": "Write first draft based on outline and research. Follow style guidelines and maintain consistent voice.",
+        "model": "claude-3-5-sonnet-20241022"
+      }
+    },
+    {
+      "id": "reviewer-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 510 },
+      "data": {
+        "label": "Editor",
+        "type": "agent",
+        "prompt": "Edit and refine content: improve clarity, fix grammar, enhance readability. Ensure accuracy and flow.",
+        "model": "claude-3-5-sonnet-20241022"
+      }
+    },
+    {
+      "id": "end-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 630 },
+      "data": {
+        "label": "End",
+        "type": "end"
+      }
+    }
+  ],
+  "edges": [
+    { "id": "e1-2", "source": "start-1", "target": "planner-1" },
+    { "id": "e2-3", "source": "planner-1", "target": "researcher-1" },
+    { "id": "e3-4", "source": "researcher-1", "target": "executor-1" },
+    { "id": "e4-5", "source": "executor-1", "target": "reviewer-1" },
+    { "id": "e5-6", "source": "reviewer-1", "target": "end-1" }
+  ]
+}

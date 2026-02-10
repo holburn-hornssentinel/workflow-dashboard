@@ -108,6 +108,22 @@ function checkNodeSecurity(node: any): SecuritySuggestion[] {
     }
   }
 
+  // Check for unsafe deserialization
+  if (node.data?.prompt) {
+    const deserializationCheck = checkUnsafeDeserialization(node);
+    if (deserializationCheck) {
+      suggestions.push(deserializationCheck);
+    }
+  }
+
+  // Check for XML External Entity (XXE) vulnerabilities
+  if (node.type === 'tool' || node.type === 'mcp') {
+    const xxeCheck = checkXXE(node);
+    if (xxeCheck) {
+      suggestions.push(xxeCheck);
+    }
+  }
+
   return suggestions;
 }
 
@@ -261,10 +277,141 @@ function checkInputValidation(node: any): SecuritySuggestion | null {
 }
 
 /**
+ * Check for unsafe deserialization patterns (CWE-502)
+ */
+function checkUnsafeDeserialization(node: any): SecuritySuggestion | null {
+  const textToCheck = [
+    node.data?.prompt,
+    node.data?.code,
+    JSON.stringify(node.data?.config),
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  for (const pattern of SECURITY_PATTERNS.UNSAFE_DESERIALIZATION) {
+    if (pattern.test(textToCheck)) {
+      // Check if it's on untrusted input
+      const hasUntrustedInput =
+        textToCheck.includes('user') ||
+        textToCheck.includes('input') ||
+        textToCheck.includes('request') ||
+        textToCheck.includes('external');
+
+      if (hasUntrustedInput) {
+        return {
+          id: `sec-deserialization-${node.id}`,
+          type: 'security',
+          severity: 'critical',
+          title: 'Unsafe Deserialization',
+          description: `Node "${node.data?.label || node.id}" deserializes untrusted input which can lead to remote code execution.`,
+          remediation:
+            'Validate and sanitize input before deserialization. Use safe parsing methods with strict schemas. Never deserialize untrusted data.',
+          cwe: 'CWE-502',
+          nodeIds: [node.id],
+        };
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Check for XML External Entity (XXE) vulnerabilities (CWE-611)
+ */
+function checkXXE(node: any): SecuritySuggestion | null {
+  const textToCheck = [
+    node.data?.prompt,
+    node.data?.toolId,
+    JSON.stringify(node.data?.args),
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  for (const pattern of SECURITY_PATTERNS.XML_EXTERNAL_ENTITY) {
+    if (pattern.test(textToCheck)) {
+      return {
+        id: `sec-xxe-${node.id}`,
+        type: 'security',
+        severity: 'high',
+        title: 'XML External Entity (XXE) Risk',
+        description: `Node "${node.data?.label || node.id}" parses XML which may be vulnerable to XXE attacks.`,
+        remediation:
+          'Disable external entity processing in XML parser. Use secure XML parsing libraries with XXE protection enabled.',
+        cwe: 'CWE-611',
+        nodeIds: [node.id],
+      };
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Check for missing authorization checks before dangerous operations (CWE-863)
+ */
+function checkMissingAuthorization(
+  node: any,
+  graph: WorkflowGraph
+): SecuritySuggestion | null {
+  // Check if node performs dangerous operations
+  const isDangerous =
+    node.type === 'mcp' &&
+    DANGEROUS_TOOLS.some((tool) => node.data?.toolId?.includes(tool));
+
+  if (!isDangerous) return null;
+
+  // Check if there's an authorization node before this node
+  const hasAuthCheck = graph.nodes.some((n) => {
+    if (n.id === node.id) return false;
+
+    const label = typeof n.data?.label === 'string' ? n.data.label : '';
+    const prompt = typeof n.data?.prompt === 'string' ? n.data.prompt : '';
+
+    const isAuthNode =
+      label.toLowerCase().includes('auth') ||
+      label.toLowerCase().includes('permission') ||
+      label.toLowerCase().includes('verify') ||
+      prompt.toLowerCase().includes('authorize') ||
+      prompt.toLowerCase().includes('permission');
+
+    // Check if auth node comes before this node in the workflow
+    const authIndex = graph.nodes.findIndex((gn) => gn.id === n.id);
+    const nodeIndex = graph.nodes.findIndex((gn) => gn.id === node.id);
+
+    return isAuthNode && authIndex < nodeIndex;
+  });
+
+  if (!hasAuthCheck) {
+    return {
+      id: `sec-missing-authz-${node.id}`,
+      type: 'security',
+      severity: 'high',
+      title: 'Missing Authorization Check',
+      description: `Node "${node.data?.label || node.id}" performs dangerous operations without prior authorization checks.`,
+      remediation:
+        'Add authorization/permission checks before dangerous operations. Verify user identity and permissions.',
+      cwe: 'CWE-863',
+      nodeIds: [node.id],
+    };
+  }
+
+  return null;
+}
+
+/**
  * Check for workflow-level security patterns
  */
 function checkWorkflowPatterns(graph: WorkflowGraph): SecuritySuggestion[] {
   const suggestions: SecuritySuggestion[] = [];
+
+  // Check for missing authorization on dangerous operations
+  for (const node of graph.nodes) {
+    const authCheck = checkMissingAuthorization(node, graph);
+    if (authCheck) {
+      suggestions.push(authCheck);
+    }
+  }
 
   // Check for network calls without sanitization
   const networkNodes = graph.nodes.filter(

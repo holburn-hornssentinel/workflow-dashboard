@@ -13,8 +13,9 @@ import { Builder3DCanvas } from '@/components/builder/Builder3DCanvas';
 import { SuggestionsPanel } from '@/components/builder/SuggestionsPanel';
 import { useSuggestionsStore } from '@/stores/suggestionsStore';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+import { TemplateGallery } from '@/components/builder/TemplateGallery';
 import Link from 'next/link';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, LayoutTemplate } from 'lucide-react';
 import { markChecklistComplete } from '@/components/walkthrough/ProgressChecklist';
 
 const nodeTypes = {
@@ -26,6 +27,7 @@ export default function BuilderPage() {
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
   const [draggedNodeType, setDraggedNodeType] = useState<NodeType | null>(null);
   const [showVibeInput, setShowVibeInput] = useState(false);
+  const [showTemplateGallery, setShowTemplateGallery] = useState(false);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -252,6 +254,14 @@ export default function BuilderPage() {
             {/* View Toggle */}
             <ViewToggle />
 
+            {/* Templates */}
+            <button
+              onClick={() => setShowTemplateGallery(true)}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors flex items-center gap-2"
+            >
+              <LayoutTemplate className="h-4 w-4" /> Templates
+            </button>
+
             {/* Vibe Coding */}
             <button
               onClick={() => setShowVibeInput(true)}
@@ -472,6 +482,12 @@ export default function BuilderPage() {
           </div>
         </div>
       )}
+
+      {/* Template Gallery */}
+      <TemplateGallery
+        isOpen={showTemplateGallery}
+        onClose={() => setShowTemplateGallery(false)}
+      />
       </div>
     </ErrorBoundary>
   );

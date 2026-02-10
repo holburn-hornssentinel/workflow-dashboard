@@ -19,21 +19,29 @@ export default function WorkflowDetailPage() {
   const [loading, setLoading] = useState(true);
 
   // Zustand store - use single selector to prevent multiple subscriptions
-  const { workflow, nodes, edges } = useWorkflowStore((state) => ({
+  const {
+    workflow,
+    nodes,
+    edges,
+    workingDirectory,
+    selectedModel,
+    setWorkflow,
+    setIsExecuting,
+    goToStepByKey,
+  } = useWorkflowStore((state) => ({
     workflow: state.workflow,
     nodes: state.nodes,
     edges: state.edges,
+    workingDirectory: state.workingDirectory,
+    selectedModel: state.selectedModel,
+    setWorkflow: state.setWorkflow,
+    setIsExecuting: state.setIsExecuting,
+    goToStepByKey: state.goToStepByKey,
   }));
-
-  const setWorkflow = useWorkflowStore((state) => state.setWorkflow);
-  const workingDirectory = useWorkflowStore((state) => state.workingDirectory);
-  const selectedModel = useWorkflowStore((state) => state.selectedModel);
-  const setIsExecuting = useWorkflowStore((state) => state.setIsExecuting);
 
   const { streamExecution } = useStreamingExecution();
   const [showWizard, setShowWizard] = useState(false);
   const terminalRef = useRef<StreamingTerminalHandle>(null);
-  const goToStepByKey = useWorkflowStore((state) => state.goToStepByKey);
 
   const handleExecuteStep = async (stepKey: string) => {
     if (!workflow) return;

@@ -70,14 +70,37 @@ export function generateApiKey(): string {
 }
 
 /**
+ * Get the current authentication mode from environment
+ */
+export function getAuthMode(): 'open' | 'api-key' | 'dev-bypass' {
+  const mode = process.env.AUTH_MODE?.toLowerCase();
+
+  if (mode === 'open' || mode === 'api-key' || mode === 'dev-bypass') {
+    return mode;
+  }
+
+  // Default to dev-bypass for backwards compatibility
+  return 'dev-bypass';
+}
+
+/**
  * Check if authentication is required based on environment
  */
 export function isAuthRequired(): boolean {
-  // Skip auth in development by default
-  if (process.env.NODE_ENV === 'development') {
-    return process.env.REQUIRE_AUTH_IN_DEV === 'true';
-  }
+  const authMode = getAuthMode();
 
-  // Always require auth in production
-  return true;
+  switch (authMode) {
+    case 'open':
+      // No auth required
+      return false;
+    case 'api-key':
+      // Always require auth
+      return true;
+    case 'dev-bypass':
+      // Skip auth in development, require in production
+      return process.env.NODE_ENV !== 'development';
+    default:
+      // Default to requiring auth for safety
+      return true;
+  }
 }

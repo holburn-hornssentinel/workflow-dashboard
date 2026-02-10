@@ -84,4 +84,15 @@ export const SECURITY_PATTERNS = {
     /;\s*DROP\s+/i,
     /UNION\s+SELECT/i,
   ],
+  UNSAFE_DESERIALIZATION: [
+    /JSON\.parse\(/i,
+    /eval\(/i,
+    /unserialize\(/i,
+  ],
+  XML_EXTERNAL_ENTITY: [
+    /parseXML/i,
+    /DOMParser/i,
+    /XMLParser/i,
+    /<!ENTITY/i,
+  ],
 } as const;

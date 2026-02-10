@@ -1,0 +1,87 @@
+{
+  "id": "ci-cd-pipeline",
+  "name": "CI/CD Pipeline",
+  "description": "Continuous integration and deployment workflow with build, test, and deploy stages",
+  "category": "devops",
+  "difficulty": "intermediate",
+  "tags": ["ci-cd", "devops", "automation", "deployment"],
+  "securityScore": 78,
+  "metadata": {
+    "author": "Horns Sentinel",
+    "version": "1.0.0",
+    "createdAt": "2026-02-10",
+    "estimatedCost": "$0.05-0.15",
+    "requiredProviders": ["claude"]
+  },
+  "nodes": [
+    {
+      "id": "start-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 50 },
+      "data": {
+        "label": "Start",
+        "type": "start"
+      }
+    },
+    {
+      "id": "executor-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 150 },
+      "data": {
+        "label": "Build",
+        "type": "agent",
+        "prompt": "Build the application: install dependencies, compile code, and bundle assets. Verify build artifacts.",
+        "model": "claude-3-5-haiku-20241022"
+      }
+    },
+    {
+      "id": "executor-2",
+      "type": "custom",
+      "position": { "x": 100, "y": 270 },
+      "data": {
+        "label": "Test",
+        "type": "agent",
+        "prompt": "Run test suite: unit tests, integration tests, and end-to-end tests. Generate coverage report.",
+        "model": "claude-3-5-haiku-20241022"
+      }
+    },
+    {
+      "id": "condition-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 390 },
+      "data": {
+        "label": "Tests Passed?",
+        "type": "condition",
+        "prompt": "if test_success && coverage > 80"
+      }
+    },
+    {
+      "id": "executor-3",
+      "type": "custom",
+      "position": { "x": 300, "y": 490 },
+      "data": {
+        "label": "Deploy",
+        "type": "agent",
+        "prompt": "Deploy to target environment. Run health checks and smoke tests to verify deployment.",
+        "model": "claude-3-5-haiku-20241022"
+      }
+    },
+    {
+      "id": "end-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 590 },
+      "data": {
+        "label": "End",
+        "type": "end"
+      }
+    }
+  ],
+  "edges": [
+    { "id": "e1-2", "source": "start-1", "target": "executor-1" },
+    { "id": "e2-3", "source": "executor-1", "target": "executor-2" },
+    { "id": "e3-4", "source": "executor-2", "target": "condition-1" },
+    { "id": "e4-5", "source": "condition-1", "target": "executor-3", "label": "yes" },
+    { "id": "e4-6", "source": "condition-1", "target": "end-1", "label": "no" },
+    { "id": "e5-6", "source": "executor-3", "target": "end-1" }
+  ]
+}

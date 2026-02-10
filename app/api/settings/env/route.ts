@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { validateApiKey } from '@/lib/security/auth';
+import { validateApiKey, isAuthRequired, getAuthMode } from '@/lib/security/auth';
 
 const ENV_PATH = join(process.cwd(), '.env.local');
 
@@ -30,6 +30,8 @@ export async function GET() {
       hasGeminiKey: !!config.GEMINI_API_KEY,
       memoryBackend: config.MEMORY_BACKEND,
       lancedbPath: config.LANCEDB_PATH,
+      authMode: getAuthMode(),
+      demoMode: process.env.DEMO_MODE === 'true',
     };
 
     return NextResponse.json(masked);
@@ -42,21 +44,23 @@ export async function GET() {
 // POST: Update environment configuration
 export async function POST(request: NextRequest) {
   try {
-    // Require API key authentication
-    const apiKey = process.env.DASHBOARD_API_KEY;
+    // Check if authentication is required based on AUTH_MODE
+    if (isAuthRequired()) {
+      const apiKey = process.env.DASHBOARD_API_KEY;
 
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: 'Environment updates are disabled. Configure DASHBOARD_API_KEY to enable.' },
-        { status: 403 }
-      );
-    }
+      if (!apiKey) {
+        return NextResponse.json(
+          { error: 'Environment updates are disabled. Configure DASHBOARD_API_KEY to enable.' },
+          { status: 403 }
+        );
+      }
 
-    if (!validateApiKey(request)) {
-      return NextResponse.json(
-        { error: 'Unauthorized. Valid API key required.' },
-        { status: 401 }
-      );
+      if (!validateApiKey(request)) {
+        return NextResponse.json(
+          { error: 'Unauthorized. Valid API key required.' },
+          { status: 401 }
+        );
+      }
     }
 
     const body = await request.json();

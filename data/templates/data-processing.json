@@ -1,0 +1,86 @@
+{
+  "id": "data-processing",
+  "name": "Data Processing Pipeline",
+  "description": "ETL workflow for fetching, transforming, and loading data with validation loops",
+  "category": "data-pipeline",
+  "difficulty": "beginner",
+  "tags": ["etl", "data", "pipeline", "transformation"],
+  "securityScore": 70,
+  "metadata": {
+    "author": "Horns Sentinel",
+    "version": "1.0.0",
+    "createdAt": "2026-02-10",
+    "estimatedCost": "$0.08-0.20",
+    "requiredProviders": ["claude"]
+  },
+  "nodes": [
+    {
+      "id": "start-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 50 },
+      "data": {
+        "label": "Start",
+        "type": "start"
+      }
+    },
+    {
+      "id": "tool-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 150 },
+      "data": {
+        "label": "Fetch Data",
+        "type": "tool",
+        "prompt": "fetch_from_api(endpoint, params)",
+        "tools": ["http", "database"]
+      }
+    },
+    {
+      "id": "executor-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 270 },
+      "data": {
+        "label": "Transform",
+        "type": "agent",
+        "prompt": "Clean and transform raw data: parse formats, normalize values, enrich with metadata, and apply business rules.",
+        "model": "claude-3-5-haiku-20241022"
+      }
+    },
+    {
+      "id": "loop-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 390 },
+      "data": {
+        "label": "Validate Loop",
+        "type": "loop",
+        "prompt": "for each batch in data"
+      }
+    },
+    {
+      "id": "tool-2",
+      "type": "custom",
+      "position": { "x": 100, "y": 510 },
+      "data": {
+        "label": "Write Data",
+        "type": "tool",
+        "prompt": "write_to_storage(data, destination)",
+        "tools": ["database", "file-system"]
+      }
+    },
+    {
+      "id": "end-1",
+      "type": "custom",
+      "position": { "x": 100, "y": 630 },
+      "data": {
+        "label": "End",
+        "type": "end"
+      }
+    }
+  ],
+  "edges": [
+    { "id": "e1-2", "source": "start-1", "target": "tool-1" },
+    { "id": "e2-3", "source": "tool-1", "target": "executor-1" },
+    { "id": "e3-4", "source": "executor-1", "target": "loop-1" },
+    { "id": "e4-5", "source": "loop-1", "target": "tool-2" },
+    { "id": "e5-6", "source": "tool-2", "target": "end-1" }
+  ]
+}

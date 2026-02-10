@@ -10,6 +10,9 @@ import { Tabs, Tab } from '@/components/ui/Tabs';
 import { Settings as SettingsIcon, RefreshCw, DollarSign, Bot, Shield, Zap } from 'lucide-react';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { markChecklistComplete } from '@/components/walkthrough/ProgressChecklist';
+import { useToastStore } from '@/stores/toastStore';
+import { useApiKeyStore } from '@/stores/apiKeyStore';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 
 interface EnvConfig {
   anthropicKey: string;
@@ -18,21 +21,27 @@ interface EnvConfig {
   hasGeminiKey: boolean;
   memoryBackend: string;
   lancedbPath: string;
+  authMode: 'open' | 'api-key' | 'dev-bypass';
+  demoMode: boolean;
 }
 
 export default function SettingsPage() {
+  const toast = useToastStore();
+  const apiKeyStore = useApiKeyStore();
+
   const [config, setConfig] = useState<EnvConfig | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [testing, setTesting] = useState<{ provider: 'claude' | 'gemini' | null }>({ provider: null });
   const [restarting, setRestarting] = useState(false);
+  const [showRestartConfirm, setShowRestartConfirm] = useState(false);
 
   // Form state
   const [anthropicKey, setAnthropicKey] = useState('');
   const [geminiKey, setGeminiKey] = useState('');
   const [memoryBackend, setMemoryBackend] = useState('local');
   const [lancedbPath, setLancedbPath] = useState('./data/lancedb');
+  const [dashboardApiKey, setDashboardApiKey] = useState('');
 
   // Load current config
   useEffect(() => {
@@ -52,7 +61,7 @@ export default function SettingsPage() {
       setLancedbPath(data.lancedbPath);
     } catch (error) {
       console.error('Failed to load config:', error);
-      setMessage({ type: 'error', text: 'Failed to load configuration' });
+      toast.error('Failed to load configuration');
     } finally {
       setLoading(false);
     }
@@ -60,12 +69,18 @@ export default function SettingsPage() {
 
   const handleSave = async () => {
     setSaving(true);
-    setMessage(null);
 
     try {
+      const headers: HeadersInit = { 'Content-Type': 'application/json' };
+
+      // Add X-API-Key header if dashboard API key is set
+      if (dashboardApiKey) {
+        headers['X-API-Key'] = dashboardApiKey;
+      }
+
       const response = await fetch('/api/settings/env', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           anthropicKey,
           geminiKey,
@@ -77,14 +92,15 @@ export default function SettingsPage() {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage({ type: 'success', text: data.message });
+        toast.success(data.message);
         await loadConfig(); // Reload to show updated masked keys
+        await apiKeyStore.refreshStatus(); // Refresh API key status
       } else {
-        setMessage({ type: 'error', text: data.error || 'Failed to save configuration' });
+        toast.error(data.error || 'Failed to save configuration');
       }
     } catch (error) {
       console.error('Save failed:', error);
-      setMessage({ type: 'error', text: 'Failed to save configuration' });
+      toast.error('Failed to save configuration');
     } finally {
       setSaving(false);
     }
@@ -92,7 +108,6 @@ export default function SettingsPage() {
 
   const testConnection = async (provider: 'claude' | 'gemini') => {
     setTesting({ provider });
-    setMessage(null);
 
     try {
       const response = await fetch('/api/vibe/generate', {
@@ -105,29 +120,36 @@ export default function SettingsPage() {
       });
 
       if (response.ok) {
-        setMessage({ type: 'success', text: `${provider === 'claude' ? 'Claude' : 'Gemini'} connection successful!` });
+        toast.success(`${provider === 'claude' ? 'Claude' : 'Gemini'} connection successful!`);
       } else {
         const error = await response.json();
-        setMessage({ type: 'error', text: error.error || 'Connection failed' });
+        toast.error(error.error || 'Connection failed');
       }
     } catch (error) {
       console.error('Test failed:', error);
-      setMessage({ type: 'error', text: 'Connection test failed' });
+      toast.error('Connection test failed');
     } finally {
       setTesting({ provider: null });
     }
   };
 
   const handleRestart = async () => {
-    if (!confirm('Restart the development server? The page will reload automatically.')) {
-      return;
-    }
-
+    setShowRestartConfirm(false);
     setRestarting(true);
-    setMessage({ type: 'success', text: 'Restarting server...' });
+    toast.success('Restarting server...');
 
     try {
-      await fetch('/api/settings/restart', { method: 'POST' });
+      const headers: HeadersInit = {};
+
+      // Add X-API-Key header if dashboard API key is set
+      if (dashboardApiKey) {
+        headers['X-API-Key'] = dashboardApiKey;
+      }
+
+      await fetch('/api/settings/restart', {
+        method: 'POST',
+        headers,
+      });
 
       // Wait for server to restart and reload page
       setTimeout(() => {
@@ -135,7 +157,7 @@ export default function SettingsPage() {
       }, 3000);
     } catch (error) {
       console.error('Restart failed:', error);
-      setMessage({ type: 'error', text: 'Restart failed. Please restart manually.' });
+      toast.error('Restart failed. Please restart manually.');
       setRestarting(false);
     }
   };
@@ -164,19 +186,6 @@ export default function SettingsPage() {
           </h1>
           <p className="text-slate-300">Configure AI providers and system settings</p>
         </div>
-
-        {/* Message Banner */}
-        {message && (
-          <div
-            className={`mb-6 p-4 rounded-lg border ${
-              message.type === 'success'
-                ? 'bg-green-500/10 border-green-500 text-green-400'
-                : 'bg-red-500/10 border-red-500 text-red-400'
-            }`}
-          >
-            {message.text}
-          </div>
-        )}
 
         {/* Tabbed Interface */}
         <Tabs
@@ -305,11 +314,79 @@ export default function SettingsPage() {
               label: 'Security',
               icon: <Shield className="h-4 w-4" />,
               content: (
-                <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-xl p-4">
-                  <h2 className="text-lg font-medium text-white mb-4">Security Settings</h2>
-                  <p className="text-slate-400 mb-6">Configure security and privacy options.</p>
-                  <div className="text-slate-400 text-sm">
-                    Security settings coming soon. For now, all API keys are stored securely in environment variables.
+                <div className="space-y-6">
+                  {/* Authentication Configuration */}
+                  <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-xl p-4">
+                    <h2 className="text-lg font-medium text-white mb-4">Authentication</h2>
+                    <p className="text-slate-400 mb-6">Configure how the dashboard protects sensitive endpoints.</p>
+
+                    {/* Auth Mode Display */}
+                    <div className="mb-6">
+                      <label className="text-white font-medium block mb-2">Current Auth Mode</label>
+                      <div className="px-4 py-3 bg-slate-900 border border-slate-600 rounded text-white">
+                        <span className="font-mono">{config?.authMode || 'dev-bypass'}</span>
+                        <span className="ml-3 text-slate-400">
+                          {config?.authMode === 'open' && '(No auth required)'}
+                          {config?.authMode === 'api-key' && '(API key required)'}
+                          {config?.authMode === 'dev-bypass' && '(Skip auth in dev)'}
+                        </span>
+                      </div>
+                      <p className="text-slate-500 text-sm mt-2">
+                        Set AUTH_MODE in .env.local to change this setting.
+                      </p>
+                    </div>
+
+                    {/* Dashboard API Key */}
+                    <div className="mb-6">
+                      <label className="text-white font-medium block mb-2">Dashboard API Key</label>
+                      <input
+                        type="password"
+                        value={dashboardApiKey}
+                        onChange={(e) => setDashboardApiKey(e.target.value)}
+                        placeholder="Enter your DASHBOARD_API_KEY"
+                        className="w-full px-4 py-2 bg-slate-900 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-purple-500"
+                      />
+                      <p className="text-slate-500 text-sm mt-2">
+                        Required when AUTH_MODE=api-key. Enter the key here to authenticate save operations.
+                      </p>
+                    </div>
+
+                    {/* Info Box */}
+                    <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                      <p className="text-blue-300 text-sm">
+                        <strong>Auth Modes:</strong>
+                        <br />
+                        • <span className="font-mono">open</span> - No auth required (local dev, trusted networks)
+                        <br />
+                        • <span className="font-mono">api-key</span> - Require DASHBOARD_API_KEY (production)
+                        <br />
+                        • <span className="font-mono">dev-bypass</span> - Skip auth in development (default)
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Demo Mode Display */}
+                  <div className="bg-slate-800/50 backdrop-blur border border-white/[0.06] rounded-xl p-4">
+                    <h2 className="text-lg font-medium text-white mb-4">Demo Mode</h2>
+                    <p className="text-slate-400 mb-6">Blocks dangerous MCP operations for public demos.</p>
+
+                    <div className="flex items-center justify-between p-4 bg-slate-900 border border-slate-600 rounded">
+                      <div>
+                        <p className="text-white font-medium">Demo Mode</p>
+                        <p className="text-slate-400 text-sm">
+                          Current status: <span className={config?.demoMode ? 'text-yellow-400' : 'text-green-400'}>
+                            {config?.demoMode ? 'Enabled' : 'Disabled'}
+                          </span>
+                        </p>
+                      </div>
+                      <div className={`px-3 py-1 rounded ${config?.demoMode ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400'}`}>
+                        {config?.demoMode ? 'ON' : 'OFF'}
+                      </div>
+                    </div>
+
+                    <p className="text-slate-500 text-sm mt-4">
+                      Set DEMO_MODE=true in .env.local to enable. Blocks file deletion, git push, and shell execution.
+                    </p>
                   </div>
                 </div>
               ),
@@ -362,10 +439,22 @@ export default function SettingsPage() {
           defaultTab="budget"
         />
 
+        {/* Confirm Dialog */}
+        <ConfirmDialog
+          isOpen={showRestartConfirm}
+          title="Restart Server"
+          message="Restart the development server? The page will reload automatically."
+          confirmLabel="Restart"
+          cancelLabel="Cancel"
+          variant="warning"
+          onConfirm={handleRestart}
+          onCancel={() => setShowRestartConfirm(false)}
+        />
+
         {/* Save Button */}
         <div className="flex justify-between items-center gap-4">
           <button
-            onClick={handleRestart}
+            onClick={() => setShowRestartConfirm(true)}
             disabled={restarting}
             className="px-4 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors active:scale-[0.98] flex items-center gap-2"
           >
